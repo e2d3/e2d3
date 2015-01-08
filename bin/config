@@ -1,0 +1,8 @@
+#!/bin/bash
+
+SCRIPTDIR=$(dirname $0)
+ROOTDIR=$SCRIPTDIR/..
+
+export PATH=$ROOTDIR/node_modules/.bin:$PATH
+
+cd $ROOTDIR

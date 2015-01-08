@@ -1,0 +1,19 @@
+extends layout
+
+block vars
+  - var title = 'E2D3'
+  - var main = 'chart.js'
+
+block content
+  section#controller.hide-if-only-chart-area.text-center
+    h3 Select data area from cells. Or set sample data.
+    p#chart-select
+      button#select(type='button', class='btn btn-primary') Select data
+      |  or 
+      button#fill(type='button', class='btn btn-success') Set sample data
+    p#chart-control
+      button#visualize(type='button', class='btn btn-primary') Visualize
+      |  
+      button#reset(type='button', class='btn btn-default') Reset Bind
+    hr
+  section#chart

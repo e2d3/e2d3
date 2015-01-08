@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ContentApp">
+  <Id>643CB785-2445-432f-B12C-17BA5D40550C</Id>
+  <AlternateId>en-US\WA856525475</AlternateId>
+  <Version>0.3.0.0</Version>
+  <ProviderName>E2D3.org</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="E2D3" />
+  <Description DefaultValue="More intaractive charts on excel. and more charts comming soon." />
+  <IconUrl DefaultValue="http://e2d3.dev:8000/apps/icon.png" />
+  <SupportUrl DefaultValue="http://e2d3.dev:8000/" />
+  <Hosts>
+    <Host Name="Workbook" />
+  </Hosts>
+  <DefaultSettings>
+    <SourceLocation DefaultValue="http://e2d3.dev:8000/apps/index.html" />
+    <RequestedWidth>900</RequestedWidth>
+    <RequestedHeight>600</RequestedHeight>
+  </DefaultSettings>
+  <Permissions>ReadWriteDocument</Permissions>
+</OfficeApp>

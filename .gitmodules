@@ -1,0 +1,3 @@
+[submodule "src/contrib"]
+	path = src/contrib
+	url = git@github.com:E2D3/e2d3-contrib.git
