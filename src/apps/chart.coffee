@@ -1,9 +1,13 @@
-_baseUrl = window.location.hash.substring 1
+params = window.location.hash.substring 1
+  .split ','
+
+_baseUrl = params[0]
+_main = if params[1] == 'cs' then 'cs!main' else 'main'
 
 require.config
   baseUrl: _baseUrl
 
-require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3', 'main'], (domReady, bootstrap, $, d3, d3Promise, queue, e2d3, main) ->
+require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3', _main], (domReady, bootstrap, $, d3, d3Promise, queue, e2d3, main) ->
   e2d3.initialize()
     .then (reason) ->
       domReady initialize

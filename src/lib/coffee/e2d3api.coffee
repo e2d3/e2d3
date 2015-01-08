@@ -24,6 +24,7 @@ define ['jquery', 'd3', 'd3.promise', 'queue'], ($, d3, d3Promise, queue) ->
             .each (d, i) ->
               chart =
                 baseUrl: d3.select(this).attr('href')
+                type: 'js'
               charts.push chart
           charts.shift()
           resolve charts

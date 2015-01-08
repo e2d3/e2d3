@@ -16,6 +16,8 @@
   "dependencies": {
     "requirejs": "~2.1.15",
     "requirejs-domready": "~2.0.1",
+    "require-cs": "~0.5.0",
+    "coffeescript": "~1.8.0",
     "bootstrap-sass-official": "~3.3.0",
     "d3": "~3.4.13",
     "underscore": "~1.7.0",
@@ -28,6 +30,9 @@
   "overrides": {
     "requirejs-domready": {
       "main": "domReady.js"
+    },
+    "require-cs": {
+      "main": "cs.js"
     },
     "modernizr": {
       "main": "modernizr.js"
@@ -43,6 +48,9 @@
     },
     "font-awesome": {
       "main": "fonts/*"
+    },
+    "coffeescript": {
+      "main": "extras/coffee-script.js"
     }
   }
 }

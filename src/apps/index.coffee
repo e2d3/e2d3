@@ -21,7 +21,7 @@ require ['bootstrap', 'd3', 'd3.promise', 'e2d3', 'markdown'], (bootstrap, d3, d
                   this.innerHTML = markdown.toHTML readme, "Maruku"
 
             cell.select '.use'
-              .attr 'href', 'chart.html#' + d.baseUrl
+              .attr 'href', 'chart.html#' + d.baseUrl + ',' + d.type
 
             this.appendChild(cell.node())
 
