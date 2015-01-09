@@ -52,5 +52,8 @@
     "coffeescript": {
       "main": "extras/coffee-script.js"
     }
+  },
+  "resolutions": {
+    "coffeescript": "~1.8.0"
   }
 }
