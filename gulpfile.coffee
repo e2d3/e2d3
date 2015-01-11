@@ -75,22 +75,22 @@ gulp.task 'misc', ['clean'], ->
     .pipe filter ['**/*', '!**/*.js', '!**/*.coffee', '!**/*.css', '!**/*.scss']
     .pipe gulp.dest 'dist/lib'
 
-html = (name, dest) ->
+html = (src, dest) ->
   merge(
-    gulp.src 'src/' + name + '/**/*.jade'
+    gulp.src src + '/**/*.jade'
       .pipe plumber()
       .pipe jade()
-    gulp.src 'src/' + name + '/**/*.coffee'
+    gulp.src src + '/**/*.coffee'
       .pipe plumber()
       .pipe coffee()
-    gulp.src 'src/' + name + '/**/*'
+    gulp.src src + '/**/*'
       .pipe plumber()
       .pipe filter ['**/*', '!**/*.jade', '!**/*.coffee']
     )
     .pipe gulp.dest 'dist' + dest
 
 gulp.task 'apps', ['clean'], ->
-  html 'apps', ''
+  html 'src/apps', ''
 
 gulp.task 'contrib', ['clean'], ->
   html 'contrib', '/contrib'
@@ -114,6 +114,6 @@ gulp.task 'run', ['watch'], ->
         enable: true
         path: 'dist'
         options:
-          template: 'misc/serve-index.tmpl'
+          template: 'src/misc/serve-index.tmpl'
 
 gulp.task 'default', ['build']

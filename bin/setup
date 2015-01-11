@@ -1,6 +1,0 @@
-#!/bin/bash
-
-. $(dirname $0)/config
-
-npm update
-bower update
