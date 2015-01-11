@@ -28,5 +28,10 @@
     "rimraf": "~2.2.8"
   },
   "author": "E2D3",
-  "license": "E2D3"
+  "license": "E2D3",
+  "scripts": {
+    "postinstall": "bower update",
+    "build": "gulp build --release",
+    "start": "gulp run"
+  }
 }
