@@ -1,10 +1,10 @@
 $icon-font-path: "";
 
-@import "bootstrap";
+@import "../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap";
 
 $fa-font-path: ".";
 
-@import "font-awesome";
+@import "../../../bower_components/font-awesome/scss/font-awesome";
 
 body {
   padding: 6px 15px 6px 6px;

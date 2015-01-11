@@ -16,7 +16,7 @@ bowerFiles = require 'main-bower-files'
 
 jade = require 'gulp-jade'
 coffee = require 'gulp-coffee'
-sass = require 'gulp-ruby-sass'
+sass = require 'gulp-sass'
 minify= require 'gulp-minify-css'
 uglify = require 'gulp-uglify'
 amd = require 'amd-optimize'
@@ -61,10 +61,7 @@ gulp.task 'css', ['clean'], ->
     gulp.src bowerFiles()
       .pipe filter '**/*.css'
     gulp.src 'src/lib/scss/main.scss'
-      .pipe sass loadPath: [
-        'bower_components/bootstrap-sass-official/assets/stylesheets',
-        'bower_components/font-awesome/scss'
-      ]
+      .pipe sass()
     )
     .pipe concat 'main.css'
     .pipe cond isRelease, minify()
@@ -95,7 +92,7 @@ gulp.task 'apps', ['clean'], ->
 gulp.task 'contrib', ['clean'], ->
   html 'contrib', '/contrib'
 
-gulp.task 'build', ['js', 'css', 'misc', 'apps', 'contrib']
+gulp.task 'build', ['apps', 'contrib', 'js', 'css', 'misc']
 
 gulp.task 'watch', ['build'], ->
   gulp.watch 'src/lib/**/*', ['js','css','misc']
