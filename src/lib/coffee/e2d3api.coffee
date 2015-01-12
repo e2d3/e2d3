@@ -1,4 +1,4 @@
-define ['jquery', 'd3', 'd3.promise', 'queue'], ($, d3, d3Promise, queue) ->
+define ['jquery', 'underscore', 'd3', 'queue'], ($, _, d3, queue) ->
   apiBaseUrl = '/api'
 
   # served from gulp-webserver
@@ -18,15 +18,34 @@ define ['jquery', 'd3', 'd3.promise', 'queue'], ($, d3, d3Promise, queue) ->
       new Promise (resolve, reject) ->
         d3.html '/contrib/', (error, html) ->
           reject error if error
-          charts = []
-          d3.select html
-            .selectAll 'a'
-            .each (d, i) ->
-              chart =
-                baseUrl: d3.select(this).attr('href')
-                type: 'js'
-              charts.push chart
-          charts.shift()
-          resolve charts
+
+          baseUrls = $(html).find('a').map(() -> $(this).attr('href')).filter((i) -> i != 0).get()
+
+          q = queue()
+          q = q.defer d3.html, baseUrl for baseUrl in baseUrls
+
+          q.await () ->
+            error = arguments[0]
+            htmls = [].slice.call arguments, 1
+
+            charts = []
+            for html, i in htmls
+              files = $(html).find('a').map(() -> $(this).attr('href')).filter((i) -> i != 0).get()
+
+              exts = _(files)
+                .map (file) ->
+                  result = /([^/\.]+)\.([^/\.]+)$/.exec file
+                  if result then [result[1], result[2]] else null
+                .filter (name) -> name != null
+                .map (file) -> file
+
+              extmap = _.object(exts)
+
+              charts.push
+                baseUrl: baseUrls[i]
+                scriptType: extmap['main']
+                dataType: extmap['data']
+
+            resolve charts
 
   if isStandalone then standalone else server

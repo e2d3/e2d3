@@ -22,9 +22,11 @@ uglify = require 'gulp-uglify'
 amd = require 'amd-optimize'
 
 isRelease = gutil.env.release?
+isFirst = true
 
 gulp.task 'clean', (cb) ->
-  if isRelease
+  if isFirst
+    isFirst = false
     rimraf 'dist', cb
   else
     cb()
@@ -72,32 +74,30 @@ gulp.task 'misc', ['clean'], ->
     .pipe filter ['**/*', '!**/*.js', '!**/*.coffee', '!**/*.css', '!**/*.scss']
     .pipe gulp.dest 'dist/lib'
 
-html = (src, dest) ->
+gulp.task 'apps', ['clean'], ->
   merge(
-    gulp.src src + '/**/*.jade'
+    gulp.src 'src/apps/**/*.jade'
       .pipe plumber()
       .pipe jade()
-    gulp.src src + '/**/*.coffee'
+    gulp.src 'src/apps/**/*.coffee'
       .pipe plumber()
       .pipe coffee()
-    gulp.src src + '/**/*'
+    gulp.src 'src/apps/**/*'
       .pipe plumber()
       .pipe filter ['**/*', '!**/*.jade', '!**/*.coffee']
     )
-    .pipe gulp.dest 'dist' + dest
-
-gulp.task 'apps', ['clean'], ->
-  html 'src/apps', ''
+    .pipe gulp.dest 'dist'
 
 gulp.task 'contrib', ['clean'], ->
-  html 'contrib', '/contrib'
+  gulp.src 'contrib/**/*'
+    .pipe gulp.dest 'dist/contrib'
 
-gulp.task 'build', ['apps', 'contrib', 'js', 'css', 'misc']
+gulp.task 'build', ['js', 'css', 'misc', 'apps', 'contrib']
 
 gulp.task 'watch', ['build'], ->
   gulp.watch 'src/lib/**/*', ['js','css','misc']
   gulp.watch 'src/apps/**/*', ['apps']
-  gulp.watch 'src/contrib/**/*', ['contrib']
+  gulp.watch 'contrib/**/*', ['contrib']
 
 gulp.task 'run', ['watch'], ->
   gulp.src 'dist'

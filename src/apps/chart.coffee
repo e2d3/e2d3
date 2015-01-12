@@ -2,7 +2,8 @@ params = window.location.hash.substring 1
   .split ','
 
 _baseUrl = params[0]
-_main = if params[1] == 'cs' then 'cs!main' else 'main'
+_main = if params[1] == 'coffee' then 'cs!main' else 'main'
+_dataType = params[2]
 
 require.config
   baseUrl: _baseUrl
@@ -45,9 +46,9 @@ require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3',
           e2d3.onError err
 
     $('#fill').on 'click', ->
-      d3.promise.text _baseUrl + '/data.csv'
-        .then (csv) ->
-          e2d3.excel.fillCsv csv
+      d3.promise.text _baseUrl + '/data.' + _dataType
+        .then (text) ->
+          e2d3.excel.fill _dataType, text
         .then (selection) ->
           e2d3.excel.bindSelected selection
         .then (binding) ->

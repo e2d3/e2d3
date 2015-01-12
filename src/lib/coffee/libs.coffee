@@ -1,1 +1,1 @@
-define ['domReady', 'cs', 'bootstrap', 'd3', 'd3.promise', 'e2d3', 'queue', 'markdown', 'modernizr'], ->
+define ['domReady', 'cs', 'bootstrap', 'd3', 'd3.promise', 'underscore', 'e2d3', 'queue', 'markdown', 'modernizr'], ->

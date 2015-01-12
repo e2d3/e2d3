@@ -143,9 +143,10 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
         console.log "error: #{message}"
 
     excel:
-      fillCsv: (csv, callback) ->
-        rows = d3.csv.parseRows csv
+      fill: (type, text, callback) ->
         new Promise (resolve, reject) ->
+          rows = d3[type].parseRows text
+
           if e2d3.util.isExcel()
             Office.context.document.setSelectedDataAsync rows, coercionType: Office.CoercionType.Matrix, (result) ->
               if result.status == Office.AsyncResultStatus.Succeeded
@@ -173,10 +174,6 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
               resolve(new Binding(result.value))
             else
               reject(result.error)
-
-      bindCsv: (csv, callback) ->
-        new Promise (resolve, reject) ->
-          resolve(new DummyBinding ChartData.fromCsv csv)
 
     data:
       empty: ChartData.empty
