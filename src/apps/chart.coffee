@@ -61,3 +61,8 @@ require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3',
 
     $('#reset').on 'click', ->
       console.log 'reset'
+
+    # for development
+    if !e2d3.util.isExcel() && e2d3.util.isStandalone()
+      $('#controller').hide()
+      $('#fill').click()

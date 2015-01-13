@@ -1,57 +1,66 @@
 define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
-  ###*
-  # chart data.
-  # field: head, rows
-  ###
-  class ChartData
-    ###*
-    # null chart data object.
-    ###
-    @empty: () ->
-      new ChartData [], []
+  class ChartDataTable extends Array
+    constructor: (array) ->
+      @.push.apply @, array
 
-    ###*
-    # array to chart data object.
-    ###
-    @fromArray: (array) ->
-      head = array[0]
-      rows = array.slice(1).map (row) ->
+    transpose: () ->
+      cols = d3.max(@, (row) -> row.length)
+      rows = @.length
+      newarray = []
+      for c in [0..cols-1]
+        newarray[c] = []
+        for r in [0..rows-1]
+          newarray[c][r] = @[r][c]
+      new ChartDataTable newarray
+
+    values: () ->
+      values = []
+      for row in @
+        for value in row
+          values.push +value if $.isNumeric value
+      values
+
+    toList: (head) ->
+      new ChartDataKeyValueList @, head
+
+    toMap: () ->
+      new ChartDataKeyValueMap @
+
+  class ChartDataKeyValueList extends Array
+    constructor: (table, head) ->
+      if !head
+        head = table[0]
+        table = table.slice(1)
+      data = table.map (row) ->
         obj = {}
         for key, i in head
           obj[key] = row[i]
         obj
-      new ChartData head, rows
-
-    ###*
-    # chart data object constructor.
-    ###
-    constructor: (head, rows) ->
       @head = head
-      @rows = rows
+      @.push.apply @, data
 
-    ###*
-    # chart data object to map.
-    # key is first column value.
-    ###
-    toMap: ()->
-      map = new ChartDataMap
-      return map if @head.length == 0
-      for row in @rows
-        copy = $.extend {}, row
-        delete copy[@head[0]]
-        map[row[@head[0]]] = copy
-      map
-
-  ###*
-  # chart data map form.
-  # field: head, rows
-  ###
-  class ChartDataMap
     values: () ->
       values = []
-      for own key, row of this
+      for row in @
+        for name, value of row
+          values.push +value if $.isNumeric value
+      values
+
+  class ChartDataKeyValueMap
+    constructor: (table) ->
+      head = table[0].slice(1)
+      for row in table.slice(1)
+        data = row.slice(1)
+        obj = {}
+        for key, i in head
+          obj[key] = data[i]
+        @[row[0]] = obj
+
+    values: () ->
+      values = []
+      for own key, row of @
         for own name, value of row
-          values.push +value
+          values.push +value if $.isNumeric(value)
       values
 
   class Binding
@@ -67,9 +76,9 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
     fetchData: (callback) ->
       _binding.getDataAsync valueFormat: Office.ValueFormat.Unformatted, (result) ->
         if result.status == Office.AsyncResultStatus.Succeeded
-          callback ChartData.fromArray result.value
+          callback new ChartDataTable result.value
         else
-          callback ChartData.empty()
+          callback new ChartDataTable []
 
   class DummyBinding
     _data = null
@@ -80,21 +89,20 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
     on: (event, handler) ->
 
     fetchData: (callback) ->
-      callback _data
+      callback new ChartDataTable _data
 
   ###*
   # if '?debug' parameter is specified
   # change `console.log()`'s output to popup dialog
   ###
   setConsoleToPopup = () ->
-    # return if (e2d3.util.urlParam 'debug') == null
+    return if (e2d3.util.urlParam 'debug') == null
 
     $('#log').on 'click', () ->
       clearTimeout $('#log').data 'timer'
       $('#log').stop(true, true).fadeOut(100)
 
     print = (msg) ->
-      return
       return if (msg + '').indexOf('Agave.HostCall.') == 0
 
       $('#log').append($('<div>').text(msg + ''))
@@ -139,7 +147,6 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
 
     onError: (message) ->
       if message.message
-        console.log message
         console.log "error: #{message.message}"
       else
         console.log "error: #{message}"
@@ -156,7 +163,7 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
               else
                 reject result.error
           else
-            resolve ChartData.fromArray rows
+            resolve rows
 
       bindSelected: (selection, callback) ->
         new Promise (resolve, reject) ->
@@ -173,13 +180,12 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
         new Promise (resolve, reject) ->
           Office.context.document.bindings.addFromPromptAsync Office.BindingType.Matrix, (result) ->
             if result.status == Office.AsyncResultStatus.Succeeded
-              resolve(new Binding(result.value))
+              resolve new Binding result.value
             else
-              reject(result.error)
+              reject result.error
 
     data:
-      empty: ChartData.empty
-      fromCsv: ChartData.fromCsv
+      empty: () -> new ChartDataTable []
 
     api: api
 
@@ -187,8 +193,14 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
       isExcel: () ->
         !!Office.context.document
 
+      isDevelopment: () ->
+        $('script[src*="livereload.js"]').length != 0
+
+      isStandalone: () ->
+        $('script[src*=":35730/livereload.js"]').length != 0
+
       urlParam: (name) ->
-        results = new RegExp("[\?&]#{name}(=([^&#]*))?").exec(window.location.href);
-        if results == null then null else results[2] || 0
+        results = new RegExp("[\?&]#{name}(=([^&#]*))?").exec(window.location.search);
+        if results == null then null else results[2]
 
   e2d3
