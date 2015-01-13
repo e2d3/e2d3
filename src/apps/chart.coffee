@@ -18,24 +18,23 @@ require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3',
 
   initialize = () ->
     _chart = $('#chart').get(0)
+    _main = main _chart, _baseUrl
     _binding = null
-
-    render = (data) ->
-      main.render _chart, data, _baseUrl
 
     renderBinding = () ->
       if _binding
         _binding.fetchData (data) ->
-          render data
+          _main.update data
       else
-        render e2d3.data.empty()
+        _main.update e2d3.data.empty()
 
     setupBinding = (binding) ->
       _binding = binding
       _binding.on 'change', renderBinding
       renderBinding()
 
-    $(window).on 'resize', renderBinding
+    $(window).on 'resize', () ->
+      _main.resize() if _main.resize
 
     $('#select').on 'click', ->
       e2d3.excel.bindPrompt()
@@ -62,5 +61,3 @@ require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3',
 
     $('#reset').on 'click', ->
       console.log 'reset'
-
-    renderBinding()

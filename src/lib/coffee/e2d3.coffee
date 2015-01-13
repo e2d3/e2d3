@@ -94,9 +94,10 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
       $('#log').stop(true, true).fadeOut(100)
 
     print = (msg) ->
-      return if msg.startsWith 'Agave.HostCall.'
+      return
+      return if (msg + '').indexOf('Agave.HostCall.') == 0
 
-      $('#log').append($('<div>').text(msg))
+      $('#log').append($('<div>').text(msg + ''))
 
       # you can't use `$.delay()`
       # http://stackoverflow.com/questions/3329197/jquery-delay-or-timeout-with-stop
@@ -107,6 +108,9 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
           $('#log').data 'timer', setTimeout () ->
             $('#log').stop(true, true).fadeOut(500)
           , 5000
+
+    window.onerror = (message, url, line) ->
+      print "#{message} (#{url}:#{line})"
 
     console.log = print
 
@@ -122,9 +126,6 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
     initialize: () ->
       setConsoleToPopup()
 
-      window.onerror = (message, url, line) ->
-        console.log "#{message} (#{url}:#{line})"
-
       new Promise (resolve, reject) ->
         timer = setTimeout () ->
           console.log 'initialized: browser'
@@ -138,6 +139,7 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
 
     onError: (message) ->
       if message.message
+        console.log message
         console.log "error: #{message.message}"
       else
         console.log "error: #{message}"
