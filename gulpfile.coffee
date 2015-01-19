@@ -58,6 +58,13 @@ gulp.task 'js', ['clean'], ->
     .pipe cond isRelease, uglify preserveComments: 'some'
     .pipe gulp.dest 'dist/lib'
 
+  merge(
+    gulp.src 'bower_components/react/JSXTransformer.js'
+    gulp.src 'bower_components/jsx-requirejs-plugin/js/jsx.js'
+    )
+    .pipe cond isRelease, uglify preserveComments: 'some'
+    .pipe gulp.dest 'dist/lib'
+
 gulp.task 'css', ['clean'], ->
   merge(
     gulp.src bowerFiles()

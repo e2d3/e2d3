@@ -16,8 +16,11 @@
   "dependencies": {
     "requirejs": "~2.1.15",
     "requirejs-domready": "~2.0.1",
-    "require-cs": "~0.5.0",
+    "requirejs-text": "~2.0.13",
+    "react": "~0.12.2",
+    "jsx-requirejs-plugin": "~0.5.2",
     "coffeescript": "~1.8.0",
+    "require-cs": "~0.5.0",
     "bootstrap-sass-official": "~3.3.0",
     "d3": "~3.4.13",
     "underscore": "~1.7.0",
@@ -33,6 +36,9 @@
     },
     "require-cs": {
       "main": "cs.js"
+    },
+    "requirejs-text": {
+      "main": "text.js"
     },
     "modernizr": {
       "main": "modernizr.js"
@@ -51,6 +57,12 @@
     },
     "coffeescript": {
       "main": "extras/coffee-script.js"
+    },
+    "react": {
+      "main": [
+        "react.js",
+        "JSXTransformer.js"
+      ]
     }
   },
   "resolutions": {
