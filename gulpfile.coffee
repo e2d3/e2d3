@@ -31,7 +31,8 @@ gulp.task 'clean', (cb) ->
   else
     cb()
 
-gulp.task 'js', ['clean'], ->
+gulp.task 'lib', ['clean'], ->
+  # js
   options =
     paths:
       'bootstrap': 'bower_components/bootstrap-sass-official/assets/javascripts/bootstrap'
@@ -65,7 +66,7 @@ gulp.task 'js', ['clean'], ->
     .pipe cond isRelease, uglify preserveComments: 'some'
     .pipe gulp.dest 'dist/lib'
 
-gulp.task 'css', ['clean'], ->
+  # css
   merge(
     gulp.src bowerFiles()
       .pipe filter '**/*.css'
@@ -76,7 +77,7 @@ gulp.task 'css', ['clean'], ->
     .pipe cond isRelease, minify()
     .pipe gulp.dest 'dist/lib'
 
-gulp.task 'misc', ['clean'], ->
+  # misc
   gulp.src bowerFiles()
     .pipe filter ['**/*', '!**/*.js', '!**/*.coffee', '!**/*.css', '!**/*.scss']
     .pipe gulp.dest 'dist/lib'
@@ -99,10 +100,10 @@ gulp.task 'contrib', ['clean'], ->
   gulp.src 'contrib/**/*'
     .pipe gulp.dest 'dist/contrib'
 
-gulp.task 'build', ['js', 'css', 'misc', 'apps', 'contrib']
+gulp.task 'build', ['lib', 'apps', 'contrib']
 
 gulp.task 'watch', ['build'], ->
-  gulp.watch 'src/lib/**/*', ['js','css','misc']
+  gulp.watch 'src/lib/**/*', ['lib']
   gulp.watch 'src/apps/**/*', ['apps']
   gulp.watch 'contrib/**/*', ['contrib']
 
