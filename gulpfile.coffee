@@ -34,8 +34,6 @@ gulp.task 'clean', (cb) ->
 gulp.task 'lib', ['clean'], ->
   # js
   options =
-    paths:
-      'bootstrap': 'bower_components/bootstrap-sass-official/assets/javascripts/bootstrap'
     shim:
       'bootstrap':
         deps: ['jquery']
