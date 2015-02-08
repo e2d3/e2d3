@@ -1,102 +1,36 @@
-define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
-  class ChartDataTable extends Array
-    constructor: (array) ->
-      @.push.apply @, array
-
-    transpose: () ->
-      cols = d3.max(@, (row) -> row.length)
-      rows = @.length
-      newarray = []
-      for c in [0..cols-1]
-        newarray[c] = []
-        for r in [0..rows-1]
-          newarray[c][r] = @[r][c]
-      new ChartDataTable newarray
-
-    values: () ->
-      values = []
-      for row in @
-        for value in row
-          values.push +value if $.isNumeric value
-      values
-
-    toList: (head) ->
-      new ChartDataKeyValueList @, head
-
-    toMap: () ->
-      new ChartDataKeyValueMap @
-
-  class ChartDataKeyValueList extends Array
-    constructor: (table, head) ->
-      if !head
-        head = table[0]
-        table = table.slice(1)
-      data = table.map (row) ->
-        obj = {}
-        for key, i in head
-          obj[key] = row[i]
-        obj
-      @head = head
-      @.push.apply @, data
-
-    values: () ->
-      values = []
-      for row in @
-        for name, value of row
-          values.push +value if $.isNumeric value
-      values
-
-  class ChartDataKeyValueMap
-    constructor: (table) ->
-      head = table[0].slice(1)
-      for row in table.slice(1)
-        data = row.slice(1)
-        obj = {}
-        for key, i in head
-          obj[key] = data[i]
-        @[row[0]] = obj
-
-    values: () ->
-      values = []
-      for own key, row of @
-        for own name, value of row
-          values.push +value if $.isNumeric(value)
-      values
+define ['params!', 'd3', 'jquery', 'e2d3api', 'e2d3model'], (params, d3, $, api, model) ->
+  ChartDataTable = model.ChartDataTable
 
   class Binding
-    _binding = null
-
-    constructor: (binding) ->
-      _binding = binding
+    constructor: (@binding) ->
 
     on: (event, handler) ->
       if event == 'change'
-        _binding.addHandlerAsync Office.EventType.BindingDataChanged, handler
+        @binding.addHandlerAsync Office.EventType.BindingDataChanged, handler
 
-    fetchData: (callback) ->
-      _binding.getDataAsync valueFormat: Office.ValueFormat.Unformatted, (result) ->
-        if result.status == Office.AsyncResultStatus.Succeeded
-          callback new ChartDataTable result.value
-        else
-          callback new ChartDataTable []
+    fetchData: () ->
+      new Promise (resolve, reject) =>
+        @binding.getDataAsync valueFormat: Office.ValueFormat.Unformatted, (result) ->
+          if result.status == Office.AsyncResultStatus.Succeeded
+            resolve new ChartDataTable result.value
+          else
+            resolve new ChartDataTable []
 
   class DummyBinding
-    _data = null
-
-    constructor: (data) ->
-      _data = data
+    constructor: (@data) ->
 
     on: (event, handler) ->
 
-    fetchData: (callback) ->
-      callback new ChartDataTable _data
+    fetchData: () ->
+      new Promise (resolve, reject) =>
+        resolve new ChartDataTable @data
 
   ###*
   # if '?debug' parameter is specified
   # change `console.log()`'s output to popup dialog
   ###
   setConsoleToPopup = () ->
-    return if (e2d3.util.urlParam 'debug') == null
+    return if !e2d3.util.isDebugEnabled()
 
     $('#log').on 'click', () ->
       clearTimeout $('#log').data 'timer'
@@ -121,6 +55,7 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
       print "#{message} (#{url}:#{line})"
 
     console.log = print
+    console.error = print
 
   ###
   # export
@@ -146,10 +81,10 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
           resolve reason
 
     onError: (message) ->
-      if message.message
-        console.log "error: #{message.message}"
+      if message?.stack?
+        console.log message, message.stack
       else
-        console.log "error: #{message}"
+        console.log message
 
     excel:
       fill: (type, text, callback) ->
@@ -198,6 +133,9 @@ define ['d3', 'jquery', 'e2d3api'], (d3, $, api) ->
 
       isStandalone: () ->
         $('script[src*=":35730/livereload.js"]').length != 0
+
+      isDebugEnabled: () ->
+        params.debug? && e2d3.util.isExcel()
 
       urlParam: (name) ->
         results = new RegExp("[\?&]#{name}(=([^&#]*))?").exec(window.location.search);

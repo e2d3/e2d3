@@ -13,6 +13,7 @@ concat = require 'gulp-concat'
 webserver = require 'gulp-webserver'
 plumber = require 'gulp-plumber'
 bowerFiles = require 'main-bower-files'
+sourcemaps = require 'gulp-sourcemaps'
 
 jade = require 'gulp-jade'
 coffee = require 'gulp-coffee'
@@ -47,6 +48,7 @@ gulp.task 'lib', ['clean'], ->
         .pipe filter '**/*.js'
       gulp.src 'src/lib/js/*.js'
       gulp.src 'src/lib/coffee/*.coffee'
+        .pipe plumber()
         .pipe coffee()
       )
       .pipe amd 'libs', options
@@ -72,6 +74,7 @@ gulp.task 'lib', ['clean'], ->
     .pipe gulp.dest 'dist/lib'
 
   gulp.src 'src/lib/scss/main.scss'
+    .pipe plumber()
     .pipe sass()
     .pipe concat 'main.css'
     .pipe cond isRelease, minify()
@@ -89,7 +92,9 @@ gulp.task 'apps', ['clean'], ->
       .pipe jade()
     gulp.src 'src/apps/**/*.coffee'
       .pipe plumber()
+      .pipe sourcemaps.init()
       .pipe coffee()
+      .pipe sourcemaps.write()
     gulp.src 'src/apps/**/*'
       .pipe plumber()
       .pipe filter ['**/*', '!**/*.jade', '!**/*.coffee']

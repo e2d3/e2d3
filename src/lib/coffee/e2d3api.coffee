@@ -22,7 +22,9 @@ define ['jquery', 'underscore', 'd3', 'queue'], ($, _, d3, queue) ->
           baseUrls = $(html).find('a').map(() -> $(this).attr('href')).filter((i) -> i != 0).get()
 
           q = queue()
-          q = q.defer d3.html, baseUrl for baseUrl in baseUrls
+
+          for baseUrl in baseUrls
+            q = q.defer d3.html, baseUrl
 
           q.await () ->
             error = arguments[0]

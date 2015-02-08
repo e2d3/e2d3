@@ -1,6 +1,8 @@
-params = window.location.hash.substring 1
-  .split ','
+params = window.location.hash.substring(1).split ','
 
+###
+# load parameters
+###
 _baseUrl = params[0]
 _main = switch params[1]
   when 'jsx' then 'jsx!main'
@@ -8,6 +10,9 @@ _main = switch params[1]
   else 'main'
 _dataType = params[2]
 
+###
+# config
+###
 require.config
   baseUrl: _baseUrl
   paths:
@@ -16,8 +21,13 @@ require.config
   jsx:
     fileExtension: '.jsx'
 
-
+###
+# main routine
+###
 require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3', _main], (domReady, bootstrap, $, d3, d3Promise, queue, e2d3, main) ->
+  # load css, please ignore 404 error
+  $('<link rel="stylesheet" type="text/css" href="' + _baseUrl + '/main.css" >').appendTo 'head'
+
   e2d3.initialize()
     .then (reason) ->
       domReady initialize
@@ -26,24 +36,32 @@ require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3',
       e2d3.onError err
 
   initialize = () ->
-    _chart = $('#chart').get(0)
-    _main = main _chart, _baseUrl
+    _chart = main $('#chart').get(0), _baseUrl
     _binding = null
 
-    renderBinding = () ->
-      if _binding
-        _binding.fetchData (data) ->
-          _main.update data
-      else
-        _main.update e2d3.data.empty()
-
+    ###
+    # bindingの初期化
+    ###
     setupBinding = (binding) ->
       _binding = binding
       _binding.on 'change', renderBinding
       renderBinding()
 
+    ###
+    # bindingの描画
+    #
+    # bindingからデータを取り出し描画する
+    ###
+    renderBinding = () ->
+      if _binding
+        _binding.fetchData()
+          .then (data) ->
+            _chart.update data
+      else
+        _chart.update e2d3.data.empty()
+
     $(window).on 'resize', () ->
-      _main.resize() if _main.resize
+      _chart.resize() if _chart.resize
 
     $('#select').on 'click', ->
       e2d3.excel.bindPrompt()
@@ -73,5 +91,6 @@ require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3',
 
     # for development
     if !e2d3.util.isExcel() && e2d3.util.isStandalone()
-      $('#controller').hide()
       $('#fill').click()
+    else
+      $('#controller').show()
