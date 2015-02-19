@@ -61,7 +61,10 @@ require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3',
         _chart.update e2d3.data.empty()
 
     $(window).on 'resize', () ->
-      _chart.resize() if _chart.resize
+      if _chart.resize?
+        _binding.fetchData()
+          .then (data) ->
+            _chart.resize data
 
     $('#select').on 'click', ->
       e2d3.excel.bindPrompt()
