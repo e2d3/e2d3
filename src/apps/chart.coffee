@@ -66,7 +66,6 @@ require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3',
       if oldbinding?
         oldbinding.release()
           .then () ->
-            console.log 'success'
             undefined
           .catch (err) ->
             e2d3.onError err
@@ -111,11 +110,6 @@ require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3',
 
     $('#e2d3-rebind').on 'click', (e) ->
       rebind()
-
-    $('#e2d3-check').on 'click', (e) ->
-      Office.context.document.bindings.getAllAsync (asyncResult) ->
-        for binding in asyncResult.value
-          console.log binding.id
 
     # for development
     if !e2d3.util.isExcel() && e2d3.util.isStandalone()
