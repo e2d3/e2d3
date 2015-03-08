@@ -4,16 +4,14 @@ block vars
   - var title = 'E2D3'
   - var main = 'chart.js'
 
+block navleft
+  li
+    button#e2d3-rebind.btn.btn-default.navbar-btn(data-toggle='tooltip', data-placement='right', title='Click when you change selected area')
+      i.fa.fa-link
+block navright
+  li
+    button.btn.btn-default.navbar-btn(type='button' onclick='location.href="index.html"')
+      i.fa.fa-home
+
 block content
-  section#controller.text-center
-    h3 Select data area from cells. Or set sample data.
-    p#chart-select
-      button#select(type='button', class='btn btn-primary') Select data
-      |  or 
-      button#fill(type='button', class='btn btn-success') Set sample data
-    p#chart-control
-      button#visualize(type='button', class='btn btn-primary') Visualize
-      |  
-      button#reset(type='button', class='btn btn-default') Reset Bind
-    hr
-  section#chart
+  section#e2d3-chart-area

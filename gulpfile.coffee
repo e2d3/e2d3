@@ -55,6 +55,7 @@ gulp.task 'lib', ['clean'], ->
       .pipe concat 'libs.js'
     )
     .pipe order ['**/require.js', '**/libs.js']
+    .pipe sourcemaps.init()
     .pipe concat 'libs.js'
     .pipe cond isRelease, uglify preserveComments: 'some'
     .pipe gulp.dest 'dist/lib'
@@ -64,6 +65,7 @@ gulp.task 'lib', ['clean'], ->
     gulp.src 'bower_components/jsx-requirejs-plugin/js/jsx.js'
     )
     .pipe cond isRelease, uglify preserveComments: 'some'
+    .pipe sourcemaps.write()
     .pipe gulp.dest 'dist/lib'
 
   # css

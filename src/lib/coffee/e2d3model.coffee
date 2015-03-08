@@ -32,14 +32,17 @@ define ['d3'], (d3) ->
     ###
     # ChartDataKeyValueListへの変換
     ###
-    toList: (head) ->
-      new ChartDataKeyValueList @, head
+    toList: (header) -> new ChartDataKeyValueList @, header
 
     ###
     # ChartDataKeyValueMapへの変換
     ###
-    toMap: () ->
-      new ChartDataKeyValueMap @
+    toMap: (header) -> new ChartDataKeyValueMap @, header
+
+    ###
+    # ChartDataKeyValueNestedへの変換
+    ###
+    toNested: (name, header) -> new ChartDataKeyValueNested @, name, header
 
   ###
   # 行毎のヘッダと値のマップ
@@ -56,16 +59,18 @@ define ['d3'], (d3) ->
   # ]
   ###
   class ChartDataKeyValueList extends Array
-    constructor: (table, head) ->
-      if !head
-        head = table[0]
-        table = table.slice(1)
+    constructor: (table, header) ->
+      if !header?
+        header = table[0]
+        table = table[1..]
+
       data = table.map (row) ->
         obj = {}
-        for key, i in head
+        for key, i in header
           obj[key] = row[i]
         obj
-      @head = head
+
+      @header = header
       @.push.apply @, data
 
     ###
@@ -93,14 +98,67 @@ define ['d3'], (d3) ->
   # }
   ###
   class ChartDataKeyValueMap
-    constructor: (table) ->
-      head = table[0].slice(1)
-      for row in table.slice(1)
-        data = row.slice(1)
+    constructor: (table, header) ->
+      if !header?
+        header = table[0][1..]
+        table = table[1..]
+
+      for row in table
+        data = row[1..]
         obj = {}
-        for key, i in head
+        for key, i in header
           obj[key] = data[i]
         @[row[0]] = obj
+
+      @header = header
+
+    ###
+    # 全ての値を返す
+    ###
+    values: () ->
+      values = []
+      for own key, row of @
+        for own name, value of row
+          values.push +value if $.isNumeric(value)
+      values
+
+  ###
+  # 入れ子構造
+  ###
+  class Node
+    constructor: (@name) ->
+
+    findOrCreateChild: (name) ->
+      @children = [] if !@children?
+      for child in @children
+        return child if child.name == name
+      newchild = new Node name
+      @children.push newchild
+      newchild
+
+  class ChartDataKeyValueNested extends Node
+    constructor: (table, name='root', count=1, header) ->
+      super name
+
+      if !header?
+        header = table[0][-count..]
+        table = table[1..]
+      lastindex = table[0].length - 1
+
+      for row in table
+        path = row[0...-count]
+        values = row[-count..]
+
+        current = @
+        for name in path
+          break if !name
+          current = current.findOrCreateChild name
+
+        for key, i in header
+          if values[i] != ''
+            current[key] = values[i]
+
+      @header = header
 
     ###
     # 全ての値を返す

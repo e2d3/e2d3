@@ -28,6 +28,20 @@ require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3',
   # load css, please ignore 404 error
   $('<link rel="stylesheet" type="text/css" href="' + _baseUrl + '/main.css" >').appendTo 'head'
 
+  ###
+  # デフォルトの設定
+  ###
+  if !main?
+    main = (node, baseUrl) ->
+      _data = null
+      _reload = (data) ->
+        _data = data if data?
+        $(node).empty()
+        render node, _data
+
+      update: _reload
+      resize: _reload
+
   e2d3.initialize()
     .then (reason) ->
       domReady initialize
@@ -36,8 +50,10 @@ require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3',
       e2d3.onError err
 
   initialize = () ->
-    _chart = main $('#chart').get(0), _baseUrl
+    _chart = main $('#e2d3-chart-area').get(0), _baseUrl
     _binding = null
+
+    $('[data-toggle="tooltip"]').tooltip()
 
     ###
     # bindingの初期化
@@ -60,40 +76,36 @@ require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3',
       else
         _chart.update e2d3.data.empty()
 
-    $(window).on 'resize', () ->
-      if _chart.resize?
-        _binding.fetchData()
-          .then (data) ->
-            _chart.resize data
-
-    $('#select').on 'click', ->
-      e2d3.excel.bindPrompt()
-        .then (binding) ->
-          setupBinding binding
-          undefined # cofeescript promise idiom
-        .catch (err) ->
-          e2d3.onError err
-
-    $('#fill').on 'click', ->
+    fill = () ->
       d3.promise.text _baseUrl + '/data.' + _dataType
         .then (text) ->
           e2d3.excel.fill _dataType, text
-        .then (selection) ->
-          e2d3.excel.bindSelected selection
+        .then () ->
+          e2d3.excel.bindSelected()
         .then (binding) ->
           setupBinding binding
           undefined # cofeescript promise idiom
         .catch (err) ->
           e2d3.onError err
 
-    $('#visualize').on 'click', ->
-      console.log 'visualize'
+    rebind = () ->
+      e2d3.excel.bindSelected()
+        .then (binding) ->
+          setupBinding binding
+          undefined # cofeescript promise idiom
+        .catch (err) ->
+          e2d3.onError err
 
-    $('#reset').on 'click', ->
-      console.log 'reset'
+
+    $(window).on 'resize', () ->
+      if _chart.resize?
+        _chart.resize()
+
+    $('#e2d3-rebind').on 'click', ->
+      rebind()
 
     # for development
     if !e2d3.util.isExcel() && e2d3.util.isStandalone()
-      $('#fill').click()
+      fill()
     else
-      $('#controller').show()
+      fill()

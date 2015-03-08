@@ -1,6 +1,6 @@
 {
   "name": "e2d3",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "E2D3 is JavaScript library for using D3.js on Excel.",
   "keywords": [
     "E2D3"
@@ -28,8 +28,11 @@
     "merge2": "~0.3.1",
     "rimraf": "~2.2.8"
   },
-  "author": "E2D3",
-  "license": "E2D3",
+  "engines": {
+    "node": "~0.10.35"
+  },
+  "author": "E2D3 Project",
+  "license": "Apache 2.0",
   "scripts": {
     "postinstall": "bower update",
     "build": "gulp --require coffee-script/register build --release",

@@ -8,7 +8,7 @@ require ['bootstrap', 'd3', 'd3.promise', 'e2d3', 'markdown'], (bootstrap, d3, d
         .selectAll 'div'
           .data charts
         .enter().append 'div'
-          .classed 'col-xs-4 col-sm-3', true
+          .classed 'col-xs-4 col-sm-4', true
           .each (d, i) ->
             newcell = d3.select(cell.cloneNode(true))
 
