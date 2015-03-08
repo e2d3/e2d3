@@ -16,6 +16,15 @@ define ['params!', 'd3', 'e2d3model', 'e2d3util'], (params, d3, model, util) ->
           else
             resolve new ChartDataTable []
 
+    release: () ->
+      new Promise (resolve, reject) =>
+        Office.context.document.bindings.releaseByIdAsync @binding.id, (result) =>
+          if result.status == Office.AsyncResultStatus.Succeeded
+            delete @binding
+            resolve()
+          else
+            reject result.error
+
   class ExcelAPI
     fill: (type, text, callback) ->
       new Promise (resolve, reject) ->
@@ -55,6 +64,10 @@ define ['params!', 'd3', 'e2d3model', 'e2d3util'], (params, d3, model, util) ->
       new Promise (resolve, reject) =>
         resolve new ChartDataTable @data
 
+    release: () ->
+      new Promise (resolve, reject) ->
+        resolve()
+
   class DummyExcelAPI
     fill: (type, text, callback) ->
       new Promise (resolve, reject) ->
@@ -70,8 +83,6 @@ define ['params!', 'd3', 'e2d3model', 'e2d3util'], (params, d3, model, util) ->
   ###
   initialize: () ->
     if util.isExcel()
-      console.log 'Excel'
       new ExcelAPI()
     else
-      console.log 'Dummy'
       new DummyExcelAPI()

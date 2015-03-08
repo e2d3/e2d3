@@ -1,4 +1,10 @@
 define ['d3'], (d3) ->
+
+  unenumerable = (obj, name) ->
+    desc = Object.getOwnPropertyDescriptor obj, name
+    desc.enumerable = false
+    Object.defineProperty obj, name, desc
+
   ###
   # 単純な2次元配列
   ###
@@ -103,14 +109,19 @@ define ['d3'], (d3) ->
         header = table[0][1..]
         table = table[1..]
 
+      keys = []
       for row in table
         data = row[1..]
         obj = {}
         for key, i in header
           obj[key] = data[i]
         @[row[0]] = obj
+        keys.push row[0]
 
       @header = header
+      @keys = keys
+      unenumerable @, 'header'
+      unenumerable @, 'keys'
 
     ###
     # 全ての値を返す
@@ -122,6 +133,8 @@ define ['d3'], (d3) ->
           values.push +value if $.isNumeric(value)
       values
 
+  unenumerable ChartDataKeyValueMap.prototype, 'values'
+
   ###
   # 入れ子構造
   ###
@@ -129,12 +142,16 @@ define ['d3'], (d3) ->
     constructor: (@name) ->
 
     findOrCreateChild: (name) ->
-      @children = [] if !@children?
+      if !@children?
+        @children = []
+        unenumerable @, 'children'
       for child in @children
         return child if child.name == name
       newchild = new Node name
       @children.push newchild
       newchild
+
+  unenumerable Node.prototype, 'findOrCreateChild'
 
   class ChartDataKeyValueNested extends Node
     constructor: (table, name='root', count=1, header) ->
