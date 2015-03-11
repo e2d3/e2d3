@@ -62,7 +62,6 @@ gulp.task 'lib', ['clean'], ->
 
   merge(
     gulp.src 'bower_components/react/JSXTransformer.js'
-    gulp.src 'bower_components/jsx-requirejs-plugin/js/jsx.js'
     )
     .pipe cond isRelease, uglify preserveComments: 'some'
     .pipe sourcemaps.write()

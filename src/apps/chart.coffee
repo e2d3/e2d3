@@ -5,9 +5,9 @@ params = window.location.hash.substring(1).split ','
 ###
 _baseUrl = params[0]
 _main = switch params[1]
-  when 'jsx' then 'jsx!main'
-  when 'coffee' then 'cs!main'
-  else 'main'
+  when 'jsx' then 'main.jsx'
+  when 'coffee' then 'main.coffee'
+  else 'main.js'
 _dataType = params[2]
 
 ###
@@ -17,30 +17,13 @@ require.config
   baseUrl: _baseUrl
   paths:
     JSXTransformer: '/lib/JSXTransformer'
-    jsx: '/lib/jsx'
-  jsx:
-    fileExtension: '.jsx'
 
 ###
 # main routine
 ###
-require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3', _main], (domReady, bootstrap, $, d3, d3Promise, queue, e2d3, main) ->
+require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3', 'e2d3loader!'+_main], (domReady, bootstrap, $, d3, d3Promise, queue, e2d3, main) ->
   # load css, please ignore 404 error
   $('<link rel="stylesheet" type="text/css" href="' + _baseUrl + '/main.css" >').appendTo 'head'
-
-  ###
-  # デフォルトの設定
-  ###
-  if !main?
-    main = (node, baseUrl) ->
-      _data = null
-      _reload = (data) ->
-        _data = data if data?
-        $(node).empty()
-        render node, _data
-
-      update: _reload
-      resize: _reload
 
   e2d3.initialize()
     .then (reason) ->

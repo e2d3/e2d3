@@ -1,4 +1,4 @@
-define ['params!', 'd3', 'jquery', 'e2d3api', 'e2d3model', 'e2d3excel', 'e2d3util'], (params, d3, $, api, model, excel, util) ->
+define ['params!', 'd3', 'jquery', 'e2d3api', 'e2d3model', 'e2d3excel', 'e2d3util', 'e2d3loader'], (params, d3, $, api, model, excel, util, loader) ->
 
   ###*
   # if '?debug' parameter is specified
