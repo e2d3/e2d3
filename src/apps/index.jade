@@ -4,5 +4,14 @@ block vars
   - var title = 'E2D3'
   - var main = 'index.js'
 
+block navleft
+  ul.nav.navbar-nav
+    li.active: a(href='#recommended')
+      i.fa.fa-star
+      |  Recommended
+    li: a(href='#geometory')
+      i.fa.fa-globe
+      |  Geometory
+
 block content
   #contrib.row.grid.cs-style-1

@@ -12,15 +12,13 @@ html
     //- header
     header
       nav.navbar.navbar-default.navbar-fixed-top
-        .container
+        .container-fluid
           .navbar-header
             .navbar-brand(href='index.html')
               img(src='logo.png', width=32, height=20)
           #navbar.collapse.navbar-collapse
-            ul.nav.navbar-nav
-              block navleft
-            ul.nav.navbar-nav.navbar-right
-              block navright
+            block navleft
+            block navright
 
     //- body
     #maincontent.container-fluid
