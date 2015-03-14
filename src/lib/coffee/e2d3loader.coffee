@@ -56,7 +56,7 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
         _data = data;
         _reload();
       },
-      resize: function(data) {
+      resize: function () {
         _dispose();
         _initialize();
       }

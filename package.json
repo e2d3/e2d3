@@ -36,6 +36,7 @@
   "scripts": {
     "postinstall": "bower update",
     "build": "gulp --require coffee-script/register build --release",
+    "watch": "gulp --require coffee-script/register run",
     "start": "gulp --require coffee-script/register run"
   }
 }

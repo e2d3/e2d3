@@ -10,33 +10,21 @@ _main = switch params[1]
   else 'main.js'
 _dataType = params[2]
 
-###
-# config
-###
-require.config
-  baseUrl: _baseUrl
-  paths:
-    JSXTransformer: '/lib/JSXTransformer'
+require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domReady, bootstrap, $, d3, d3Promise, e2d3) ->
+  $('[data-toggle="tooltip"]').tooltip()
 
-###
-# main routine
-###
-require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3', 'e2d3loader!'+_main], (domReady, bootstrap, $, d3, d3Promise, queue, e2d3, main) ->
-  # load css, please ignore 404 error
-  $('<link rel="stylesheet" type="text/css" href="' + _baseUrl + '/main.css" >').appendTo 'head'
-
-  e2d3.initialize()
-    .then (reason) ->
-      domReady initialize
-      undefined # cofeescript promise idiom
-    .catch (err) ->
-      e2d3.onError err
+  createFrame = () ->
+    iframe = document.createElement 'iframe'
+    iframe.src = 'frame.html' + window.location.hash
+    iframe.width = '100%'
+    iframe.height = '100%'
+    iframe.frameBorder = 0
+    iframe.scrolling = 'no'
+    iframe.sandbox = 'allow-same-origin allow-scripts'
+    return iframe
 
   initialize = () ->
-    _chart = main $('#e2d3-chart-area').get(0), _baseUrl
     _binding = null
-
-    $('[data-toggle="tooltip"]').tooltip()
 
     ###
     # bindingの初期化
@@ -62,9 +50,9 @@ require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3',
       if _binding
         _binding.fetchData()
           .then (data) ->
-            _chart.update data
+            _frame.contentWindow.update data
       else
-        _chart.update e2d3.data.empty()
+        _frame.contentWindow.update e2d3.data.empty()
 
     fill = () ->
       d3.promise.text _baseUrl + '/data.' + _dataType
@@ -86,16 +74,20 @@ require ['domReady', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'queue', 'e2d3',
         .catch (err) ->
           e2d3.onError err
 
-
-    $(window).on 'resize', (e) ->
-      if _chart.resize?
-        _chart.resize()
-
-    $('#e2d3-rebind').on 'click', (e) ->
-      rebind()
+    $('#e2d3-rebind').on 'click', (e) -> rebind()
 
     # for development
     if !e2d3.util.isExcel() && e2d3.util.isStandalone()
       fill()
     else
       fill()
+
+  _frame = createFrame()
+
+  frameReadyPromise = new Promise (resolve, reject) -> $(_frame).on 'load', () -> resolve()
+  excelReadyPromise = e2d3.initialize()
+
+  $('#e2d3-frame').append _frame
+
+  Promise.all [frameReadyPromise, excelReadyPromise]
+    .then initialize
