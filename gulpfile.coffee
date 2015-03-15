@@ -68,12 +68,6 @@ gulp.task 'lib', ['clean'], ->
     .pipe gulp.dest 'dist/lib'
 
   # css
-  gulp.src bowerFiles()
-    .pipe filter '**/*.css'
-    .pipe concat 'libs.css'
-    .pipe cond isRelease, minify()
-    .pipe gulp.dest 'dist/lib'
-
   gulp.src 'src/lib/scss/main.scss'
     .pipe plumber()
     .pipe sass()

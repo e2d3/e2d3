@@ -1,3 +1,5 @@
+$font-family-sans-serif: "Segoe UI", "Lucida Grande", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$navbar-height: 40px;
 $icon-font-path: "";
 
 @import "../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap";
@@ -8,7 +10,6 @@ $fa-font-path: ".";
 
 body {
   padding: 6px 15px 6px 6px;
-  margin-bottom: 60px;
 
   header {
     .navbar {
@@ -21,7 +22,7 @@ body {
   }
 
   #maincontent {
-    padding: 60px 15px 0;
+    padding: $navbar-height 15px 0;
   }
 }
 
@@ -57,6 +58,21 @@ body {
   figure {
     border: 1px solid #ccc;
 
+    .cover {
+      background-size: cover;
+      background-position: center center;
+
+      .title {
+        padding: 2px 8px 4px;
+        background-color: rgba(255,255,255,0.8);
+        border-top: 1px solid #ccc;
+        position: absolute;
+        text-align: right;
+        bottom: 0;
+        width: 100%;
+      }
+    }
+
     .outer {
       position: relative;
       width: 100%;
@@ -65,45 +81,75 @@ body {
       overflow-x: hidden;
       overflow-y: hidden;
 
-      img.inner {
+      .inner {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
-        height: auto;
+        height: 100%;
       }
     }
 
-
     figcaption {
+      position: absolute;
+      top: 0;
+      left: 0;
       height: auto;
       width: 400px;
+      padding: 15px;
+      border: 1px solid #AAA;
+      box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
       z-index: 100;
       text-align: left;
-      color: #fff;
-      background-color: rgba(51,51,51,0.8);
+      background-color: #FAFAFA;
       visibility: hidden;
+      opacity: 0;
+      transition: transform 0.3s, opacity 0.3s;
+
+      .action {
+        float: right;
+        margin-left: 10px;
+      }
 
       h1 {
         @extend .h3;
       }
+      h1:first-child {
+        margin-top: 0;
+      }
+
       h2 {
         @extend .h4;
       }
+
       h3 {
         @extend .h5;
       }
+
       table {
         @extend .table;
         @extend .table-bordered;
         font-size: 0.8em;
       }
     }
+
+    &:hover figcaption {
+      visibility: visible;
+      opacity: 1;
+      transform: translate(15px, 15px);
+    }
   }
 
-  figure:hover {
-    figcaption {
-      visibility: visible;
+  > div:nth-child(3n) {
+    figure {
+      figcaption {
+        left: auto;
+        right: 0;
+      }
+
+      &:hover figcaption {
+        transform: translate(-15px, 15px);
+      }
     }
   }
 }
@@ -114,7 +160,7 @@ body {
 //
 #e2d3-frame {
   position: absolute;
-  top: 60px;
+  top: $navbar-height+15px;
   bottom: 0;
   left: 0;
   right: 0;
