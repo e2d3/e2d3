@@ -24,8 +24,6 @@
     "d3": "~3.4.13",
     "underscore": "~1.7.0",
     "queue-async": "~1.0.7",
-    "modernizr": "~2.8.3",
-    "CaptionHoverEffects": "*",
     "markdown": "~0.5.0",
     "font-awesome": "~4.2.0",
     "jquery-deparam": "~0.2.0",
@@ -40,15 +38,6 @@
     },
     "requirejs-text": {
       "main": "text.js"
-    },
-    "modernizr": {
-      "main": "modernizr.js"
-    },
-    "CaptionHoverEffects": {
-      "main": [
-        "js/toucheffects.js",
-        "css/component.css"
-      ]
     },
     "markdown": {
       "main": "lib/markdown.js"

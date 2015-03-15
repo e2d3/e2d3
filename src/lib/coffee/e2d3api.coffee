@@ -44,6 +44,7 @@ define ['jquery', 'underscore', 'd3', 'queue'], ($, _, d3, queue) ->
               extmap = _.object(exts)
 
               charts.push
+                title: baseUrls[i].replace /^\/contrib/, 'e2d3'
                 baseUrl: baseUrls[i]
                 scriptType: extmap['main']
                 dataType: extmap['data']

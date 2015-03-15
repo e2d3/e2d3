@@ -12,8 +12,10 @@ require ['bootstrap', 'd3', 'd3.promise', 'e2d3', 'markdown'], (bootstrap, d3, d
           .each (d, i) ->
             newcell = d3.select(cell.cloneNode(true))
 
-            newcell.select 'img'
-              .attr 'src', d.baseUrl + '/thumbnail.png'
+            newcell.select '.cover'
+              .style 'background-image', "url('#{d.baseUrl}/thumbnail.png')"
+              .select '.title'
+              .text d.title
 
             newcell.select '.readme'
               .each ->
