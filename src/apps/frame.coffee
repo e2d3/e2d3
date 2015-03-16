@@ -31,8 +31,8 @@ require ['domReady!', 'jquery', 'e2d3loader!'+_main], (domReady, $, main) ->
     if _chart.resize?
       _chart.resize()
 
-  window.update = (data) ->
-    _chart.update data
-
-  window.save = () ->
-    _chart.save()
+  window.chart =
+    update: (data) ->
+      _chart.update data
+    save: (data) ->
+      _chart.save()
