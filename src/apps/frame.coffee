@@ -33,3 +33,6 @@ require ['domReady!', 'jquery', 'e2d3loader!'+_main], (domReady, $, main) ->
 
   window.update = (data) ->
     _chart.update data
+
+  window.save = () ->
+    _chart.save()

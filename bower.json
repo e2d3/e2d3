@@ -27,7 +27,8 @@
     "markdown": "~0.5.0",
     "font-awesome": "~4.2.0",
     "jquery-deparam": "~0.2.0",
-    "jsx-requirejs-plugin": "~0.5.2"
+    "jsx-requirejs-plugin": "~0.5.2",
+    "FileSaver": "*"
   },
   "overrides": {
     "requirejs-domready": {
@@ -41,6 +42,9 @@
     },
     "markdown": {
       "main": "lib/markdown.js"
+    },
+    "FileSaver": {
+      "main": "FileSaver.js"
     },
     "font-awesome": {
       "main": "fonts/*"
