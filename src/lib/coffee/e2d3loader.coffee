@@ -1,4 +1,4 @@
-define ['text'], (text) ->
+define ['text', 'coffee-script'], (text, CoffeeScript) ->
   'use strict';
 
   generate = (src, modules) ->
@@ -91,7 +91,7 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
     version: '0.4.0'
 
     load: (name, req, onLoadNative, config) ->
-      req ['coffee-script', 'JSXTransformer'], (CoffeeScript, JSXTransformer) ->
+      req ['JSXTransformer'], (JSXTransformer) ->
         onLoad = (content) ->
           firstLine = (content.split /\r\n|\r|\n/)[0]
 

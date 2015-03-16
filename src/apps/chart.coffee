@@ -10,7 +10,7 @@ _main = switch params[1]
   else 'main.js'
 _dataType = params[2]
 
-require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg', 'e2d3'], (domReady, bootstrap, $, d3, d3Promise, saveAs, canvg, e2d3) ->
+require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domReady, bootstrap, $, d3, d3Promise, e2d3) ->
   $('[data-toggle="tooltip"]').tooltip()
 
   createFrame = () ->
@@ -50,9 +50,9 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'c
       if _binding
         _binding.fetchData()
           .then (data) ->
-            _frame.contentWindow.update data
+            chart().update data
       else
-        _frame.contentWindow.update e2d3.data.empty()
+        chart().update e2d3.data.empty()
 
     fill = () ->
       d3.promise.text _baseUrl + '/data.' + _dataType
@@ -74,44 +74,15 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'c
         .catch (err) ->
           e2d3.onError err
 
-
-    save = (type) ->
-      svg = _frame.contentWindow.save().node()
-      d3.select(svg)
-        .attr
-          version: '1.1'
-          xmlns: 'http://www.w3.org/2000/svg'
-      width = d3.select(svg).attr 'width'
-      height = d3.select(svg).attr 'height'
-
-      svgxml = new XMLSerializer().serializeToString(svg)
-
-      switch type
-        when 'svg' then saveAs toBlobSVG(svgxml), 'image.svg'
-        when 'png' then saveAs toBlobPNG(svgxml, width, height), 'image.png'
-
-    toBlobSVG = (svg) ->
-      new Blob [svg], type: 'image/svg+xml;charset=utf-8'
-
-    toBlobPNG = (svg, width, height) ->
-      canvas = document.createElement 'canvas'
-      canvg canvas, svg
-      dataUrlToBlob canvas.toDataURL 'image/png'
-
-    dataUrlToBlob = (url) ->
-      [all, type, base64] = url.match /^data:(.*);base64,(.*)$/
-      bin = atob base64
-      buffer = new Uint8Array bin.length
-      buffer[i] = bin.charCodeAt i for i in [0...bin.length]
-      new Blob [buffer.buffer], type: type
+    chart = () -> _frame.contentWindow.chart
 
     $('#e2d3-rebind').on 'click', (e) -> rebind()
     $('#e2d3-save-svg').on 'click', (e) ->
       e.preventDefault()
-      save 'svg'
+      e2d3.util.save chart().save().node(), 'svg'
     $('#e2d3-save-png').on 'click', (e) ->
       e.preventDefault()
-      save 'png'
+      e2d3.util.save chart().save().node(), 'png'
 
     # for development
     if !e2d3.util.isExcel() && e2d3.util.isStandalone()

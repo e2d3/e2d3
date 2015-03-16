@@ -19,7 +19,6 @@
     "requirejs-text": "~2.0.13",
     "react": "~0.13.0",
     "coffeescript": "~1.8.0",
-    "require-cs": "~0.5.0",
     "bootstrap-sass-official": "~3.3.0",
     "d3": "~3.4.13",
     "underscore": "~1.7.0",
@@ -34,9 +33,6 @@
   "overrides": {
     "requirejs-domready": {
       "main": "domReady.js"
-    },
-    "require-cs": {
-      "main": "cs.js"
     },
     "requirejs-text": {
       "main": "text.js"
@@ -57,10 +53,7 @@
       "main": "extras/coffee-script.js"
     },
     "react": {
-      "main": [
-        "react.js",
-        "JSXTransformer.js"
-      ]
+      "main": "JSXTransformer.js"
     }
   },
   "resolutions": {
