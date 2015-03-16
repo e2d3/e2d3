@@ -27,26 +27,29 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
 //// ORIGINAL SCRIPT END
 ////
 
-    return update;
+    var _functions = {};
+    if (typeof update !== 'undefined') _functions.update = update;
+    if (typeof save !== 'undefined') _functions.save = save;
+    return _functions;
   }
 
-  return function (node, baseUrl) {
+  return function (root, baseUrl) {
     var _data = null;
-    var _update = null;
+    var _functions = null;
 
     var _reload = function () {
-      if (_data && _update) {
-        _update(_data);
+      if (_data && _functions.update) {
+        _functions.update(_data);
       }
     };
 
     var _initialize = function () {
-      _update = _script(node, baseUrl, _reload);
+      _functions = _script(root, baseUrl, _reload);
       _reload();
     };
 
     var _dispose = function () {
-      d3.select(node).selectAll('*').remove();
+      d3.select(root).selectAll('*').remove();
     };
 
     _initialize();
@@ -59,6 +62,13 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
       resize: function () {
         _dispose();
         _initialize();
+      },
+      save: function () {
+        if (_functions.save) {
+          return _functions.save();
+        } else {
+          return d3.select(root).select('svg');
+        }
       }
     };
 

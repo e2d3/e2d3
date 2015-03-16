@@ -13,6 +13,15 @@ block navleft
 block navright
   ul.nav.navbar-nav.navbar-right
     li
+      .dropdown
+      button#e2d3-save.btn.btn-sm.btn-default.dropdown-toggle.navbar-btn(type='button', data-toggle='dropdown', aria-expanded='true')
+        i.fa.fa-file-image-o
+        |  Save Image&nbsp;
+        spean.caret
+      ul.dropdown-menu(role='menu', aria-labelledby='e2d3-save')
+        li(role='presentation'): a#e2d3-save-svg(role='menuitem', tabindex=-1, href='#', download='image.svg') Save AS SVG
+        li(role='presentation'): a#e2d3-save-png(role='menuitem', tabindex=-1, href='#', download='image.png') Save AS PNG
+    li
       button.btn.btn-sm.btn-default.navbar-btn(type='button' onclick='location.href="index.html"')
         i.fa.fa-home
 
