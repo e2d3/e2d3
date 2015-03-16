@@ -10,7 +10,7 @@ _main = switch params[1]
   else 'main.js'
 _dataType = params[2]
 
-require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'e2d3'], (domReady, bootstrap, $, d3, d3Promise, saveAs, e2d3) ->
+require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg', 'e2d3'], (domReady, bootstrap, $, d3, d3Promise, saveAs, canvg, e2d3) ->
   $('[data-toggle="tooltip"]').tooltip()
 
   createFrame = () ->
@@ -94,14 +94,8 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'e
       new Blob [svg], type: 'image/svg+xml;charset=utf-8'
 
     toBlobPNG = (svg, width, height) ->
-      base64 = btoa unescape encodeURIComponent svg
       canvas = document.createElement 'canvas'
-      context = canvas.getContext '2d'
-      canvas.width = width
-      canvas.height = height
-      image = new Image()
-      image.src = 'data:image/svg+xml;charset=utf-8;base64,' + base64
-      context.drawImage image, 0, 0
+      canvg canvas, svg
       dataUrlToBlob canvas.toDataURL 'image/png'
 
     dataUrlToBlob = (url) ->

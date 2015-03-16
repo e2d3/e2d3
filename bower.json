@@ -28,7 +28,8 @@
     "font-awesome": "~4.2.0",
     "jquery-deparam": "~0.2.0",
     "jsx-requirejs-plugin": "~0.5.2",
-    "FileSaver": "*"
+    "FileSaver": "*",
+    "canvg": "~1.3.0"
   },
   "overrides": {
     "requirejs-domready": {
@@ -45,6 +46,9 @@
     },
     "FileSaver": {
       "main": "FileSaver.js"
+    },
+    "canvg": {
+      "main": "dist/canvg.bundle.js"
     },
     "font-awesome": {
       "main": "fonts/*"
