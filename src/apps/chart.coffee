@@ -55,7 +55,7 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
         chart().update e2d3.data.empty()
 
     fill = () ->
-      d3.promise.text _baseUrl + '/data.' + _dataType
+      d3.promise.text "#{_baseUrl}/data.#{_dataType}"
         .then (text) ->
           e2d3.excel.fill _dataType, text
         .then () ->
@@ -79,10 +79,10 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
     $('#e2d3-rebind').on 'click', (e) -> rebind()
     $('#e2d3-save-svg').on 'click', (e) ->
       e.preventDefault()
-      e2d3.util.save chart().save().node(), 'svg'
+      e2d3.util.save chart().save().node(), 'svg', _baseUrl
     $('#e2d3-save-png').on 'click', (e) ->
       e.preventDefault()
-      e2d3.util.save chart().save().node(), 'png'
+      e2d3.util.save chart().save().node(), 'png', _baseUrl
 
     # for development
     if !e2d3.util.isExcel() && e2d3.util.isStandalone()
