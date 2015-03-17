@@ -35,8 +35,6 @@ gulp.task 'clean', (cb) ->
 gulp.task 'lib', ['clean'], ->
   # js
   options =
-    paths:
-      'canvg': 'bower_components/canvg/dist/canvg.bundle'
     shim:
       'bootstrap':
         deps: ['jquery']

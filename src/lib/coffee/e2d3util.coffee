@@ -1,4 +1,4 @@
-define ['params!', 'jquery', 'd3', 'FileSaver', 'canvg'], (params, $, d3, saveAs, canvg) ->
+define ['params!', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], (params, $, d3, d3Promise, saveAs, canvg) ->
   class E2D3Util
     isExcel: () ->
       !!Office.context.document
@@ -16,16 +16,25 @@ define ['params!', 'jquery', 'd3', 'FileSaver', 'canvg'], (params, $, d3, saveAs
       results = new RegExp("[\?&]#{name}(=([^&#]*))?").exec(window.location.search);
       if results == null then null else results[2]
 
-    save: (svgnode, type, filename='image') ->
-      # should deep-clone node (but cannot on IE)
-      d3.select(svgnode)
-        .attr
-          version: '1.1'
-          xmlns: 'http://www.w3.org/2000/svg'
+    save: (svgnode, type, baseUrl, filename='image') ->
+      d3.promise.text "#{baseUrl}/main.css"
+        .then (css) =>
+          @saveWithCSS svgnode, type, baseUrl, filename, css
+        .catch (err) =>
+          @saveWithCSS svgnode, type, baseUrl, filename, null
+
+    saveWithCSS: (svgnode, type, basUrl, filename, css) ->
       width = d3.select(svgnode).attr 'width'
       height = d3.select(svgnode).attr 'height'
 
+      svgnode = svgnode.cloneNode true
+
+      d3.select(svgnode)
+        .attr version: '1.1', xmlns: 'http://www.w3.org/2000/svg'
+        .insert 'defs', ':first-child'
+
       svgxml = new XMLSerializer().serializeToString(svgnode)
+      svgxml = svgxml.replace /<defs ?\/>/, """<defs><style type="text/css"><![CDATA[#{css}]]></style></defs>""" if css?
 
       switch type
         when 'svg' then saveAs @toBlobSVG(svgxml), "#{filename}.svg"
