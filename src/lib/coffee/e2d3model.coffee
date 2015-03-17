@@ -5,6 +5,9 @@ define ['d3'], (d3) ->
     desc.enumerable = false
     Object.defineProperty obj, name, desc
 
+  isNumber = (value) ->
+    typeof value == 'number'
+
   ###
   # 単純な2次元配列
   ###
@@ -32,7 +35,7 @@ define ['d3'], (d3) ->
       values = []
       for row in @
         for value in row
-          values.push +value if $.isNumeric value
+          values.push value if isNumber value
       values
 
     ###
@@ -86,7 +89,7 @@ define ['d3'], (d3) ->
       values = []
       for row in @
         for name, value of row
-          values.push +value if $.isNumeric value
+          values.push value if isNumber value
       values
 
   ###
@@ -130,7 +133,7 @@ define ['d3'], (d3) ->
       values = []
       for own key, row of @
         for own name, value of row
-          values.push +value if $.isNumeric(value)
+          values.push value if isNumber(value)
       values
 
   unenumerable ChartDataKeyValueMap.prototype, 'values'
@@ -184,7 +187,7 @@ define ['d3'], (d3) ->
       values = []
       for own key, row of @
         for own name, value of row
-          values.push +value if $.isNumeric(value)
+          values.push value if isNumber(value)
       values
 
   ###

@@ -22,9 +22,9 @@ define ['params!', 'd3', 'e2d3model', 'e2d3util'], (params, d3, model, util) ->
 
     fetchData: () ->
       new Promise (resolve, reject) =>
-        @binding.getDataAsync valueFormat: Office.ValueFormat.Unformatted, (result) ->
+        @binding.getDataAsync valueFormat: Office.ValueFormat.Formatted, (result) ->
           if result.status == Office.AsyncResultStatus.Succeeded
-            resolve new ChartDataTable result.value
+            resolve new ChartDataTable normalizeDataType result.value
           else
             resolve new ChartDataTable []
 
