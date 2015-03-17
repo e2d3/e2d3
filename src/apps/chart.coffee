@@ -1,5 +1,10 @@
 params = window.location.hash.substring(1).split ','
 
+# HACKED: prevent LiveReload shutdowning parent's LiveReload
+document.addEventListener 'LiveReloadConnect', () ->
+  LiveReload.__proto__.shutDown = () ->
+    # noop
+
 ###
 # load parameters
 ###
