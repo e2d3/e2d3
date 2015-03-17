@@ -1,6 +1,18 @@
 define ['params!', 'd3', 'e2d3model', 'e2d3util'], (params, d3, model, util) ->
   ChartDataTable = model.ChartDataTable
 
+  REGEXP_NUMBER = /^[-+]?(\d{1,3}(,?\d{3})*(\.\d+)?|\.\d+)([eE][-+]?\d+)?$/
+
+  normalizeDataType = (rows) ->
+    for row in rows
+      for value, i in row
+        if REGEXP_NUMBER.test value
+          row[i] = +(value.replace /,/, '')
+    rows
+
+  ###
+  # Excel API
+  ###
   class Binding
     constructor: (@binding) ->
 
@@ -71,7 +83,7 @@ define ['params!', 'd3', 'e2d3model', 'e2d3util'], (params, d3, model, util) ->
   class DummyExcelAPI
     fill: (type, text, callback) ->
       new Promise (resolve, reject) ->
-        @rows = d3[type].parseRows text
+        @rows = normalizeDataType d3[type].parseRows text
         resolve()
 
     bindSelected: (callback) ->
