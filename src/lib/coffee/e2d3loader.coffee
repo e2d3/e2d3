@@ -1,4 +1,4 @@
-define ['text'], (text) ->
+define ['text', 'coffee-script', 'vlq'], (text, CoffeeScript, vlq) ->
   'use strict';
 
   generate = (src, modules) ->
@@ -91,21 +91,46 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
     version: '0.4.0'
 
     load: (name, req, onLoadNative, config) ->
-      req ['coffee-script', 'JSXTransformer'], (CoffeeScript, JSXTransformer) ->
+      req ['JSXTransformer'], (JSXTransformer) ->
         onLoad = (content) ->
-          firstLine = (content.split /\r\n|\r|\n/)[0]
+          lines = content.split /\r\n|\r|\n/
+          mappingsPrefix = ';;;;;;;;'
+
+          srcmap =
+            version: 3
+            file: 'evaluated'
+            sourceRoot: config.baseUrl
+            sources: [name]
+            sourcesContent: [content]
+            names: []
 
           try
             if /.coffee$/.test name
-              options = bare: true, header: false, inline: true
-              content = CoffeeScript.compile(content, options)
+              options =
+                bare: true
+                header: false
+                inline: true
+                sourceMap: true
+              compiled = CoffeeScript.compile(content, options)
+              content = compiled.js
+              originalSourceMap = JSON.parse(compiled.v3SourceMap)
+              srcmap.mappings = mappingsPrefix + originalSourceMap.mappings
             else if /.jsx$/.test name
-              options = {}
-              content = JSXTransformer.transform(content, options).code
+              compiled = JSXTransformer.transform content, sourceMap: true
+              content = compiled.code
+              srcmap.mappings = mappingsPrefix + compiled.sourceMap.mappings
+            else
+              vlqs = for i in [0...lines.length]
+                diff = if i == 0 then 0 else 1
+                vlq.encode [0, 0, diff, 0]
+              srcmap.mappings = mappingsPrefix + vlqs.join ';'
           catch err
-            onLoadNative.error err
+            console.error err
 
-          content = transform content, firstLine
+          content = transform content, lines[0]
+
+          sourceMapping = btoa unescape encodeURIComponent JSON.stringify srcmap
+          content += "\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,#{sourceMapping}"
 
           onLoadNative.fromText content
 

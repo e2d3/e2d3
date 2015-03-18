@@ -9,7 +9,7 @@ define ['jquery', 'underscore', 'd3', 'queue'], ($, _, d3, queue) ->
   server =
     topcharts: () ->
       new Promise (resolve, reject) ->
-        d3.json apiBaseUrl + '/users', (error, json) ->
+        d3.json apiBaseUrl + '/categories/github/e2d3/e2d3-contrib', (error, json) ->
           reject error if error
           resolve json.charts
 
@@ -44,7 +44,7 @@ define ['jquery', 'underscore', 'd3', 'queue'], ($, _, d3, queue) ->
               extmap = _.object(exts)
 
               charts.push
-                title: baseUrls[i].replace /^\/contrib/, 'e2d3'
+                title: baseUrls[i].replace /^\/contrib/, 'e2d3/e2d3-contrib'
                 baseUrl: baseUrls[i]
                 scriptType: extmap['main']
                 dataType: extmap['data']
