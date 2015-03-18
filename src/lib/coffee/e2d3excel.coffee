@@ -1,15 +1,6 @@
 define ['params!', 'd3', 'e2d3model', 'e2d3util'], (params, d3, model, util) ->
   ChartDataTable = model.ChartDataTable
 
-  REGEXP_NUMBER = /^[-+]?(\d{1,3}(,?\d{3})*(\.\d+)?|\.\d+)([eE][-+]?\d+)?$/
-
-  normalizeDataType = (rows) ->
-    for row in rows
-      for value, i in row
-        if REGEXP_NUMBER.test value
-          row[i] = +(value.replace /,/, '')
-    rows
-
   ###
   # Excel API
   ###
@@ -24,7 +15,7 @@ define ['params!', 'd3', 'e2d3model', 'e2d3util'], (params, d3, model, util) ->
       new Promise (resolve, reject) =>
         @binding.getDataAsync valueFormat: Office.ValueFormat.Formatted, (result) ->
           if result.status == Office.AsyncResultStatus.Succeeded
-            resolve new ChartDataTable normalizeDataType result.value
+            resolve new ChartDataTable result.value
           else
             resolve new ChartDataTable []
 
@@ -83,7 +74,7 @@ define ['params!', 'd3', 'e2d3model', 'e2d3util'], (params, d3, model, util) ->
   class DummyExcelAPI
     fill: (type, text, callback) ->
       new Promise (resolve, reject) ->
-        @rows = normalizeDataType d3[type].parseRows text
+        @rows = d3[type].parseRows text
         resolve()
 
     bindSelected: (callback) ->
