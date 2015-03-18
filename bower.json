@@ -21,12 +21,10 @@
     "coffeescript": "~1.8.0",
     "bootstrap-sass-official": "~3.3.0",
     "d3": "~3.4.13",
-    "underscore": "~1.7.0",
     "queue-async": "~1.0.7",
     "markdown": "~0.5.0",
     "font-awesome": "~4.2.0",
     "jquery-deparam": "~0.2.0",
-    "jsx-requirejs-plugin": "~0.5.2",
     "FileSaver": "*",
     "canvg-gabelerner": "*",
     "vlq": "~0.2.0"

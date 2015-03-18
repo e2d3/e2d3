@@ -1,10 +1,10 @@
-define ['jquery', 'underscore', 'd3', 'queue'], ($, _, d3, queue) ->
+define ['jquery', 'd3', 'queue'], ($, d3, queue) ->
   apiBaseUrl = '/api'
 
   # served from gulp-webserver
   isStandalone = $('script[src*=":35730/livereload.js"]').length != 0
 
-  console.log 'mode: standalone' if isStandalone
+  console.info 'mode: standalone' if isStandalone
 
   server =
     topcharts: () ->
@@ -34,14 +34,13 @@ define ['jquery', 'underscore', 'd3', 'queue'], ($, _, d3, queue) ->
             for html, i in htmls
               files = $(html).find('a').map(() -> $(this).attr('href')).filter((i) -> i != 0).get()
 
-              exts = _(files)
+              extmap = files
                 .map (file) ->
                   result = /([^/\.]+)\.([^/\.]+)$/.exec file
                   if result then [result[1], result[2]] else null
                 .filter (name) -> name != null
                 .map (file) -> file
-
-              extmap = _.object(exts)
+                .reduce ((obj, data) -> obj[data[0]] = data[1]; obj), {}
 
               charts.push
                 title: baseUrls[i].replace /^\/contrib/, 'e2d3/e2d3-contrib'

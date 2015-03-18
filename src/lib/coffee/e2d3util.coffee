@@ -1,7 +1,17 @@
 define ['params!', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], (params, $, d3, d3Promise, saveAs, canvg) ->
+  isExcel =
+    try
+      if window.external.GetContext()?
+        true
+      else
+        false
+    catch err
+      false
+
+
   class E2D3Util
     isExcel: () ->
-      !!Office.context.document
+      isExcel
 
     isDevelopment: () ->
       $('script[src*="livereload.js"]').length != 0
@@ -54,5 +64,37 @@ define ['params!', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], (params,
       buffer = new Uint8Array bin.length
       buffer[i] = bin.charCodeAt i for i in [0...bin.length]
       new Blob [buffer.buffer], type: type
+
+    ###*
+    # if '?debug' parameter is specified
+    # change `console.log()`'s output to popup dialog
+    ###
+    setConsoleToPopup: () ->
+      return if !@isDebugEnabled()
+
+      $('#log').on 'click', () ->
+        clearTimeout $('#log').data 'timer'
+        $('#log').stop(true, true).fadeOut(100)
+
+      print = (msg) ->
+        return if (msg + '').indexOf('Agave.HostCall.') == 0
+
+        $('#log').append($('<div>').text(JSON.stringify(msg)))
+
+        # you can't use `$.delay()`
+        # http://stackoverflow.com/questions/3329197/jquery-delay-or-timeout-with-stop
+        clearTimeout($('#log').data('timer'))
+        $('#log').stop(true, true)
+          .fadeIn 100, () ->
+            $('#log').get(0).scrollTop = $('#log').get(0).scrollHeight
+            $('#log').data 'timer', setTimeout () ->
+              $('#log').stop(true, true).fadeOut(500)
+            , 5000
+
+      window.onerror = (message, url, line) ->
+        print "#{message} (#{url}:#{line})"
+
+      console.log = print
+      console.error = print
 
   new E2D3Util()

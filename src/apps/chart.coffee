@@ -28,6 +28,8 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
     iframe.sandbox = 'allow-same-origin allow-scripts'
     return iframe
 
+  chart = () -> _frame?.contentWindow?.chart
+
   initialize = () ->
     _binding = null
 
@@ -42,7 +44,7 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
       if oldbinding?
         oldbinding.release()
           .then () ->
-            undefined
+            undefined # cofeescript promise idiom
           .catch (err) ->
             e2d3.onError err
 
@@ -56,6 +58,9 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
         _binding.fetchData()
           .then (data) ->
             chart().update data
+            undefined # cofeescript promise idiom
+          .catch (err) ->
+            e2d3.onError err
       else
         chart().update e2d3.data.empty()
 
@@ -79,15 +84,15 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
         .catch (err) ->
           e2d3.onError err
 
-    chart = () -> _frame.contentWindow.chart
-
     $('#e2d3-rebind').on 'click', (e) -> rebind()
     $('#e2d3-save-svg').on 'click', (e) ->
       e.preventDefault()
-      e2d3.util.save chart().save().node(), 'svg', _baseUrl
+      node = chart().save().node()
+      e2d3.util.save chart().save().node(), 'svg', _baseUrl if node
     $('#e2d3-save-png').on 'click', (e) ->
       e.preventDefault()
-      e2d3.util.save chart().save().node(), 'png', _baseUrl
+      node = chart().save().node()
+      e2d3.util.save chart().save().node(), 'png', _baseUrl if node
 
     # for development
     if !e2d3.util.isExcel() && e2d3.util.isStandalone()
@@ -97,7 +102,14 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
 
   _frame = createFrame()
 
-  frameReadyPromise = new Promise (resolve, reject) -> $(_frame).on 'load', () -> resolve()
+  frameReadyPromise = new Promise (resolve, reject) ->
+    checkframe = () ->
+      if chart()?
+        resolve()
+      else
+        setTimeout checkframe, 100
+    checkframe()
+  
   excelReadyPromise = e2d3.initialize()
 
   $('#e2d3-frame').append _frame
