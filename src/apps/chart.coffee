@@ -24,9 +24,12 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
     return iframe
 
   chart = () -> _frame?.contentWindow?.chart
+  debug = () -> _frame?.contentWindow?.debug
 
   initialize = () ->
     _binding = null
+
+    debug().setupDebugConsole() if e2d3.util.isDebugEnabled()
 
     ###
     # bindingの初期化

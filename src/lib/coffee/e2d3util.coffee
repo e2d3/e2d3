@@ -1,13 +1,10 @@
 define ['params!', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], (params, $, d3, d3Promise, saveAs, canvg) ->
+  # this works only on top frame
   isExcel =
     try
-      if window.external.GetContext()?
-        true
-      else
-        false
+      window.external.GetContext()?
     catch err
       false
-
 
   class E2D3Util
     isExcel: () ->
@@ -69,9 +66,7 @@ define ['params!', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], (params,
     # if '?debug' parameter is specified
     # change `console.log()`'s output to popup dialog
     ###
-    setConsoleToPopup: () ->
-      return if !@isDebugEnabled()
-
+    setupDebugConsole: () ->
       $('#log').on 'click', () ->
         clearTimeout $('#log').data 'timer'
         $('#log').stop(true, true).fadeOut(100)
@@ -95,6 +90,7 @@ define ['params!', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], (params,
         print "#{message} (#{url}:#{line})"
 
       console.log = print
+      console.info = print
       console.error = print
 
   new E2D3Util()
