@@ -24,6 +24,7 @@ html
         z-index: 10000;
         padding: 4px;
         border: 1px #ddd solid;
+        text-align: left;
         overflow-x: hidden;
         overflow-y: scroll;
         display: none;
@@ -31,8 +32,4 @@ html
   body
     section#e2d3-chart-area
     #log.log
-    script(src='https://www.promisejs.org/polyfills/promise-6.0.1.min.js')
-    script(src='https://www.promisejs.org/polyfills/promise-done-6.0.1.min.js')
-    script(src='https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js')
-    //- load if variable 'main' is defined
     script(src='lib/libs.js', data-main='frame.js')

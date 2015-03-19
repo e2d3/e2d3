@@ -18,21 +18,34 @@ require.config
   paths:
     JSXTransformer: '/lib/JSXTransformer'
 
+requirejs.onError = (err) ->
+  if err?.requireType == "fromtexteval"
+    console.error err.message.split(/\n/)[0]
+  else if err?.requireType == "timeout"
+    # noop
+  else
+    throw err
+
 ###
 # main routine
 ###
-require ['domReady!', 'jquery', 'e2d3loader!'+_main], (domReady, $, main) ->
+require ['domReady!', 'jquery', 'e2d3util', 'e2d3loader!'+_main], (domReady, $, util, main) ->
   # load css, please ignore 404 error
   $('<link rel="stylesheet" type="text/css" href="' + _baseUrl + '/main.css" >').appendTo 'head'
 
-  _chart = main $('#e2d3-chart-area').get(0), _baseUrl
+  util.setConsoleToPopup()
+
+  _chart =
+    if main?
+      main $('#e2d3-chart-area').get(0), _baseUrl
+    else
+      {}
 
   $(window).on 'resize', (e) ->
-    if _chart.resize?
-      _chart.resize()
+    _chart.resize() if _chart.resize?
 
   window.chart =
     update: (data) ->
-      _chart.update data
-    save: (data) ->
-      _chart.save()
+      _chart.update data if _chart.update?
+    save: () ->
+      _chart.save() if _chart.save?
