@@ -1,10 +1,5 @@
 params = window.location.hash.substring(1).split ','
 
-# HACKED: prevent LiveReload shutdowning parent's LiveReload
-document.addEventListener 'LiveReloadConnect', () ->
-  LiveReload.__proto__.shutDown = () ->
-    # noop
-
 ###
 # load parameters
 ###
@@ -109,7 +104,7 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
       else
         setTimeout checkframe, 100
     checkframe()
-  
+
   excelReadyPromise = e2d3.initialize()
 
   $('#e2d3-frame').append _frame

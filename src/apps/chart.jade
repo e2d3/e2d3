@@ -4,12 +4,17 @@ block vars
   - var title = 'E2D3'
   - var main = 'chart.js'
 
-block style
+block head
   style.
     body {
       overflow: hidden;
       -ms-overflow-style: none;
     }
+  script.
+    // HACKED: prevent LiveReload shutdowning parent's LiveReload
+    document.addEventListener('LiveReloadConnect', function () {
+      LiveReload.__proto__.shutDown = function () { /* noop */ };
+    });
 
 block navleft
   ul.nav.navbar-nav
