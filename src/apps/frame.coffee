@@ -33,8 +33,6 @@ require ['domReady!', 'jquery', 'e2d3util', 'e2d3loader!'+_main], (domReady, $, 
   # load css, please ignore 404 error
   $('<link rel="stylesheet" type="text/css" href="' + _baseUrl + '/main.css" >').appendTo 'head'
 
-  util.setConsoleToPopup()
-
   _chart =
     if main?
       main $('#e2d3-chart-area').get(0), _baseUrl
@@ -44,6 +42,9 @@ require ['domReady!', 'jquery', 'e2d3util', 'e2d3loader!'+_main], (domReady, $, 
   $(window).on 'resize', (e) ->
     _chart.resize() if _chart.resize?
 
+  window.debug =
+    setupDebugConsole: () ->
+      util.setupDebugConsole()
   window.chart =
     update: (data) ->
       _chart.update data if _chart.update?

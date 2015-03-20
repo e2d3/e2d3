@@ -45,18 +45,13 @@ gulp.task 'lib', ['clean'], ->
 
   merge(
     gulp.src 'bower_components/requirejs/require.js'
-      .pipe sourcemaps.init()
     merge(
       gulp.src bowerFiles()
         .pipe filter '**/*.js'
-        .pipe sourcemaps.init()
       gulp.src 'src/misc/libs.js'
-        .pipe sourcemaps.init()
       gulp.src 'src/lib/js/*.js'
-        .pipe sourcemaps.init()
       gulp.src 'src/lib/coffee/*.coffee'
         .pipe plumber()
-        .pipe sourcemaps.init()
         .pipe coffee()
       )
       .pipe amd 'libs', options
@@ -65,7 +60,6 @@ gulp.task 'lib', ['clean'], ->
     .pipe order ['**/require.js', '**/libs.js']
     .pipe concat 'libs.js'
     .pipe cond isRelease, uglify preserveComments: 'some'
-    .pipe sourcemaps.write()
     .pipe gulp.dest 'dist/lib'
 
   merge(
