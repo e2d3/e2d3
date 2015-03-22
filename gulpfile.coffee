@@ -2,7 +2,7 @@ gulp = require 'gulp'
 gutil = require 'gulp-util'
 debug = require 'gulp-debug'
 
-rimraf = require 'rimraf'
+del = require 'del'
 merge = require 'merge2'
 
 cond = require 'gulp-if'
@@ -28,7 +28,7 @@ isFirst = true
 gulp.task 'clean', (cb) ->
   if isFirst
     isFirst = false
-    rimraf 'dist', cb
+    del ['dist/**/*'], cb
   else
     cb()
 
@@ -85,7 +85,7 @@ gulp.task 'apps', ['clean'], ->
   merge(
     gulp.src 'src/apps/**/*.jade'
       .pipe plumber()
-      .pipe jade()
+      .pipe jade pretty: true
     gulp.src 'src/apps/**/*.coffee'
       .pipe plumber()
       .pipe sourcemaps.init()
