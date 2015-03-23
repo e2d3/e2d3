@@ -92,11 +92,7 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
       node = chart().save().node()
       e2d3.util.save chart().save().node(), 'png', _baseUrl if node
 
-    # for development
-    if !e2d3.util.isExcel() && e2d3.util.isStandalone()
-      fill()
-    else
-      fill()
+    fill()
 
   _frame = createFrame()
 

@@ -1,14 +1,17 @@
 define ['params!', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], (params, $, d3, d3Promise, saveAs, canvg) ->
   # this works only on top frame
-  isExcel =
+  isNativeExcel =
     try
       window.external.GetContext()?
     catch err
       false
 
+  isOffice365Excel =
+    window.parent != window
+
   class E2D3Util
     isExcel: () ->
-      isExcel
+      isNativeExcel || isOffice365Excel
 
     isDevelopment: () ->
       $('script[src*="livereload.js"]').length != 0
