@@ -2,7 +2,7 @@ gulp = require 'gulp'
 gutil = require 'gulp-util'
 debug = require 'gulp-debug'
 
-del = require 'del'
+rimraf = require 'rimraf'
 merge = require 'merge2'
 
 cond = require 'gulp-if'
@@ -28,7 +28,7 @@ isFirst = true
 gulp.task 'clean', (cb) ->
   if isFirst
     isFirst = false
-    del ['dist/**/*'], cb
+    rimraf 'dist', cb
   else
     cb()
 
