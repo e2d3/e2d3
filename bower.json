@@ -27,7 +27,8 @@
     "jquery-deparam": "~0.2.0",
     "FileSaver": "*",
     "canvg-gabelerner": "*",
-    "vlq": "~0.2.0"
+    "vlq": "~0.2.0",
+    "requirejs-plugins": "~1.0.3"
   },
   "overrides": {
     "requirejs-domready": {
