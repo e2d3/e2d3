@@ -1,5 +1,9 @@
 define([
   'domReady',
+  'async',
+  'font',
+  'goog',
+  'image',
   'text',
   'params',
   'bootstrap',

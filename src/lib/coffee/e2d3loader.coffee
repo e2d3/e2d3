@@ -2,15 +2,26 @@ define ['text', 'coffee-script', 'vlq'], (text, CoffeeScript, vlq) ->
   'use strict';
 
   generate = (src, modules) ->
-    moduleMap = (module) ->
-      switch module
-        when 'jquery' then '$'
-        when 'lodash' then '_'
-        when 'react' then 'React'
-        else module
+    nameMap =
+      jquery: '$'
+      lodash: '_'
 
-    moduleNames = modules.map(moduleMap).join(',')
-    moduleNamesWithQuote = modules.map((module) -> "'#{module}'").join(',')
+    moduleNameMap = (module) ->
+      idx = module.indexOf('=')
+      if idx != -1
+        module[0...idx]
+      else
+        nameMap[module] ? module
+
+    moduleMap = (module) ->
+      idx = module.indexOf('=')
+      if idx != -1
+        "'#{module[(idx+1)..-1]}'"
+      else
+        "'#{module}'"
+
+    moduleNames = modules.map(moduleNameMap).join(',')
+    moduleNamesWithQuote = modules.map(moduleMap).join(',')
 
     """
 define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
