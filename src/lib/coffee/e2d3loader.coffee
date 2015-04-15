@@ -5,6 +5,7 @@ define ['text', 'coffee-script', 'vlq'], (text, CoffeeScript, vlq) ->
     nameMap =
       jquery: '$'
       lodash: '_'
+      react: 'React'
 
     moduleNameMap = (module) ->
       idx = module.indexOf('=')
