@@ -10,7 +10,7 @@ filter = require 'gulp-filter'
 order = require 'gulp-order'
 concat = require 'gulp-concat'
 
-webserver = require 'gulp-webserver'
+server = require 'gulp-develop-server'
 plumber = require 'gulp-plumber'
 bowerFiles = require 'main-bower-files'
 sourcemaps = require 'gulp-sourcemaps'
@@ -32,8 +32,7 @@ gulp.task 'clean', (cb) ->
   else
     cb()
 
-gulp.task 'lib', ['clean'], ->
-  # js
+gulp.task 'lib-scripts', ['clean'], ->
   options =
     shim:
       'bootstrap':
@@ -62,13 +61,14 @@ gulp.task 'lib', ['clean'], ->
     .pipe cond isRelease, uglify preserveComments: 'some'
     .pipe gulp.dest 'dist/lib'
 
+gulp.task 'lib-scripts-jsx', ['clean'], ->
   merge(
     gulp.src 'bower_components/react/JSXTransformer.js'
     )
     .pipe cond isRelease, uglify preserveComments: 'some'
     .pipe gulp.dest 'dist/lib'
 
-  # css
+gulp.task 'lib-styles', ['clean'], ->
   gulp.src 'src/lib/scss/main.scss'
     .pipe plumber()
     .pipe sass()
@@ -76,50 +76,61 @@ gulp.task 'lib', ['clean'], ->
     .pipe cond isRelease, minify()
     .pipe gulp.dest 'dist/lib'
 
-  # misc
+gulp.task 'lib-files', ['clean'], ->
   gulp.src bowerFiles()
     .pipe filter ['**/*', '!**/*.js', '!**/*.coffee', '!**/*.css', '!**/*.scss']
     .pipe gulp.dest 'dist/lib'
 
-gulp.task 'apps', ['clean'], ->
-  merge(
-    gulp.src 'src/apps/**/*.jade'
-      .pipe plumber()
-      .pipe jade pretty: true
-    gulp.src 'src/apps/**/*.coffee'
-      .pipe plumber()
-      .pipe sourcemaps.init()
-      .pipe coffee()
-      .pipe sourcemaps.write()
-    gulp.src 'src/apps/**/*'
-      .pipe plumber()
-      .pipe filter ['**/*', '!**/*.jade', '!**/*.coffee']
-    )
+gulp.task 'html', ['clean'], ->
+  gulp.src 'src/apps/**/*.jade'
+    .pipe plumber()
+    .pipe jade pretty: true
     .pipe gulp.dest 'dist'
 
-gulp.task 'contrib', ['clean'], ->
-  gulp.src 'contrib/**/*'
-    .pipe gulp.dest 'dist/contrib'
+gulp.task 'scripts', ['clean'], ->
+  gulp.src 'src/apps/**/*.coffee'
+    .pipe plumber()
+    .pipe sourcemaps.init()
+    .pipe coffee()
+    .pipe sourcemaps.write()
+    .pipe gulp.dest 'dist'
 
-gulp.task 'build', ['lib', 'apps', 'contrib']
+gulp.task 'files', ['clean'], ->
+  gulp.src 'src/apps/**/*'
+    .pipe plumber()
+    .pipe filter ['**/*', '!**/*.jade', '!**/*.coffee']
+    .pipe gulp.dest 'dist'
+
+gulp.task 'lib', ['lib-scripts', 'lib-scripts-jsx', 'lib-styles', 'lib-files']
+
+gulp.task 'apps', ['html', 'scripts', 'files']
+
+gulp.task 'build', ['lib', 'apps']
 
 gulp.task 'watch', ['build'], ->
   gulp.watch 'src/lib/**/*', ['lib']
   gulp.watch 'src/apps/**/*', ['apps']
-  gulp.watch 'contrib/**/*', ['contrib']
+  gulp.watch ['dist/**/*', 'contrib/**/*', 'server.js'], notifyLivereload
+
+gulp.task 'watch-server', ['build'], ->
+  gulp.watch 'src/lib/**/*', ['lib']
+  gulp.watch 'src/apps/**/*', ['apps']
 
 gulp.task 'run', ['watch'], ->
-  gulp.src 'dist'
-    .pipe webserver
-      host: '0.0.0.0'
-      port: 8000
-      livereload:
-        enable: true
-        port: 35730
-      directoryListing:
-        enable: true
-        path: 'dist'
-        options:
-          template: 'src/misc/serve-index.tmpl'
+  startExpress()
+  startLivereload()
 
 gulp.task 'default', ['build']
+
+startExpress = () ->
+  server.listen path: 'server.js'
+
+lr = null
+startLivereload = () ->
+  lr = (require 'tiny-lr')()
+  lr.listen 35730
+
+notifyLivereload = (event) ->
+  server.restart (error) ->
+    if !error
+      lr.changed body: files: ['dummy']
