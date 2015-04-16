@@ -16,38 +16,8 @@ define ['jquery', 'd3', 'queue'], ($, d3, queue) ->
   standalone =
     topcharts: () ->
       new Promise (resolve, reject) ->
-        d3.html '/contrib/', (error, html) ->
+        d3.json apiBaseUrl + '/categories/develop', (error, json) ->
           reject error if error
-
-          baseUrls = $(html).find('a').map(() -> $(this).attr('href')).filter((i) -> i != 0).get()
-
-          q = queue()
-
-          for baseUrl in baseUrls
-            q = q.defer d3.html, baseUrl
-
-          q.await () ->
-            error = arguments[0]
-            htmls = [].slice.call arguments, 1
-
-            charts = []
-            for html, i in htmls
-              files = $(html).find('a').map(() -> $(this).attr('href')).filter((i) -> i != 0).get()
-
-              extmap = files
-                .map (file) ->
-                  result = /([^/\.]+)\.([^/\.]+)$/.exec file
-                  if result then [result[1], result[2]] else null
-                .filter (name) -> name != null
-                .map (file) -> file
-                .reduce ((obj, data) -> obj[data[0]] = data[1]; obj), {}
-
-              charts.push
-                title: baseUrls[i].replace /^\/contrib/, 'e2d3/e2d3-contrib'
-                baseUrl: baseUrls[i]
-                scriptType: extmap['main']
-                dataType: extmap['data']
-
-            resolve charts
+          resolve json.charts
 
   if isStandalone then standalone else server
