@@ -29,7 +29,8 @@
     "gulp-util": "~3.0.4",
     "main-bower-files": "~2.6.2",
     "merge2": "~0.3.4",
-    "rimraf": "~2.3.2"
+    "rimraf": "~2.3.2",
+    "tiny-lr": "~0.1.5"
   },
   "devDependencies": {},
   "engines": {
