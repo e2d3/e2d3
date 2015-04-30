@@ -17,17 +17,13 @@
     "requirejs": "~2.1.15",
     "requirejs-domready": "~2.0.1",
     "requirejs-text": "~2.0.13",
-    "react": "~0.13.0",
-    "coffeescript": "~1.9.1",
     "bootstrap-sass-official": "~3.3.0",
     "d3": "~3.5.5",
-    "queue-async": "~1.0.7",
     "markdown": "~0.5.0",
     "font-awesome": "~4.3.0",
     "jquery-deparam": "~0.3.0",
     "FileSaver": "*",
     "canvg-gabelerner": "*",
-    "vlq": "~0.2.0",
     "requirejs-plugins": "~1.0.3"
   },
   "overrides": {
@@ -45,12 +41,6 @@
     },
     "font-awesome": {
       "main": "fonts/*"
-    },
-    "coffeescript": {
-      "main": "extras/coffee-script.js"
-    },
-    "react": {
-      "main": "JSXTransformer.js"
     }
   }
 }

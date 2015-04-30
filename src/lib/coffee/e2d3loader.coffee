@@ -1,4 +1,4 @@
-define ['text', 'coffee-script', 'vlq'], (text, CoffeeScript, vlq) ->
+define ['text'], (text) ->
   'use strict';
 
   generate = (src, modules) ->
@@ -24,7 +24,7 @@ define ['text', 'coffee-script', 'vlq'], (text, CoffeeScript, vlq) ->
     moduleNames = modules.map(moduleNameMap).join(',')
     moduleNamesWithQuote = modules.map(moduleMap).join(',')
 
-    """
+    wrapped = """
 define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
 
   var _script = function (root, baseUrl, reload) {
@@ -88,6 +88,7 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
   };
 });
 """
+    wrapped
 
   transform = (content, firstLine) ->
     # extract module names
@@ -99,55 +100,65 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
       modules = ['d3']
     generate content, modules
 
+  compileJavaScript = (req, content, callback) ->
+    lines = content.split /\r\n|\r|\n/
+    vlqs = for i in [0...lines.length]
+      if i == 0 then 'AAAA' else 'AACA'
+    script = content
+    mappings = vlqs.join ';'
+    callback script, mappings
+
+  compileCoffeeScript = (req, content, callback) ->
+    req ['coffee-script'], (CoffeeScript) ->
+      options = bare: true, header: false, inline: true, sourceMap: true
+      compiled = CoffeeScript.compile(content, options)
+      script = compiled.js
+      mappings = JSON.parse(compiled.v3SourceMap).mappings
+      callback script, mappings
+
+  compileJSX = (req, content, callback) ->
+    req ['JSXTransformer'], (JSXTransformer) ->
+      compiled = JSXTransformer.transform content, sourceMap: true
+      script = compiled.code
+      mappings = compiled.sourceMap.mappings
+      callback script, mappings
+
   e2d3loader =
     version: '0.4.0'
 
     load: (name, req, onLoadNative, config) ->
-      req ['JSXTransformer'], (JSXTransformer) ->
-        onLoad = (content) ->
-          lines = content.split /\r\n|\r|\n/
-          mappingsPrefix = ';;;;;;;;'
+      onLoad = (content) ->
+        compile =
+          if /.coffee$/.test name
+            compileCoffeeScript
+          else if /.jsx$/.test name
+            compileJSX
+          else
+            compileJavaScript
 
-          srcmap =
+        compile req, content, (compiled, mappings) ->
+          firstLine = (/[^\r\n]+/.exec(content))?[0]
+
+          transformed = transform compiled, firstLine
+          transformedMappings = ';;;;;;;;' + mappings
+
+          sourceMap =
             version: 3
             file: 'evaluated'
             sourceRoot: config.baseUrl
             sources: [name]
             sourcesContent: [content]
             names: []
+            mappings: transformedMappings
 
-          try
-            if /.coffee$/.test name
-              options =
-                bare: true
-                header: false
-                inline: true
-                sourceMap: true
-              compiled = CoffeeScript.compile(content, options)
-              content = compiled.js
-              originalSourceMap = JSON.parse(compiled.v3SourceMap)
-              srcmap.mappings = mappingsPrefix + originalSourceMap.mappings
-            else if /.jsx$/.test name
-              compiled = JSXTransformer.transform content, sourceMap: true
-              content = compiled.code
-              srcmap.mappings = mappingsPrefix + compiled.sourceMap.mappings
-            else
-              vlqs = for i in [0...lines.length]
-                diff = if i == 0 then 0 else 1
-                vlq.encode [0, 0, diff, 0]
-              srcmap.mappings = mappingsPrefix + vlqs.join ';'
-          catch err
-            console.error err
+          encodedSourceMap = btoa unescape encodeURIComponent JSON.stringify sourceMap
+          transformed += "\n//# sourceURL=" + name
+          transformed += "\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,#{encodedSourceMap}"
 
-          content = transform content, lines[0]
+          onLoadNative.fromText transformed
 
-          sourceMapping = btoa unescape encodeURIComponent JSON.stringify srcmap
-          content += "\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,#{sourceMapping}"
+      onLoad.error = (err) -> onLoadNative.error err
 
-          onLoadNative.fromText content
-
-        onLoad.error = (err) -> onLoadNative.error err
-
-        text.load(name, req, onLoad, config);
+      text.load(name, req, onLoad, config);
 
   e2d3loader

@@ -15,8 +15,6 @@ _dataType = params[2]
 ###
 require.config
   baseUrl: _baseUrl
-  paths:
-    JSXTransformer: '/lib/JSXTransformer'
 
 ###
 # main routine
