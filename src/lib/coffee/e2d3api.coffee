@@ -1,4 +1,4 @@
-define ['jquery', 'd3', 'queue'], ($, d3, queue) ->
+define ['jquery', 'd3'], ($, d3) ->
   apiBaseUrl = '/api'
 
   # served from gulp-webserver

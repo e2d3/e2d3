@@ -16,7 +16,7 @@ define ['params!', 'd3', 'jquery', 'e2d3api', 'e2d3model', 'e2d3excel', 'e2d3uti
         initBrowser = () ->
           console.info 'initialized: browser'
           e2d3.excel = excel.initialize()
-          resolve Office.InitializationReason.Inserted
+          resolve 'inserted'
 
         if util.isExcel()
           initExcel()

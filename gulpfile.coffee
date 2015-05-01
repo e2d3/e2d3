@@ -61,13 +61,6 @@ gulp.task 'lib-scripts', ['clean'], ->
     .pipe cond isRelease, uglify preserveComments: 'some'
     .pipe gulp.dest 'dist/lib'
 
-gulp.task 'lib-scripts-jsx', ['clean'], ->
-  merge(
-    gulp.src 'bower_components/react/JSXTransformer.js'
-    )
-    .pipe cond isRelease, uglify preserveComments: 'some'
-    .pipe gulp.dest 'dist/lib'
-
 gulp.task 'lib-styles', ['clean'], ->
   gulp.src 'src/lib/scss/main.scss'
     .pipe plumber()
@@ -101,7 +94,7 @@ gulp.task 'files', ['clean'], ->
     .pipe filter ['**/*', '!**/*.jade', '!**/*.coffee']
     .pipe gulp.dest 'dist'
 
-gulp.task 'lib', ['lib-scripts', 'lib-scripts-jsx', 'lib-styles', 'lib-files']
+gulp.task 'lib', ['lib-scripts', 'lib-styles', 'lib-files']
 
 gulp.task 'apps', ['html', 'scripts', 'files']
 

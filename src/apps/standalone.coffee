@@ -16,35 +16,25 @@ _dataType = params[2]
 require.config
   baseUrl: _baseUrl
 
-requirejs.onError = (err) ->
-  if err?.requireType == "fromtexteval"
-    console.error err.message.split(/\n/)[0]
-  else if err?.requireType == "timeout"
-    # noop
-  else
-    throw err
-
 ###
 # main routine
 ###
-require ['domReady!', 'jquery', 'e2d3util', 'e2d3loader!'+_main], (domReady, $, util, main) ->
+require ['domReady!', 'jquery', 'd3', 'e2d3model', 'e2d3loader!'+_main], (domReady, $, d3, model, main) ->
+  ChartDataTable = model.ChartDataTable
+
   # load css, please ignore 404 error
   $('<link rel="stylesheet" type="text/css" href="' + _baseUrl + '/main.css" >').appendTo 'head'
 
-  _chart =
+  chart =
     if main?
       main $('#e2d3-chart-area').get(0), _baseUrl
     else
       {}
 
   $(window).on 'resize', (e) ->
-    _chart.resize() if _chart.resize?
+    chart.resize() if chart.resize?
 
-  window.debug =
-    setupDebugConsole: () ->
-      util.setupDebugConsole()
-  window.chart =
-    update: (data) ->
-      _chart.update data if _chart.update?
-    save: () ->
-      _chart.save() if _chart.save?
+  d3.text "#{_baseUrl}/data.#{_dataType}", (err, text) ->
+    rows = d3[_dataType].parseRows text
+    data = new ChartDataTable rows
+    chart.update data
