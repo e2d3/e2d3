@@ -13,6 +13,13 @@ block navleft
     li: a(href='#geometory')
       i.fa.fa-globe
       |  Geometory
+      block navright
+
+block navright
+  ul.nav.navbar-nav.navbar-right
+    li#localhost(style='display:none'): a(href='http://localhost:8000/') 
+      i.fa.fa-bug
+      |  Jump to localhost
 
 block content
   #contrib.row.grid.cs-style-1
