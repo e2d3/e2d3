@@ -2,6 +2,12 @@ var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
 var fs = require('fs');
+var http = require('http');
+var https = require('https');
+var privateKey  = fs.readFileSync('ssl/localhost.key', 'utf8');
+var certificate = fs.readFileSync('ssl/localhost.crt', 'utf8');
+
+var credentials = {key: privateKey, cert: certificate};
 
 var app = express();
 
@@ -42,4 +48,8 @@ app.get('/api/categories/develop', function (req, res) {
 app.use('/contrib', express.static(path.join(__dirname, 'contrib')));
 app.use(express.static(path.join(__dirname, 'dist')));
 
-app.listen(process.env.PORT || 8000);
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(process.env.PORT || 8000);
+httpsServer.listen(process.env.PORT || 8443);
