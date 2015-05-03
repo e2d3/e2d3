@@ -15,6 +15,9 @@ _dataType = params[2]
 ###
 require.config
   baseUrl: _baseUrl
+  config:
+    text:
+      useXhr: () -> true
 
 requirejs.onError = (err) ->
   if err?.requireType == "fromtexteval"
@@ -27,7 +30,7 @@ requirejs.onError = (err) ->
 ###
 # main routine
 ###
-require ['domReady!', 'jquery', 'e2d3util', 'e2d3loader!'+_main], (domReady, $, util, main) ->
+require ['domReady!', 'jquery', 'e2d3util', 'e2d3loader!' + _main], (domReady, $, util, main) ->
   # load css, please ignore 404 error
   $('<link rel="stylesheet" type="text/css" href="' + _baseUrl + '/main.css" >').appendTo 'head'
 

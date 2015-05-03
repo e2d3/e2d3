@@ -1,10 +1,16 @@
-define ['jquery', 'd3'], ($, d3) ->
+define ['params!', 'jquery', 'd3'], (params, $, d3) ->
   apiBaseUrl = '/api'
 
   # served from gulp-webserver
-  isStandalone = $('script[src*=":35730/livereload.js"]').length != 0
+  mode =
+    if params.delegate?
+      'delegate'
+    else if $('script[src*=":35730/livereload.js"]').length != 0
+      'standalone'
+    else
+      'server'
 
-  console.info 'mode: standalone' if isStandalone
+  console.info 'mode: ' + mode
 
   server =
     topcharts: () ->
@@ -20,4 +26,14 @@ define ['jquery', 'd3'], ($, d3) ->
           reject error if error
           resolve json.charts
 
-  if isStandalone then standalone else server
+  delegate =
+    topcharts: () ->
+      new Promise (resolve, reject) ->
+        d3.json 'https://localhost:8443/api/categories/delegate', (error, json) ->
+          reject error if error
+          resolve json.charts
+
+  switch mode
+    when 'delegate' then delegate
+    when 'standalone' then standalone
+    else server

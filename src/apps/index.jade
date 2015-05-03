@@ -13,13 +13,12 @@ block navleft
     li: a(href='#geometory')
       i.fa.fa-globe
       |  Geometory
-      block navright
 
 block navright
   ul.nav.navbar-nav.navbar-right
-    li#localhost(style='display:none'): a(href='https://localhost:8443/') 
+    li#localhost(style='display:none'): a(href='index.html?delegate') 
       i.fa.fa-bug
-      |  Jump to localhost
+      |  Go into delegate mode
 
 block content
   #contrib.row.grid.cs-style-1
