@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
 var fs = require('fs');
+var cors = require('cors');
 var http = require('http');
 var https = require('https');
 var privateKey  = fs.readFileSync('ssl/localhost.key', 'utf8');
@@ -11,41 +12,49 @@ var credentials = {key: privateKey, cert: certificate};
 
 var app = express();
 
+app.use(cors());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use((require('connect-livereload'))({ port: 35730 }));
 
-app.get('/api/categories/develop', function (req, res) {
-  var createData = function (name) {
-    var scriptType = 'js';
-    var dataType = 'tsv';
+var api = function (apiBaseUrl) {
+  return function (req, res) {
+    var createData = function (name) {
+      var scriptType = 'js';
+      var dataType = 'tsv';
 
-    fs.readdirSync(path.join(__dirname, 'contrib', name)).forEach(function (child) {
-      var match = null;
-      if (match = child.match(/^main\.(js|coffee|jsx)$/))
-        scriptType = match[1];
-      if (match = child.match(/^data\.(tsv|csv|json)$/))
-        dataType = match[1];
-    });
+      fs.readdirSync(path.join(__dirname, 'contrib', name)).forEach(function (child) {
+        var match = null;
+        if (match = child.match(/^main\.(js|coffee|jsx)$/))
+          scriptType = match[1];
+        if (match = child.match(/^data\.(tsv|csv|json)$/))
+          dataType = match[1];
+      });
 
-    return {
-      title: 'e2d3/' + name,
-      baseUrl: '/contrib/' + name,
-      scriptType: scriptType,
-      dataType: dataType
+      return {
+        title: 'e2d3/' + name,
+        baseUrl: apiBaseUrl + '/contrib/' + name,
+        scriptType: scriptType,
+        dataType: dataType
+      };
     };
+
+    var dirs = fs.readdirSync(path.join(__dirname, 'contrib'));
+    var charts = dirs.filter(function (name) { return name.indexOf('.') != 0; }).map(createData);
+
+    res.json({
+      charts: charts
+    });
   };
+};
 
-  var dirs = fs.readdirSync(path.join(__dirname, 'contrib'));
-  var charts = dirs.filter(function (name) { return name.indexOf('.') != 0; }).map(createData);
-
-  res.json({
-    charts: charts
-  });
-});
+app.get('/api/categories/develop', api(''));
+app.get('/api/categories/delegate', api('https://localhost:8443'));
 
 app.use('/contrib', express.static(path.join(__dirname, 'contrib')));
+app.use('/App', express.static(path.join(__dirname, 'dist')));
 app.use(express.static(path.join(__dirname, 'dist')));
 
 var httpServer = http.createServer(app);
