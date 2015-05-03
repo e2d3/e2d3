@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var program = require('commander');
+var path = require('path');
+var lr = require('tiny-lr')();
+var watch = require('node-watch');
+
+var e2d3server = require('../lib/index.js');
+
+var pkg = require('../package.json');
+
+function parsePort(value, aaa) {
+  return parseInt(value);
+}
+
+var contrib = '.';
+
+program
+  .description('run http server for developing charts')
+  .version(pkg.version)
+  .arguments('[dir]')
+  .option('--http <port>', 'HTTP Port', parsePort, process.env.PORT || 8000)
+  .option('--https <port>', 'HTTPS Port', parsePort, process.env.PORT || 8443)
+  .option('--livereload <port>', 'Livereload Port', parsePort, 35730)
+  .action(function (dir) { contrib = dir; });
+
+program.parse(process.argv);
+
+program.contrib = path.resolve(contrib);
+
+console.log('[E2D3 Development Server] start ' + program.contrib);
+
+if (program.livereload) {
+  lr.listen(program.livereload);
+}
+
+watch(program.contrib, function (filename) {
+  console.log(filename);
+  lr.changed({
+    body: {
+      files: ['dummy']
+    }
+  });
+});
+
+e2d3server(program);
