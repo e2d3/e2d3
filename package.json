@@ -14,7 +14,8 @@
   "scripts": {
     "postinstall": "(test -z \"${npm_package_dependencies_gulp+x}\") || (bower prune && bower update && gulp build --release)",
     "watch": "gulp run",
-    "start": "gulp run"
+    "start": "gulp run",
+    "release": "bower update && gulp build --release && npm publish"
   },
   "repository": {
     "type": "git",
