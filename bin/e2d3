@@ -6,6 +6,7 @@ var program = require('commander');
 var path = require('path');
 var lr = require('tiny-lr')();
 var watch = require('node-watch');
+var colors = require('colors');
 
 var e2d3server = require('../lib/index.js');
 
@@ -30,14 +31,16 @@ program.parse(process.argv);
 
 program.contrib = path.resolve(contrib);
 
-console.log('[E2D3 Development Server] start ' + program.contrib);
+console.log(colors.green('[E2D3] Publish ' + program.contrib));
 
 if (program.livereload) {
-  lr.listen(program.livereload);
+  lr.listen(program.livereload, function () {
+    console.log(colors.green('[E2D3] LiveReload server started at lr://0.0.0.0:' + program.livereload));
+  });
 }
 
 watch(program.contrib, function (filename) {
-  console.log(filename);
+  console.log(colors.green('[E2D3] File changed ' + filename));
   lr.changed({
     body: {
       files: ['dummy']

@@ -5,35 +5,35 @@ E2D3 is JavaScript library for using D3.js on Excel.
 
 [![license](https://img.shields.io/badge/license-Apache%202-blue.svg?style=flat)](LICENSE)
 
+
 ## Requirements
 
 * Excel 2013 (Not required for development. You can develop charts with MacOSX also.)
 * [Node.js](http://nodejs.org/)
 
+
 ## Install
 
 ```shell
-$ git clone https://github.com/e2d3/e2d3.git --recursive
-$ cd e2d3
-$ npm install
+$ npm install -g e2d3
 ```
+
 
 ## Run Development Server
 
 ```
-$ cd e2d3
-$ npm start
+$ git clone https://github.com/e2d3/e2d3-contrib.git
+$ cd e2d3-contrib
+$ e2d3
 
-> e2d3@0.3.0 start /Users/.../src/e2d3
-> gulp run
-
-[12:18:27] Requiring external module coffee-script/register
-[12:18:28] Using gulpfile ~/src/e2d3/gulpfile.coffee
-...
-[12:18:29] Webserver started at http://0.0.0.0:8000
+[E2D3] Publish /Users/chimera/Sites/e2d3-server/e2d3/contrib
+[E2D3] LiveReload server started at lr://0.0.0.0:35730
+[E2D3] Webserver started at http://0.0.0.0:8000
+[E2D3] Webserver(SSL) started at https://0.0.0.0:8443
 ```
 
-Then access to [http://localhost:8000/index.html](http://localhost:8000/index.html)
+Then access to [http://localhost:8000/](http://localhost:8000/)
+
 
 ## Run E2D3 on Excel 2013
 
@@ -50,8 +50,8 @@ Excelで実行したときにJavascriptのステップ実行等が出来るの�
 
 ## How to add charts
 
-./contrib に新しくディレクトリを作り下記ファイルを配置します。
-contribは、[e2d3/e2d3-contrib](https://github.com/e2d3/e2d3-contrib) として管理されている別レポジトリです。
+e2d3-contrib に新しくディレクトリを作り下記ファイルを配置します。
+e2d3-contrib、[e2d3/e2d3-contrib](https://github.com/e2d3/e2d3-contrib) として管理されている別レポジトリです。
 
 
 ```
@@ -59,7 +59,7 @@ contribは、[e2d3/e2d3-contrib](https://github.com/e2d3/e2d3-contrib) として
 +-- LICENSE
 +-- README.md
 +-- thumbnail.png
-+-- main.{js,coffee,jsx}
++-- main.js
 +-- data.{csv,tsv}
 ```
 
@@ -76,19 +76,18 @@ Excelやブラウザ上でもこのファイルが表示されます。
 
 一覧に表示されるサムネイル画像です。
 
-### main.{js,coffee,jsx}
+### main.js
 
 E2D3のシステム側から最初に呼び出されるファイルです。
 [AMD形式](https://github.com/amdjs/amdjs-api/wiki/AMD)で記述する必要があります。
 詳細についてはWiki(制作中)を参照してください。
-
-CoffeescriptおよびJSX(JavaScript syntax extension for React)は実験的サポートです。
 
 ### data.{csv,tsv}
 
 main.jsを使って表示可能なサンプルデータを置いてください。
 Excelではサンプルデータ投入ボタンを押すと読み込まれます。
 ブラウザ上で開発する際には、チャートの画面に飛ぶと表示時にすぐに読み込まれます。
+
 
 ## License
 [Apache License 2.0](LICENSE)
