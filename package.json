@@ -1,6 +1,6 @@
 {
   "name": "e2d3",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "E2D3 is JavaScript library for using D3.js on Excel.",
   "keywords": [
     "E2D3"
@@ -12,7 +12,7 @@
   "main": "./lib/index.js",
   "bin": "./bin/e2d3",
   "scripts": {
-    "postinstall": "(test -z \"${npm_package_dependencies_gulp+x}\") || (bower prune && bower update && gulp build --release)",
+    "postinstall": "(node scripts/postinstall-testenv.js) || (bower prune && bower update && gulp build --release)",
     "watch": "gulp run",
     "start": "gulp run",
     "release": "bower update && gulp build --release && npm publish"
