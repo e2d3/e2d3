@@ -8,7 +8,7 @@ E2D3 is JavaScript library for using D3.js on Excel.
 
 ## Requirements
 
-* Excel 2013 (Not required for development. You can develop charts with MacOSX also.)
+* Excel 2013 or Excel Online (Not required for development. You can develop charts with MacOSX also.)
 * [Node.js](http://nodejs.org/)
 
 
