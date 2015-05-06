@@ -37,7 +37,7 @@ Then access to [http://localhost:8000/](http://localhost:8000/)
 
 ## How to add your data visualization
 
-Please refer to [WIKI](https://github.com/e2d3/e2d3/wiki/Getting-Started)
+Please refer to [Wiki](https://github.com/e2d3/e2d3/wiki/Getting-Started)
 
 
 ## License
