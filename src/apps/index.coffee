@@ -1,4 +1,11 @@
-require ['bootstrap', 'd3', 'd3.promise', 'e2d3', 'markdown'], (bootstrap, d3, d3Promise, e2d3, markdown) ->
+require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'markdown'], (bootstrap, $, d3, d3Promise, e2d3, markdown) ->
+  debugCounter = 5
+
+  $(window).on 'keydown', (e) ->
+    if e.ctrlKey && e.keyCode == 17
+      if --debugCounter == 0
+        $('#localhost').show()
+
   Promise.all [d3.promise.html('cell.html'), e2d3.api.topcharts()]
     .then (values) ->
       cell = values[0]

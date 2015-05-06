@@ -12,6 +12,9 @@ _dataType = params[2] ? 'csv'
 ###
 require.config
   baseUrl: _baseUrl
+  config:
+    text:
+      useXhr: () -> true
 
 requirejs.onError = (err) ->
   if err?.requireType == "fromtexteval"

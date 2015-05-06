@@ -14,5 +14,11 @@ block navleft
       i.fa.fa-globe
       |  Geometory
 
+block navright
+  ul.nav.navbar-nav.navbar-right
+    li#localhost(style='display:none'): a(href='index.html?delegate') 
+      i.fa.fa-bug
+      |  Go into delegate mode
+
 block content
   #contrib.row.grid.cs-style-1
