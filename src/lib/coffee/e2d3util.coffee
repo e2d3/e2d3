@@ -13,9 +13,6 @@ define ['jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], ($, d3, d3Promise, 
     isExcel: () ->
       isNativeExcel || isOffice365Excel
 
-    isDevelopment: () ->
-      $('script[src*="livereload.js"]').length != 0
-
     isDelegateMode: () ->
       !!(sessionStorage.getItem('delegate'))
 
@@ -26,7 +23,10 @@ define ['jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], ($, d3, d3Promise, 
         sessionStorage.removeItem 'delegate'
 
     isDebugConsoleEnabled: () ->
-      isNativeExcel && isDelegateMode()
+      isNativeExcel && @isDelegateMode()
+
+    isLiveReloadEnabled: () ->
+      @isExcel() && @isDelegateMode()
 
     save: (svgnode, type, baseUrl, filename='image') ->
       d3.promise.text "#{baseUrl}/main.css"
@@ -96,5 +96,8 @@ define ['jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], ($, d3, d3Promise, 
       console.log = print
       console.info = print
       console.error = print
+
+    setupLiveReload: () ->
+      $.getScript 'https://localhost:8443/livereload.js?snipver=1'
 
   new E2D3Util()

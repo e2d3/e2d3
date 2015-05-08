@@ -30,6 +30,7 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
     _binding = null
 
     debug().setupDebugConsole() if e2d3.util.isDebugConsoleEnabled()
+    e2d3.util.setupLiveReload() if e2d3.util.isLiveReloadEnabled()
 
     ###
     # bindingの初期化
