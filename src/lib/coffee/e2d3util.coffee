@@ -19,6 +19,12 @@ define ['jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], ($, d3, d3Promise, 
     isDelegateMode: () ->
       !!(sessionStorage.getItem('delegate'))
 
+    setDelegateMode: (value) ->
+      if value
+        sessionStorage.setItem 'delegate', true
+      else
+        sessionStorage.removeItem 'delegate'
+
     isDebugConsoleEnabled: () ->
       isNativeExcel && isDelegateMode()
 
