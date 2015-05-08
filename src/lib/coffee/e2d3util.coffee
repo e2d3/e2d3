@@ -22,10 +22,6 @@ define ['jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], ($, d3, d3Promise, 
     isDebugEnabled: () ->
       !!(sessionStorage.getItem('debug'))
 
-    urlParam: (name) ->
-      results = new RegExp("[\?&]#{name}(=([^&#]*))?").exec(window.location.search);
-      if results == null then null else results[2]
-
     save: (svgnode, type, baseUrl, filename='image') ->
       d3.promise.text "#{baseUrl}/main.css"
         .then (css) =>
