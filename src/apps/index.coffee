@@ -5,6 +5,8 @@ require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'markdown'], (bootst
     if e.ctrlKey && e.keyCode == 17
       if --debugCounter == 0
         $('#localhost').show()
+    else
+      debugCounter = 5
 
   Promise.all [d3.promise.html('cell.html'), e2d3.api.topcharts()]
     .then (values) ->
@@ -27,11 +29,10 @@ require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'markdown'], (bootst
             newcell.select '.readme'
               .each ->
                 d3.text d.baseUrl + '/README.md', (error, readme) =>
-                  this.innerHTML = markdown.toHTML readme, "Maruku"
+                  this.innerHTML = markdown.toHTML readme, 'Maruku'
 
-            debug = if e2d3.util.isDevelopment() then '?debug' else ''
             newcell.select '.use'
-              .attr 'href', "chart.html#{debug}##{d.baseUrl},#{d.scriptType},#{d.dataType}"
+              .attr 'href', "chart.html##{d.baseUrl},#{d.scriptType},#{d.dataType}"
 
             this.appendChild(newcell.node())
 

@@ -5,7 +5,6 @@ define([
   'goog',
   'image',
   'text',
-  'params',
   'bootstrap',
   'd3',
   'd3.promise',

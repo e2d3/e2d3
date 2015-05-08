@@ -1,4 +1,4 @@
-define ['params!', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], (params, $, d3, d3Promise, saveAs, canvg) ->
+define ['jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], ($, d3, d3Promise, saveAs, canvg) ->
   # this works only on top frame
   isNativeExcel =
     try
@@ -16,11 +16,11 @@ define ['params!', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], (params,
     isDevelopment: () ->
       $('script[src*="livereload.js"]').length != 0
 
-    isStandalone: () ->
-      $('script[src*=":35730/livereload.js"]').length != 0
+    isDelegateMode: () ->
+      !!(sessionStorage.getItem('delegate'))
 
     isDebugEnabled: () ->
-      params.debug? && @isExcel()
+      !!(sessionStorage.getItem('debug'))
 
     urlParam: (name) ->
       results = new RegExp("[\?&]#{name}(=([^&#]*))?").exec(window.location.search);
@@ -66,7 +66,6 @@ define ['params!', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], (params,
       new Blob [buffer.buffer], type: type
 
     ###*
-    # if '?debug' parameter is specified
     # change `console.log()`'s output to popup dialog
     ###
     setupDebugConsole: () ->

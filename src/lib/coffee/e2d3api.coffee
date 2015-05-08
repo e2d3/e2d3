@@ -1,9 +1,9 @@
-define ['params!', 'jquery', 'd3'], (params, $, d3) ->
+define ['jquery', 'd3'], ($, d3) ->
   apiBaseUrl = '/api'
 
   # served from gulp-webserver
   mode =
-    if params.delegate?
+    if !!(sessionStorage.getItem 'delegate')
       'delegate'
     else if $('script[src*=":35730/livereload.js"]').length != 0
       'standalone'
