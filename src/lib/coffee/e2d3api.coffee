@@ -3,7 +3,7 @@ define ['jquery', 'd3'], ($, d3) ->
 
   # served from gulp-webserver
   mode =
-    if !!(sessionStorage.getItem 'delegate')
+    if sessionStorage.getItem 'delegate'
       'delegate'
     else if $('script[src*=":35730/livereload.js"]').length != 0
       'standalone'

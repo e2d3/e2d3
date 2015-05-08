@@ -4,9 +4,20 @@ require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'markdown'], (bootst
   $(window).on 'keydown', (e) ->
     if e.ctrlKey && e.keyCode == 17
       if --debugCounter == 0
-        $('#localhost').show()
+        $('#delegate').show()
     else
       debugCounter = 5
+
+  if sessionStorage.getItem 'delegate'
+    $('#delegate').show()
+    $('#delegate a').html('<i class="fa fa-sign-out"></i> Leave from delegate mode')
+
+  $('#delegate').on 'click', (e) ->
+    if !sessionStorage.getItem 'delegate'
+      sessionStorage.setItem 'delegate', true
+    else
+      sessionStorage.removeItem 'delegate'
+    window.location.reload()
 
   Promise.all [d3.promise.html('cell.html'), e2d3.api.topcharts()]
     .then (values) ->

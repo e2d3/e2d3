@@ -19,8 +19,8 @@ define ['jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], ($, d3, d3Promise, 
     isDelegateMode: () ->
       !!(sessionStorage.getItem('delegate'))
 
-    isDebugEnabled: () ->
-      !!(sessionStorage.getItem('debug'))
+    isDebugConsoleEnabled: () ->
+      isNativeExcel && isDelegateMode()
 
     save: (svgnode, type, baseUrl, filename='image') ->
       d3.promise.text "#{baseUrl}/main.css"
