@@ -4,7 +4,7 @@
 
 var program = require('commander');
 var path = require('path');
-var lr = require('tiny-lr')();
+var tinylr = require('tiny-lr');
 var watch = require('node-watch');
 var colors = require('colors');
 
@@ -24,28 +24,18 @@ program
   .arguments('[dir]')
   .option('--http <port>', 'HTTP Port', parsePort, process.env.PORT || 8000)
   .option('--https <port>', 'HTTPS Port', parsePort, process.env.PORT || 8443)
-  .option('--livereload <port>', 'Livereload Port', parsePort, 35730)
   .action(function (dir) { contrib = dir; });
 
 program.parse(process.argv);
 
 program.contrib = path.resolve(contrib);
+program.tinylr = tinylr;
 
 console.log(colors.green('[E2D3] Publish ' + program.contrib));
 
-if (program.livereload) {
-  lr.listen(program.livereload, function () {
-    console.log(colors.green('[E2D3] LiveReload server started at lr://0.0.0.0:' + program.livereload));
-  });
-}
-
 watch(program.contrib, function (filename) {
   console.log(colors.green('[E2D3] File changed ' + filename));
-  lr.changed({
-    body: {
-      files: ['dummy']
-    }
-  });
+  tinylr.changed('dummy');
 });
 
 e2d3server(program);
