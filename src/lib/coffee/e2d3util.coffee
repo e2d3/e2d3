@@ -1,4 +1,4 @@
-define ['params!', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], (params, $, d3, d3Promise, saveAs, canvg) ->
+define ['jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], ($, d3, d3Promise, saveAs, canvg) ->
   # this works only on top frame
   isNativeExcel =
     try
@@ -13,18 +13,20 @@ define ['params!', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], (params,
     isExcel: () ->
       isNativeExcel || isOffice365Excel
 
-    isDevelopment: () ->
-      $('script[src*="livereload.js"]').length != 0
+    isDelegateMode: () ->
+      !!(sessionStorage.getItem('delegate'))
 
-    isStandalone: () ->
-      $('script[src*=":35730/livereload.js"]').length != 0
+    setDelegateMode: (value) ->
+      if value
+        sessionStorage.setItem 'delegate', true
+      else
+        sessionStorage.removeItem 'delegate'
 
-    isDebugEnabled: () ->
-      params.debug? && @isExcel()
+    isDebugConsoleEnabled: () ->
+      isNativeExcel && @isDelegateMode()
 
-    urlParam: (name) ->
-      results = new RegExp("[\?&]#{name}(=([^&#]*))?").exec(window.location.search);
-      if results == null then null else results[2]
+    isLiveReloadEnabled: () ->
+      @isExcel() && @isDelegateMode()
 
     save: (svgnode, type, baseUrl, filename='image') ->
       d3.promise.text "#{baseUrl}/main.css"
@@ -66,7 +68,6 @@ define ['params!', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], (params,
       new Blob [buffer.buffer], type: type
 
     ###*
-    # if '?debug' parameter is specified
     # change `console.log()`'s output to popup dialog
     ###
     setupDebugConsole: () ->
@@ -95,5 +96,8 @@ define ['params!', 'jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], (params,
       console.log = print
       console.info = print
       console.error = print
+
+    setupLiveReload: () ->
+      $.getScript 'https://localhost:8443/livereload.js?snipver=1'
 
   new E2D3Util()

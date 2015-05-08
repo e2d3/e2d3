@@ -1,4 +1,4 @@
-define ['params!', 'd3', 'e2d3model', 'e2d3util'], (params, d3, model, util) ->
+define ['d3', 'e2d3model', 'e2d3util'], (d3, model, util) ->
   ChartDataTable = model.ChartDataTable
 
   ###
