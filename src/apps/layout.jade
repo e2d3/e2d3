@@ -27,3 +27,8 @@ html
     script(src='https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js')
     //- load if variable 'main' is defined
     script(src='lib/libs.js', data-main=main || false)
+    script.
+      document.addEventListener("DOMContentLoaded", function(event) {
+        if (sessionStorage.getItem('delegate'))
+          document.querySelector('html').className += 'delegate'
+      });
