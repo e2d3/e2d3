@@ -8,6 +8,8 @@ _scriptType = params[1] ? 'js'
 _dataType = params[2] ? 'csv'
 
 require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domReady, bootstrap, $, d3, d3Promise, e2d3) ->
+  e2d3.util.setupLiveReload() if e2d3.util.isLiveReloadEnabled()
+
   $('[data-toggle="tooltip"]').tooltip()
 
   createFrame = () ->
@@ -27,7 +29,6 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
     _binding = null
 
     debug().setupDebugConsole() if e2d3.util.isDebugConsoleEnabled()
-    e2d3.util.setupLiveReload() if e2d3.util.isLiveReloadEnabled()
 
     ###
     # bindingの初期化
