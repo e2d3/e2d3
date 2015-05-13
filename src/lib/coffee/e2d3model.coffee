@@ -6,9 +6,23 @@ define ['d3'], (d3) ->
     Object.defineProperty obj, name, desc
 
   REGEXP_NUMBER = /^[-+]?(\d{1,3}(,?\d{3})*(\.\d+)?|\.\d+)([eE][-+]?\d+)?$/
+  REGEXP_ISODATE = /^\d{4}-\d{1,2}-\d{1,2}$/
+  REGEXP_YMD = /^\d{4}\/\d{1,2}\/\d{1,2}$/
+  REGEXP_MDY = /^\d{1,2}\/\d{1,2}\/\d{4}$/
 
-  isNumber = (value) ->
-    typeof value == 'number'
+  PARSE_ISODATE = d3.time.format('%Y-%m-%d').parse
+  PARSE_YMD = d3.time.format('%Y/%m/%d').parse
+  PARSE_MDY = d3.time.format('%m/%d/%Y').parse
+
+  convert = (value, callback) ->
+    if REGEXP_NUMBER.test value
+      callback +(value.replace /,/, '')
+    else if REGEXP_ISODATE.test value
+      callback PARSE_ISODATE value
+    else if REGEXP_YMD.test value
+      callback PARSE_YMD value
+    else if REGEXP_MDY.test value
+      callback PARSE_MDY value
 
   ###
   # 単純な2次元配列
@@ -43,8 +57,7 @@ define ['d3'], (d3) ->
     convertToNumber: () ->
       for row in @
         for value, i in row
-          if REGEXP_NUMBER.test value
-            row[i] = +(value.replace /,/, '')
+          convert value, (converted) -> row[i] = converted
       @
 
     ###
@@ -109,8 +122,7 @@ define ['d3'], (d3) ->
     typing: () ->
       for row in @
         for own name, value of row
-          if REGEXP_NUMBER.test value
-            row[name] = +(value.replace /,/, '')
+          convert value, (converted) -> row[name] = converted
       @
 
   ###
@@ -165,8 +177,7 @@ define ['d3'], (d3) ->
     typing: () ->
       for own key, row of @
         for own name, value of row
-          if REGEXP_NUMBER.test value
-            row[name] = +(value.replace /,/, '')
+          convert value, (converted) -> row[name] = converted
       @
 
   unenumerable ChartDataKeyValueMap.prototype, 'values'
