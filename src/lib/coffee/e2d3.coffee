@@ -27,9 +27,9 @@ define ['d3', 'jquery', 'e2d3api', 'e2d3model', 'e2d3excel', 'e2d3util', 'e2d3lo
 
     onError: (message) ->
       if message?.stack?
-        console.log message, message.stack
+        console.log JSON.stringify(message), message.stack
       else
-        console.log message
+        console.log JSON.stringify(message)
 
     excel: null
     data: empty: () -> new ChartDataTable []

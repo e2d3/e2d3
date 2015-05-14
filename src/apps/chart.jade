@@ -19,9 +19,12 @@ block head
 block navleft
   ul.nav.navbar-nav
     li
-      button#e2d3-rebind.btn.btn-sm.btn-default.navbar-btn(data-toggle='tooltip', data-placement='right', title='Click when you change selected area')
+      button#e2d3-rebind.btn.btn-sm.btn-default.navbar-btn(data-toggle='tooltip', data-placement='bottom', title='Click when you change selected area')
         i.fa.fa-table
-        |  Link Data
+        |  Link data
+      button#e2d3-fill-sample.btn.btn-sm.btn-default.navbar-btn(style='display: none', data-toggle='tooltip', data-placement='bottom', title='Select empty cell and then click')
+        i.fa.fa-refresh
+        |  Retry filling sample data
 
 block navright
   ul.nav.navbar-nav.navbar-right
@@ -29,7 +32,7 @@ block navright
       .dropdown
       button#e2d3-save.btn.btn-sm.btn-default.dropdown-toggle.navbar-btn(type='button', data-toggle='dropdown', aria-expanded='true')
         i.fa.fa-file-image-o
-        |  Save Image&nbsp;
+        |  Save image&nbsp;
         spean.caret
       ul.dropdown-menu(role='menu', aria-labelledby='e2d3-save')
         li(role='presentation'): a#e2d3-save-svg(role='menuitem', tabindex=-1, href='#', download='image.svg') Save AS SVG
@@ -40,3 +43,11 @@ block navright
 
 block content
   section#e2d3-frame
+  #e2d3-alert.modal.fade(tabindex='-1', role='dialog', aria-labelledby='e2d3-alert', aria-hidden='true')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5#e2d3-alert-title.modal-title Modal title
+        #e2d3-alert-body.modal-body
+        .modal-footer
+          button.btn.btn-sm.btn-default(type='button', data-dismiss='modal') OK
