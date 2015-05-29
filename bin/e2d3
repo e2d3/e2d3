@@ -14,7 +14,7 @@ var e2d3server = require('../lib/index.js');
 
 var e2d3 = require('../package.json');
 
-function parsePort(value, aaa) {
+function parsePort(value) {
   return parseInt(value);
 }
 

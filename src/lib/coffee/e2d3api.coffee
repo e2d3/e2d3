@@ -1,7 +1,6 @@
 define ['jquery', 'd3'], ($, d3) ->
   apiBaseUrl = '/api'
 
-  # served from gulp-webserver
   mode =
     if sessionStorage.getItem 'delegate'
       'delegate'
