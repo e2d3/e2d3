@@ -8,17 +8,19 @@ script = document.currentScript || do ->
 _baseUrl = script.getAttribute('data-base-url') ? '.'
 _scriptType = script.getAttribute('data-script-type') ? 'js'
 _dataType = script.getAttribute('data-data-type') ? 'csv'
+_viewport = script.getAttribute('data-viewport') ? '#e2d3-chart-area'
 
 ###
 # config
 ###
-require.config
+req = require.config
+  context: _viewport
   baseUrl: _baseUrl
 
 ###
 # main routine
 ###
-require ['domReady!', 'd3', 'e2d3model', 'e2d3loader!main.' + _scriptType], (domReady, d3, model, main) ->
+req ['domReady!', 'd3', 'e2d3model', 'e2d3loader!main.' + _scriptType], (domReady, d3, model, main) ->
   ChartDataTable = model.ChartDataTable
 
   # load css, please ignore 404 error
@@ -30,7 +32,7 @@ require ['domReady!', 'd3', 'e2d3model', 'e2d3loader!main.' + _scriptType], (dom
 
   chart =
     if main?
-      main document.querySelector('#e2d3-chart-area'), _baseUrl
+      main document.querySelector(_viewport), _baseUrl
     else
       {}
 
