@@ -1,13 +1,10 @@
 define ['jquery', 'd3'], ($, d3) ->
   apiBaseUrl = '/api'
 
-  # served from gulp-webserver
   mode =
     if sessionStorage.getItem 'delegate'
       'delegate'
-    else if $('script[src*=":35730/livereload.js"]').length != 0
-      'standalone'
-    else if $('script[src="/livereload.js?snipver=1"]').length != 0
+    else if document.cookie.indexOf('e2d3_standalone') != -1
       'standalone'
     else
       'server'

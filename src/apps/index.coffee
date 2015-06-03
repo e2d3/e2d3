@@ -25,7 +25,7 @@ require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'markdown'], (bootst
         .selectAll 'div'
           .data charts
         .enter().append 'div'
-          .classed 'col-xs-4 col-sm-4', true
+          .classed 'col-xs-4', true
           .each (d, i) ->
             newcell = d3.select(cell.cloneNode(true))
 

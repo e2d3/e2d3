@@ -1,181 +1,39 @@
 $font-family-sans-serif: "Segoe UI", "Lucida Grande", "Helvetica Neue", Helvetica, Arial, sans-serif;
-$navbar-height: 40px;
-$icon-font-path: "";
 
-@import "../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap";
+$navbar-height: 40px;
+
+$grid-float-breakpoint: 300px;
+$grid-gutter-width: 12px;
+
+$icon-font-path: "";
 
 $fa-font-path: ".";
 
+@import "../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap";
 @import "../../../bower_components/font-awesome/scss/font-awesome";
 
 body {
   padding: 6px 15px 6px 6px;
-
-  header {
-    .navbar {
-      .container-fluid {
-        padding: 0px;
-        margin-left: 15px;
-        margin-right: 30px;
-      }
-    }
-  }
-
-  #maincontent {
-    padding: $navbar-height 15px 0;
-  }
 }
 
-.log {
-  font-family: monospace;
-  font-size: 10px;
-  position: absolute;
-  width: 600px;
-  height: 200px;
-  background-color: rgba(250,250,250,0.7);
-  color: #000;
-  bottom: 0;
-  left: 0;
-  z-index: 10000;
-  padding: 4px;
-  border: 1px #ddd solid;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  display: none;
-}
-
-
-//
-// index.html
-//
 .delegate {
   .navbar-default {
     background-color: #ffdddd;
   }
 }
 
-.grid {
-  padding: 0px;
-
-  > div {
-    padding: 7px;
-  }
-
-  figure {
-    border: 1px solid #ccc;
-
-    .cover {
-      background-size: cover;
-      background-position: center center;
-
-      .title {
-        padding: 2px 8px 4px;
-        background-color: rgba(255,255,255,0.8);
-        border-top: 1px solid #ccc;
-        position: absolute;
-        text-align: right;
-        bottom: 0;
-        width: 100%;
-      }
-    }
-
-    .outer {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      padding: 56.25% 0 0;
-      overflow-x: hidden;
-      overflow-y: hidden;
-
-      .inner {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-      }
-    }
-
-    figcaption {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: auto;
-      width: 400px;
-      padding: 15px;
-      border: 1px solid #AAA;
-      box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
-      z-index: 100;
-      text-align: left;
-      background-color: #FAFAFA;
-      visibility: hidden;
-      opacity: 0;
-      transition: transform 0.3s, opacity 0.3s;
-
-      .action {
-        float: right;
-        margin-left: 10px;
-      }
-
-      h1 {
-        @extend .h3;
-      }
-      h1:first-child {
-        margin-top: 0;
-      }
-
-      h2 {
-        @extend .h4;
-      }
-
-      h3 {
-        @extend .h5;
-      }
-
-      table {
-        @extend .table;
-        @extend .table-bordered;
-        font-size: 0.8em;
-      }
-    }
-
-    &:hover figcaption {
-      visibility: visible;
-      opacity: 1;
-      transform: translate(15px, 15px);
-    }
-  }
-
-  > div:nth-child(3n) {
-    figure {
-      figcaption {
-        left: auto;
-        right: 0;
-      }
-
-      &:hover figcaption {
-        transform: translate(-15px, 15px);
-      }
-    }
+.navbar {
+  .container-fluid {
+    padding: 0px;
+    margin-left: 15px;
+    margin-right: 30px;
   }
 }
 
-
-//
-// chart.html
-//
-#e2d3-frame {
-  position: absolute;
-  top: $navbar-height+15px;
-  bottom: 0;
-  left: 0;
-  right: 0;
+#maincontent {
+  padding: $navbar-height $grid-gutter-width/2 0;
 }
 
-#e2d3-controller {
-  display: none;
-}
-
-#e2d3-chart-control {
-  display: none;
-}
+@import "./log";
+@import "./grid";
+@import "./chart";

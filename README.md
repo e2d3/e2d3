@@ -3,8 +3,9 @@ E2D3
 
 E2D3 is JavaScript library for using D3.js on Excel.
 
-[![license](https://img.shields.io/badge/license-Apache%202-blue.svg?style=flat)](LICENSE)
-
+[![npm](https://img.shields.io/npm/v/e2d3.svg)](https://www.npmjs.com/package/e2d3)
+[![license](https://img.shields.io/npm/l/e2d3.svg)](LICENSE)
+[![downloads](https://img.shields.io/npm/dm/e2d3.svg)](https://www.npmjs.com/package/e2d3)
 
 ## Requirements
 
@@ -36,7 +37,7 @@ Then access to [http://localhost:8000/](http://localhost:8000/)
 
 ## How to add your data visualization
 
-Please refer to [Wiki](https://github.com/e2d3/e2d3/wiki/Getting-Started)(日本語)
+Please refer to [Wiki](https://github.com/e2d3/e2d3/wiki/Getting-Started) ([日本語](https://github.com/e2d3/e2d3/wiki/Getting-Started_ja))
 
 
 ## License

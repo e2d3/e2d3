@@ -42,8 +42,7 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
         oldbinding.release()
           .then () ->
             undefined # cofeescript promise idiom
-          .catch (err) ->
-            e2d3.onError err
+          .catch onError
 
     ###
     # bindingの描画
@@ -56,8 +55,7 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
           .then (data) ->
             chart().update data
             undefined # cofeescript promise idiom
-          .catch (err) ->
-            e2d3.onError err
+          .catch onError
       else
         chart().update e2d3.data.empty()
 
@@ -69,19 +67,21 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
           e2d3.excel.bindSelected()
         .then (binding) ->
           setupBinding binding
+          $('#e2d3-fill-sample').hide()
           undefined # cofeescript promise idiom
         .catch (err) ->
-          e2d3.onError err
+          onError err
+          $('#e2d3-fill-sample').show()
 
     rebind = () ->
       e2d3.excel.bindSelected()
         .then (binding) ->
           setupBinding binding
           undefined # cofeescript promise idiom
-        .catch (err) ->
-          e2d3.onError err
+        .catch onError
 
     $('#e2d3-rebind').on 'click', (e) -> rebind()
+    $('#e2d3-fill-sample').on 'click', (e) -> fill()
     $('#e2d3-save-svg').on 'click', (e) ->
       e.preventDefault()
       node = chart().save().node()
@@ -92,6 +92,15 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
       e2d3.util.save chart().save().node(), 'png', _baseUrl if node
 
     fill()
+
+  onError = (err) ->
+    showAlert err.name, err.message if err.code?
+    e2d3.onError err
+
+  showAlert = (title, message) ->
+    $('#e2d3-alert-title').text(title)
+    $('#e2d3-alert-body').text(message)
+    $('#e2d3-alert').modal()
 
   _frame = createFrame()
 

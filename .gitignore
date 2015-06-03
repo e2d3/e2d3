@@ -5,3 +5,4 @@ bower_components
 dist
 gulpfile.tmp.*
 *.log
+contrib
