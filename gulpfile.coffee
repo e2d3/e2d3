@@ -139,7 +139,7 @@ gulp.task 'watch', ['build'], ->
   gulp.watch ['dist/**/*', 'contrib/**/*', 'server.js', 'lib/index.js'], notifyLivereload
 
 gulp.task 'watch-server', ['build'], ->
-  gulp.watch 'src/lib/**/*', ['lib']
+  gulp.watch ['src/lib/**/*', 'src/misc/**/*'], ['lib']
   gulp.watch 'src/apps/**/*', ['apps']
 
 gulp.task 'run', ['watch'], ->
