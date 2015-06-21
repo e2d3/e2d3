@@ -83,12 +83,15 @@ gulp.task 'lib-scripts-standalone', ['clean'], ->
         .pipe coffee()
       )
       .pipe amd 'libs-standalone', options
-      .pipe concat 'e2d3-standalone.js'
+      .pipe concat 'libs.js'
+    gulp.src 'src/misc/paths.coffee'
+      .pipe plumber()
+      .pipe coffee({ bare: true })
     gulp.src 'src/misc/standalone.coffee'
       .pipe plumber()
       .pipe coffee()
     )
-    .pipe order ['**/require.js', '**/libs.js', '**/standalone.coffee']
+    .pipe order ['**/require.js', '**/libs.js', '**/paths.js', '**/standalone.coffee']
     .pipe concat 'e2d3.js'
     .pipe cond isRelease, uglify preserveComments: 'some'
     .pipe gulp.dest 'dist/lib'

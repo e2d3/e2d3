@@ -16,6 +16,7 @@ _viewport = script.getAttribute('data-viewport') ? '#e2d3-chart-area'
 req = require.config
   context: _viewport
   baseUrl: _baseUrl
+  paths: e2d3_default_paths
 
 ###
 # main routine
