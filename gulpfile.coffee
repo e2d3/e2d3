@@ -84,9 +84,7 @@ gulp.task 'lib-scripts-standalone', ['clean'], ->
       )
       .pipe amd 'libs-standalone', options
       .pipe concat 'libs.js'
-    gulp.src 'src/misc/paths.coffee'
-      .pipe plumber()
-      .pipe coffee({ bare: true })
+    gulp.src 'src/misc/paths.js'
     gulp.src 'src/misc/standalone.coffee'
       .pipe plumber()
       .pipe coffee()
