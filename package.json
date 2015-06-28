@@ -23,14 +23,14 @@
   },
   "dependencies": {
     "body-parser": "~1.13.1",
-    "colors": "^1.1.2",
-    "commander": "^2.8.1",
+    "colors": "~1.1.2",
+    "commander": "~2.8.1",
     "connect-livereload": "~0.5.3",
     "cors": "~2.7.1",
     "express": "~4.13.0",
     "morgan": "~1.6.0",
     "node-watch": "~0.3.4",
-    "semver": "^4.3.6",
+    "semver": "~4.3.6",
     "tiny-lr": "~0.1.6"
   },
   "devDependencies": {
@@ -41,7 +41,7 @@
     "gulp-coffee": "~2.3.1",
     "gulp-concat": "~2.6.0",
     "gulp-debug": "~2.0.1",
-    "gulp-develop-server": "0.4.3",
+    "gulp-develop-server": "~0.4.3",
     "gulp-filter": "~2.0.2",
     "gulp-if": "~1.2.5",
     "gulp-jade": "~1.0.1",
