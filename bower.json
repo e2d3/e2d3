@@ -40,6 +40,9 @@
     },
     "font-awesome": {
       "main": "fonts/*"
+    },
+    "canvg-gabelerner": {
+      "main": ["canvg.js", "stackblur.js", "rgbcolor.js"]
     }
   }
 }
