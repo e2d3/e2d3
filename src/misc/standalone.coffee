@@ -27,11 +27,13 @@ req = require.config
 req ['domReady!', 'd3', 'e2d3model', 'e2d3loader!main.' + _scriptType], (domReady, d3, model, main) ->
   ChartDataTable = model.ChartDataTable
 
+  # set base uri
+  document.querySelector('#e2d3-base').href = _baseUrl + '/'
   # load css, please ignore 404 error
   css = document.createElement('link')
   css.rel = 'stylesheet'
   css.type = 'text/css'
-  css.href = _baseUrl + '/main.css'
+  css.href = 'main.css'
   document.querySelector('head').appendChild(css)
 
   chart =

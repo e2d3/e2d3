@@ -28,8 +28,10 @@ requirejs.onError = (err) ->
 # main routine
 ###
 require ['domReady!', 'jquery', 'e2d3util', 'e2d3loader!main.' + _scriptType], (domReady, $, util, main) ->
+  # set base uri
+  $('#e2d3-base').attr('href', _baseUrl + '/')
   # load css, please ignore 404 error
-  $('<link rel="stylesheet" type="text/css" href="' + _baseUrl + '/main.css" >').appendTo 'head'
+  $('<link rel="stylesheet" type="text/css" href="main.css" >').appendTo 'head'
 
   _chart =
     if main?

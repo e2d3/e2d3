@@ -3,6 +3,7 @@ html
   head
     meta(charset='UTF-8')
     meta(http-equiv='X-UA-Compatible', content='IE=Edge')
+    base#e2d3-base(href='.')
     style.
       html, body, figure {
         width: 100%;
@@ -19,5 +20,5 @@ html
   body
     figure#e2d3-chart-area
     figure#e2d3-chart-area2
-    script(src='lib/e2d3.js', data-base-url='/contrib/japanmap-coffeescript', data-script-type='coffee', data-data-type='csv', data-viewport='#e2d3-chart-area')
-    script(src='lib/e2d3.js', data-base-url='/contrib/wordcloud', data-script-type='js', data-data-type='csv', data-viewport='#e2d3-chart-area2')
+    script(src='lib/e2d3.js', data-base-url='/contrib/japanmap-javascript', data-script-type='js', data-data-type='tsv', data-viewport='#e2d3-chart-area')
+    script(src='lib/e2d3.js', data-base-url='/contrib/barchart-javascript', data-script-type='js', data-data-type='csv', data-viewport='#e2d3-chart-area2')
