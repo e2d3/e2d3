@@ -55,8 +55,9 @@ gulp.task 'lib-scripts', ['clean'], ->
       )
       .pipe amd 'libs', options
       .pipe concat 'libs.js'
+    gulp.src 'src/misc/paths.js'
     )
-    .pipe order ['**/require.js', '**/libs.js']
+    .pipe order ['**/require.js', '**/libs.js', '**/paths.js']
     .pipe concat 'libs.js'
     .pipe cond isRelease, uglify preserveComments: 'some'
     .pipe gulp.dest 'dist/lib'
