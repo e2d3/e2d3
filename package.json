@@ -17,10 +17,7 @@
     "start": "gulp run",
     "release": "bower update && gulp build --release && npm publish"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/e2d3/e2d3.git"
-  },
+  "repository": "e2d3/e2d3",
   "dependencies": {
     "body-parser": "~1.13.1",
     "colors": "~1.1.2",
