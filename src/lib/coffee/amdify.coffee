@@ -1,5 +1,5 @@
 define ['text', 'compiler'], (text, compiler) ->
-  'use strict';
+  'use strict'
 
   wrap = (compiled, exports) ->
     wrapped = """

@@ -1,11 +1,13 @@
 define ['text', 'compiler'], (text, compiler) ->
-  'use strict';
+  'use strict'
 
   wrap = (compiled, firstLine) ->
     # extract module names
     if matched = firstLine.match /^\/\/#\s*require\s*=\s*(.*)$/
+      # for JavaScript
       modules = matched[1].split(',').map (module) -> module.trim()
     else if matched = firstLine.match /^##\s*require\s*=\s*(.*)$/
+      # for CoffeeScript
       modules = matched[1].split(',').map (module) -> module.trim()
     else
       modules = ['d3']
@@ -14,16 +16,18 @@ define ['text', 'compiler'], (text, compiler) ->
       jquery: '$'
       lodash: '_'
       react: 'React'
+      vue: 'Vue'
+      'three.js': 'THREE'
 
     moduleNameMap = (module) ->
-      idx = module.indexOf('=')
+      idx = module.indexOf(':')
       if idx != -1
         module[0...idx]
       else
         nameMap[module] ? module
 
     moduleMap = (module) ->
-      idx = module.indexOf('=')
+      idx = module.indexOf(':')
       if idx != -1
         "'#{module[(idx+1)..-1]}'"
       else

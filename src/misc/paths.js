@@ -11,7 +11,7 @@ var e2d3_default_paths = {
     "coffee-script"
   ],
   "d3": [
-    "//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min",
+    "//cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min",
     "d3"
   ],
   "d3plus": [
@@ -26,16 +26,25 @@ var e2d3_default_paths = {
     "//cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.min",
     "react"
   ],
+  "three": [
+    "//cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min",
+    "three"
+  ],
   "topojson": [
     "//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min",
     "topojson"
   ],
   "vue": [
-    "//cdnjs.cloudflare.com/ajax/libs/vue/0.12.1/vue.min",
+    "//cdnjs.cloudflare.com/ajax/libs/vue/0.12.7/vue.min",
     "vue"
   ],
   "JSXTransformer": [
     "//cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer",
     "JSXTransformer"
   ]
+};
+var e2d3_default_shim = {
+  "three": {
+    "exports": "THREE"
+  }
 };

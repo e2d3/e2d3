@@ -13,10 +13,12 @@ _dataType = params[2] ? 'csv'
 require.config
   baseUrl: _baseUrl
   paths: e2d3_default_paths
+  shim: e2d3_default_shim
   config:
     text:
       useXhr: () -> true
 
+###
 requirejs.onError = (err) ->
   if err?.requireType == "fromtexteval"
     console.error err.message.split(/\n/)[0]
@@ -24,6 +26,7 @@ requirejs.onError = (err) ->
     # noop
   else
     throw err
+###
 
 ###
 # main routine

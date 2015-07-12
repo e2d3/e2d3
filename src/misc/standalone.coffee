@@ -18,6 +18,7 @@ req = require.config
   context: _viewport
   baseUrl: _baseUrl
   paths: e2d3_default_paths
+  shim: e2d3_default_shim
   config:
     text:
       useXhr: () -> true
