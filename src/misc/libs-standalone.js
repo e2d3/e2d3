@@ -1,10 +1,8 @@
 define([
   'domReady',
-  'bootstrap',
   'd3',
-  'd3.promise',
-  'markdown',
-  'e2d3'
+  'e2d3model',
+  'e2d3loader'
 ], function () {
   // noop
 });

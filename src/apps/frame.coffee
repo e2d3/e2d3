@@ -3,22 +3,22 @@ params = window.location.hash.substring(1).split ','
 ###
 # load parameters
 ###
-_baseUrl = params[0]
-_main = switch params[1]
-  when 'jsx' then 'main.jsx'
-  when 'coffee' then 'main.coffee'
-  else 'main.js'
-_dataType = params[2]
+_baseUrl = params[0] ? '.'
+_scriptType = params[1] ? 'js'
+_dataType = params[2] ? 'csv'
 
 ###
 # config
 ###
 require.config
   baseUrl: _baseUrl
+  paths: e2d3_default_paths
+  shim: e2d3_default_shim
   config:
     text:
       useXhr: () -> true
 
+###
 requirejs.onError = (err) ->
   if err?.requireType == "fromtexteval"
     console.error err.message.split(/\n/)[0]
@@ -26,13 +26,16 @@ requirejs.onError = (err) ->
     # noop
   else
     throw err
+###
 
 ###
 # main routine
 ###
-require ['domReady!', 'jquery', 'e2d3util', 'e2d3loader!' + _main], (domReady, $, util, main) ->
+require ['domReady!', 'jquery', 'e2d3util', 'e2d3loader!main.' + _scriptType], (domReady, $, util, main) ->
+  # set base uri
+  $('#e2d3-base').attr('href', _baseUrl + '/')
   # load css, please ignore 404 error
-  $('<link rel="stylesheet" type="text/css" href="' + _baseUrl + '/main.css" >').appendTo 'head'
+  $('<link rel="stylesheet" type="text/css" href="main.css" >').appendTo 'head'
 
   _chart =
     if main?

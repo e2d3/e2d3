@@ -1,21 +1,33 @@
-define ['text'], (text) ->
-  'use strict';
+define ['text', 'compiler'], (text, compiler) ->
+  'use strict'
 
-  generate = (src, modules) ->
+  wrap = (compiled, firstLine) ->
+    # extract module names
+    if matched = firstLine.match /^\/\/#\s*require\s*=\s*(.*)$/
+      # for JavaScript
+      modules = matched[1].split(',').map (module) -> module.trim()
+    else if matched = firstLine.match /^##\s*require\s*=\s*(.*)$/
+      # for CoffeeScript
+      modules = matched[1].split(',').map (module) -> module.trim()
+    else
+      modules = ['d3']
+
     nameMap =
       jquery: '$'
       lodash: '_'
       react: 'React'
+      vue: 'Vue'
+      'three.js': 'THREE'
 
     moduleNameMap = (module) ->
-      idx = module.indexOf('=')
+      idx = module.indexOf(':')
       if idx != -1
         module[0...idx]
       else
         nameMap[module] ? module
 
     moduleMap = (module) ->
-      idx = module.indexOf('=')
+      idx = module.indexOf(':')
       if idx != -1
         "'#{module[(idx+1)..-1]}'"
       else
@@ -29,15 +41,7 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
 
   var _script = function (root, baseUrl, reload) {
 
-////
-//// ORIGINAL SCRIPT START
-////
-
-#{src}
-
-////
-//// ORIGINAL SCRIPT END
-////
+#{compiled}
 
     var _functions = {};
     if (typeof update !== 'undefined') _functions.update = update;
@@ -90,70 +94,18 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
 """
     wrapped
 
-  transform = (content, firstLine) ->
-    # extract module names
-    if matched = firstLine.match /^\/\/#\s*require\s*=\s*(.*)$/
-      modules = matched[1].split(',').map (module) -> module.trim()
-    else if matched = firstLine.match /^##\s*require\s*=\s*(.*)$/
-      modules = matched[1].split(',').map (module) -> module.trim()
-    else
-      modules = ['d3']
-    generate content, modules
-
-  compileJavaScript = (req, content, callback) ->
-    lines = content.split /\r\n|\r|\n/
-    vlqs = for i in [0...lines.length]
-      if i == 0 then 'AAAA' else 'AACA'
-    script = content
-    mappings = vlqs.join ';'
-    callback script, mappings
-
-  compileCoffeeScript = (req, content, callback) ->
-    req ['coffee-script'], (CoffeeScript) ->
-      options = bare: true, header: false, inline: true, sourceMap: true
-      compiled = CoffeeScript.compile(content, options)
-      script = compiled.js
-      mappings = JSON.parse(compiled.v3SourceMap).mappings
-      callback script, mappings
-
-  compileJSX = (req, content, callback) ->
-    req ['JSXTransformer'], (JSXTransformer) ->
-      compiled = JSXTransformer.transform content, sourceMap: true
-      script = compiled.code
-      mappings = compiled.sourceMap.mappings
-      callback script, mappings
-
   e2d3loader =
     version: '0.4.0'
 
     load: (name, req, onLoadNative, config) ->
-      onLoad = (content) ->
-        compile =
-          if /.coffee$/.test name
-            compileCoffeeScript
-          else if /.jsx$/.test name
-            compileJSX
-          else
-            compileJavaScript
+      onLoad = (source) ->
+        compiler.compile req, name, source, (compiled, mappings) ->
+          firstLine = (/[^\r\n]+/.exec(source))?[0]
 
-        compile req, content, (compiled, mappings) ->
-          firstLine = (/[^\r\n]+/.exec(content))?[0]
+          wrapped = wrap compiled, firstLine
+          wrappedMappings = ';;;;' + mappings
 
-          transformed = transform compiled, firstLine
-          transformedMappings = ';;;;;;;;' + mappings
-
-          sourceMap =
-            version: 3
-            file: 'evaluated'
-            sourceRoot: config.baseUrl
-            sources: [name]
-            sourcesContent: [content]
-            names: []
-            mappings: transformedMappings
-
-          encodedSourceMap = btoa unescape encodeURIComponent JSON.stringify sourceMap
-          transformed += "\n//# sourceURL=" + name
-          transformed += "\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,#{encodedSourceMap}"
+          transformed = compiler.mapping wrapped, name, source, wrappedMappings, config.baseUrl
 
           onLoadNative.fromText transformed
 
