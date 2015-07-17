@@ -29,6 +29,18 @@ req = require.config
 req ['domReady!', 'd3', 'e2d3model', 'e2d3loader!main.' + _scriptType], (domReady, d3, model, main) ->
   ChartDataTable = model.ChartDataTable
 
+  cssloaded = false
+  dataloaded = false
+
+  takeScreenShot = () ->
+    if typeof window.callPhantom == 'function'
+      # PhantomJS currently does not support 'onload' event for stylesheets
+      # see https://github.com/ariya/phantomjs/issues/12332
+      if dataloaded # && cssloaded
+        setTimeout () ->
+          window.callPhantom 'takeShot'
+        , 0
+
   # set base uri
   document.querySelector('#e2d3-base').href = _baseUrl + '/'
   # load css, please ignore 404 error
@@ -36,6 +48,9 @@ req ['domReady!', 'd3', 'e2d3model', 'e2d3loader!main.' + _scriptType], (domRead
   css.rel = 'stylesheet'
   css.type = 'text/css'
   css.href = 'main.css'
+  css.onload = css.onerror = () ->
+    cssloaded = true
+    takeScreenShot()
   document.querySelector('head').appendChild(css)
 
   chart =
@@ -51,3 +66,5 @@ req ['domReady!', 'd3', 'e2d3model', 'e2d3loader!main.' + _scriptType], (domRead
     rows = d3[_dataType].parseRows text
     data = new ChartDataTable rows
     chart.update data
+    dataloaded = true
+    takeScreenShot()
