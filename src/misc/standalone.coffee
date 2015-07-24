@@ -36,7 +36,7 @@ req ['domReady!', 'd3', 'e2d3model', 'e2d3loader!main.' + _scriptType], (domRead
     if typeof window.callPhantom == 'function'
       # PhantomJS currently does not support 'onload' event for stylesheets
       # see https://github.com/ariya/phantomjs/issues/12332
-      if dataloaded # && cssloaded
+      if dataloaded && cssloaded
         setTimeout () ->
           window.callPhantom 'takeShot'
         , 0
@@ -48,7 +48,9 @@ req ['domReady!', 'd3', 'e2d3model', 'e2d3loader!main.' + _scriptType], (domRead
   css.rel = 'stylesheet'
   css.type = 'text/css'
   css.href = 'main.css'
-  css.onload = css.onerror = () ->
+  # called from node-webshot via phantomjs
+  # css.onload = css.onerror = () ->
+  window.onmaincssload = window.onmaincsserror = () ->
     cssloaded = true
     takeScreenShot()
   document.querySelector('head').appendChild(css)
