@@ -51,11 +51,17 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
 
   return function (root, baseUrl) {
     var _data = null;
+    var _onload = null;
     var _functions = null;
 
     var _reload = function () {
       if (_data && _functions.update) {
-        _functions.update(_data);
+        var result = _functions.update(_data);
+        if (!(typeof result === 'boolean' && result === false)) {
+          if (_onload) {
+            _onload();
+          }
+        }
       }
     };
 
@@ -71,8 +77,9 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
     _initialize();
 
     var exports = {
-      update: function (data) {
+      update: function (data, onload) {
         _data = data;
+        _onload = onload;
         _reload();
       },
       resize: function () {

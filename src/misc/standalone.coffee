@@ -67,6 +67,6 @@ req ['domReady!', 'd3', 'e2d3model', 'e2d3loader!main.' + _scriptType], (domRead
   d3.text _dataUrl, (err, text) ->
     rows = d3[_dataType].parseRows text
     data = new ChartDataTable rows
-    chart.update data
-    dataloaded = true
-    takeScreenShot()
+    chart.update data, () ->
+      dataloaded = true
+      takeScreenShot()
