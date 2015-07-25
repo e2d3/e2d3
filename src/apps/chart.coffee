@@ -86,7 +86,7 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
         .then (result) =>
           @showAlert 'Shared your chart!!', result.url
         .catch (err) =>
-          @onError err
+          @showAlert 'Error on sharing', err
 
     fetchSampleData: () ->
       d3.promise.text "#{_baseUrl}/data.#{_dataType}"
@@ -97,7 +97,7 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
       updateBinding = (binding) =>
         @binding?.release().catch(@onError)
         @binding = binding
-        @binding.on 'change', @renderBinding
+        @binding.on 'change', renderBinding
 
       renderBinding = () =>
         @getBoundData()
