@@ -29,6 +29,7 @@ define ['jquery', 'd3', 'd3.promise', 'FileSaver', 'canvg'], ($, d3, d3Promise, 
       @isExcel() && @isDelegateMode()
 
     save: (svgnode, type, baseUrl, filename='image') ->
+      return if !svgnode?
       d3.promise.text "#{baseUrl}/main.css"
         .then (css) =>
           @saveWithCSS svgnode, type, baseUrl, filename, css
