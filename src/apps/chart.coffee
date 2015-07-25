@@ -19,6 +19,14 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
 
   $('[data-toggle="tooltip"]').tooltip()
 
+  debugCounter = 5
+  $(window).on 'keydown', (e) ->
+    if e.ctrlKey && e.keyCode == 17
+      if --debugCounter == 0
+        $('#e2d3-share-chart-container').show()
+    else
+      debugCounter = 5
+
   class E2D3ChartViewer
     constructor: (frame) ->
       @binding = null
