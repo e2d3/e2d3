@@ -1,8 +1,8 @@
-params = window.location.hash.substring(1).split ','
-
 ###
 # load parameters
 ###
+params = window.location.hash.substring(1).split ','
+
 _baseUrl = params[0] ? '.'
 _scriptType = params[1] ? 'js'
 _dataType = params[2] ? 'csv'
@@ -19,23 +19,13 @@ require.config
       useXhr: () -> true
 
 ###
-requirejs.onError = (err) ->
-  if err?.requireType == "fromtexteval"
-    console.error err.message.split(/\n/)[0]
-  else if err?.requireType == "timeout"
-    # noop
-  else
-    throw err
-###
-
-###
 # main routine
 ###
-require ['domReady!', 'jquery', 'e2d3util', 'e2d3loader!main.' + _scriptType], (domReady, $, util, main) ->
+require ['domReady!', 'jquery', 'framecommon', 'e2d3util', 'e2d3loader!main.' + _scriptType], (domReady, $, common, util, main) ->
+
   # set base uri
   $('#e2d3-base').attr('href', _baseUrl + '/')
-  # load css, please ignore 404 error
-  $('<link rel="stylesheet" type="text/css" href="main.css" >').appendTo 'head'
+  common.loadMainCss()
 
   _chart =
     if main?
@@ -44,13 +34,13 @@ require ['domReady!', 'jquery', 'e2d3util', 'e2d3loader!main.' + _scriptType], (
       {}
 
   $(window).on 'resize', (e) ->
-    _chart.resize() if _chart.resize?
+    _chart.resize?()
 
   window.debug =
     setupDebugConsole: () ->
       util.setupDebugConsole()
   window.chart =
     update: (data) ->
-      _chart.update data if _chart.update?
+      _chart.update? data, common.onDataUpdated
     save: () ->
-      _chart.save() if _chart.save?
+      _chart.save?()

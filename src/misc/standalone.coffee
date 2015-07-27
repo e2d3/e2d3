@@ -1,10 +1,10 @@
+###
+# load parameters
+###
 script = document.currentScript || do ->
   scripts = document.getElementsByTagName("script")
   scripts[scripts.length - 1]
 
-###
-# load parameters
-###
 _baseUrl = script.getAttribute('data-base-url') ? '.'
 _scriptType = script.getAttribute('data-script-type') ? 'js'
 _dataType = script.getAttribute('data-data-type') ? 'csv'
@@ -26,34 +26,11 @@ req = require.config
 ###
 # main routine
 ###
-req ['domReady!', 'd3', 'e2d3model', 'e2d3loader!main.' + _scriptType], (domReady, d3, model, main) ->
-  ChartDataTable = model.ChartDataTable
-
-  cssloaded = false
-  dataloaded = false
-
-  takeScreenShot = () ->
-    if typeof window.callPhantom == 'function'
-      # PhantomJS currently does not support 'onload' event for stylesheets
-      # see https://github.com/ariya/phantomjs/issues/12332
-      if dataloaded && cssloaded
-        setTimeout () ->
-          window.callPhantom 'takeShot'
-        , 0
+req ['domReady!', 'd3', 'framecommon', 'e2d3model', 'e2d3loader!main.' + _scriptType], (domReady, d3, common, model, main) ->
 
   # set base uri
   document.querySelector('#e2d3-base').href = _baseUrl + '/'
-  # load css, please ignore 404 error
-  css = document.createElement('link')
-  css.rel = 'stylesheet'
-  css.type = 'text/css'
-  css.href = 'main.css'
-  # called from node-webshot via phantomjs
-  # css.onload = css.onerror = () ->
-  window.onmaincssload = window.onmaincsserror = () ->
-    cssloaded = true
-    takeScreenShot()
-  document.querySelector('head').appendChild(css)
+  common.loadMainCss()
 
   chart =
     if main?
@@ -62,11 +39,9 @@ req ['domReady!', 'd3', 'e2d3model', 'e2d3loader!main.' + _scriptType], (domRead
       {}
 
   window.onresize = (e) ->
-    chart.resize() if chart.resize?
+    chart.resize?()
 
   d3.text _dataUrl, (err, text) ->
     rows = d3[_dataType].parseRows text
-    data = new ChartDataTable rows
-    chart.update data, () ->
-      dataloaded = true
-      takeScreenShot()
+    data = new model.ChartDataTable rows
+    chart.update data, common.onDataUpdated
