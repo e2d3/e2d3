@@ -19,6 +19,7 @@ req = require.config
   baseUrl: _baseUrl
   paths: e2d3_default_paths
   shim: e2d3_default_shim
+  map: e2d3_default_map
   config:
     text:
       useXhr: () -> true

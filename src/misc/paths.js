@@ -39,7 +39,7 @@ var e2d3_default_paths = {
     "topojson"
   ],
   "vue": [
-    "//cdnjs.cloudflare.com/ajax/libs/vue/0.12.7/vue.min",
+    "//cdnjs.cloudflare.com/ajax/libs/vue/0.12.8/vue.min",
     "vue"
   ],
   "JSXTransformer": [
@@ -62,5 +62,13 @@ var e2d3_default_paths = {
 var e2d3_default_shim = {
   "three": {
     "exports": "THREE"
+  }
+};
+var e2d3_default_map = {
+  "*": {
+    "jquery": "jquery-private"
+  },
+  "jquery-private": {
+    "jquery": "jquery"
   }
 };
