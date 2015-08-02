@@ -1,4 +1,4 @@
-define ['d3', 'jquery', 'e2d3api', 'e2d3model', 'e2d3excel', 'e2d3util', 'e2d3loader'], (d3, $, api, model, excel, util, loader) ->
+define ['e2d3api', 'e2d3model', 'e2d3excel', 'e2d3util', 'e2d3loader', 'renderer'], (api, model, excel, util, loader, renderer) ->
 
   ###
   # export
@@ -22,8 +22,6 @@ define ['d3', 'jquery', 'e2d3api', 'e2d3model', 'e2d3excel', 'e2d3util', 'e2d3lo
           initExcel()
         else
           initBrowser()
-      .then (reason) ->
-        Promise.resolve(reason)
 
     onError: (message) ->
       if message?.stack?
@@ -35,5 +33,6 @@ define ['d3', 'jquery', 'e2d3api', 'e2d3model', 'e2d3excel', 'e2d3util', 'e2d3lo
     data: empty: () -> new ChartDataTable []
     api: api
     util: util
+    save: renderer.save
 
   e2d3

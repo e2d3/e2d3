@@ -131,6 +131,6 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
 
       onLoad.error = (err) -> onLoadNative.error err
 
-      text.load(name, req, onLoad, config);
+      text.load(name, req, onLoad, config)
 
   e2d3loader

@@ -28,7 +28,7 @@ block navleft
 
 block navright
   ul.nav.navbar-nav.navbar-right
-    li#e2d3-share-chart-container(style='display: none')
+    li
       button.btn.btn-sm.btn-default.navbar-btn#e2d3-share-chart(type='button')
         i.fa.fa-share-square-o
         |  Share chart
@@ -53,5 +53,22 @@ block content
         .modal-header
           h5#e2d3-alert-title.modal-title Modal title
         #e2d3-alert-body.modal-body
+        .modal-footer
+          button.btn.btn-sm.btn-default(type='button', data-dismiss='modal') OK
+  #e2d3-share.modal.fade(tabindex='-1', role='dialog', aria-labelledby='e2d3-share', aria-hidden='true')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5#e2d3-alert-title.modal-title Share your chart!
+        #e2d3-share-body.modal-body
+          .input-group
+            input#e2d3-share-url.form-control(type='text')
+            .input-group-btn
+              button#e2d3-share-copy.btn.btn-default(type='button')
+                i.fa.fa-copy
+              a#e2d3-share-facebook.btn.btn-default(href='javascript:')
+                i.fa.fa-facebook
+              a#e2d3-share-twitter.btn.btn-default(href='javascript:')
+                i.fa.fa-twitter
         .modal-footer
           button.btn.btn-sm.btn-default(type='button', data-dismiss='modal') OK

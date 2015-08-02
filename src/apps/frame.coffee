@@ -12,9 +12,9 @@ _dataType = params[2] ? 'csv'
 ###
 require.config
   baseUrl: _baseUrl
-  paths: e2d3_default_paths
-  shim: e2d3_default_shim
-  map: e2d3_default_map
+  paths: E2D3_DEFAULT_PATHS
+  shim: E2D3_DEFAULT_SHIM
+  map: E2D3_DEFAULT_MAP
   config:
     text:
       useXhr: () -> true

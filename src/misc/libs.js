@@ -6,6 +6,7 @@ define([
   'd3.promise',
   'markdown',
   'e2d3',
+  'secret',
   'framecommon'
 ], function () {
   // noop

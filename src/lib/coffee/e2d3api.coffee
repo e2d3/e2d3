@@ -1,4 +1,4 @@
-define ['jquery', 'd3'], ($, d3) ->
+define ['d3'], (d3) ->
   apiBaseUrl = '/api'
 
   mode =

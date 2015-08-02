@@ -1,19 +1,14 @@
-require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'markdown'], (bootstrap, $, d3, d3Promise, e2d3, markdown) ->
-  debugCounter = 5
+require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret', 'markdown'], (bootstrap, $, d3, d3Promise, e2d3, secret, markdown) ->
 
-  $(window).on 'keydown', (e) ->
-    if e.ctrlKey && e.keyCode == 17
-      if --debugCounter == 0
-        $('#delegate').show()
-    else
-      debugCounter = 5
+  secret () ->
+    $('#delegate').show()
 
   if e2d3.util.isDelegateMode()
     $('#delegate a').html('<i class="fa fa-sign-out"></i> Leave from delegate mode')
     $('#delegate').show()
 
   $('#delegate').on 'click', (e) ->
-    e2d3.util.setDelegateMode !e2d3.util.isDelegateMode()
+    e2d3.util.toggleDelegateMode()
     window.location.reload()
 
   Promise.all [d3.promise.html('cell.html'), e2d3.api.topcharts()]

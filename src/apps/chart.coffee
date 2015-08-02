@@ -11,21 +11,17 @@ _dataType = params[2] ? 'csv'
 # config
 ###
 require.config
-  paths: e2d3_default_paths
-  shim: e2d3_default_shim
+  paths: E2D3_DEFAULT_PATHS
+  shim: E2D3_DEFAULT_SHIM
+  config:
+    text:
+      useXhr: () -> true
 
-require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domReady, bootstrap, $, d3, d3Promise, e2d3) ->
-  e2d3.util.setupLiveReload() if e2d3.util.isLiveReloadEnabled()
+require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret'], (domReady, bootstrap, $, d3, d3Promise, e2d3, secret) ->
+
+  e2d3.util.setupLiveReloadForDelegateMode()
 
   $('[data-toggle="tooltip"]').tooltip()
-
-  debugCounter = 5
-  $(window).on 'keydown', (e) ->
-    if e.ctrlKey && e.keyCode == 17
-      if --debugCounter == 0
-        $('#e2d3-share-chart-container').show()
-    else
-      debugCounter = 5
 
   class E2D3ChartViewer
     constructor: (frame) ->
@@ -36,6 +32,17 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
       $('#e2d3-share-chart').on 'click', (e) => @shareChart()
       $('#e2d3-save-svg').on 'click', (e) => @saveImage 'svg'
       $('#e2d3-save-png').on 'click', (e) => @saveImage 'png'
+
+      $('#e2d3-share-copy').on 'click', (e) ->
+        $('#e2d3-share-url').select()
+        document.execCommand('copy') if document.queryCommandSupported('copy')
+
+      shareOnClick = (e) ->
+        e.preventDefault()
+        window.open($(this).attr('href'), 'share', 'width=600,height=258')
+
+      $('#e2d3-share-facebook').on 'click', shareOnClick
+      $('#e2d3-share-twitter').on 'click', shareOnClick
 
       Promise.all [@initExcel(), @createFrame()]
         .then () =>
@@ -85,14 +92,14 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
           @onError err
 
     saveImage: (type) ->
-      e2d3.util.save @chart().save().node(), type, _baseUrl
+      e2d3.save @chart().save().node(), type, _baseUrl
 
     shareChart: () ->
       @getBoundData()
         .then (data) ->
           e2d3.api.upload _baseUrl, _scriptType, data
         .then (result) =>
-          @showAlert 'Shared your chart!!', result.url
+          @showShare result.url
         .catch (err) =>
           @showAlert 'Error on sharing', err
 
@@ -132,5 +139,11 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domRe
       $('#e2d3-alert-title').text(title)
       $('#e2d3-alert-body').text(message)
       $('#e2d3-alert').modal()
+
+    showShare: (url) ->
+      $('#e2d3-share-url').val(url)
+      $('#e2d3-share-facebook').attr('href', "https://www.facebook.com/sharer/sharer.php?u=#{url}")
+      $('#e2d3-share-twitter').attr('href', "https://twitter.com/home?status=#{url}")
+      $('#e2d3-share').modal()
 
   new E2D3ChartViewer()

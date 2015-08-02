@@ -18,7 +18,7 @@ sourcemaps = require 'gulp-sourcemaps'
 jade = require 'gulp-jade'
 coffee = require 'gulp-coffee'
 sass = require 'gulp-sass'
-minify= require 'gulp-minify-css'
+minify = require 'gulp-minify-css'
 uglify = require 'gulp-uglify'
 amd = require 'amd-optimize'
 
@@ -98,7 +98,7 @@ gulp.task 'lib-scripts-standalone', ['clean'], ->
 gulp.task 'lib-styles', ['clean'], ->
   gulp.src 'src/lib/scss/main.scss'
     .pipe plumber()
-    .pipe sass()
+    .pipe sass precision: 8
     .pipe concat 'main.css'
     .pipe cond isRelease, minify()
     .pipe gulp.dest 'dist/lib'
