@@ -51,5 +51,8 @@
         "rgbcolor.js"
       ]
     }
+  },
+  "resolutions": {
+    "d3": "~3.5.5"
   }
 }
