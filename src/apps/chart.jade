@@ -61,14 +61,19 @@ block content
         .modal-header
           h5#e2d3-alert-title.modal-title Share your chart!
         #e2d3-share-body.modal-body
-          .input-group
-            input#e2d3-share-url.form-control(type='text')
-            .input-group-btn
-              button#e2d3-share-copy.btn.btn-default(type='button')
-                i.fa.fa-copy
-              a#e2d3-share-facebook.btn.btn-default(href='javascript:')
-                i.fa.fa-facebook
-              a#e2d3-share-twitter.btn.btn-default(href='javascript:')
-                i.fa.fa-twitter
+          .form-group
+            label Share URL
+            .input-group
+              input#e2d3-share-url.form-control(type='text')
+              .input-group-btn
+                button#e2d3-share-copy.btn.btn-default(type='button')
+                  i.fa.fa-copy
+                a#e2d3-share-facebook.btn.btn-default(href='javascript:')
+                  i.fa.fa-facebook
+                a#e2d3-share-twitter.btn.btn-default(href='javascript:')
+                  i.fa.fa-twitter
+          .form-group
+            label For blog
+            textarea#e2d3-share-iframe.form-control(rows='3')
         .modal-footer
-          button.btn.btn-sm.btn-default(type='button', data-dismiss='modal') OK
+          button.btn.btn-sm.btn-default(type='button', data-dismiss='modal') Close

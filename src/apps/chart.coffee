@@ -37,10 +37,16 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret
         $('#e2d3-share-url').select()
         document.execCommand('copy') if document.queryCommandSupported('copy')
 
+
+      selectOnClick = (e) ->
+        e.preventDefault()
+        $(this).select()
       shareOnClick = (e) ->
         e.preventDefault()
         window.open($(this).attr('href'), 'share', 'width=600,height=258')
 
+      $('#e2d3-share-url').on 'click', selectOnClick
+      $('#e2d3-share-iframe').on 'click', selectOnClick
       $('#e2d3-share-facebook').on 'click', shareOnClick
       $('#e2d3-share-twitter').on 'click', shareOnClick
 
@@ -142,6 +148,7 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret
 
     showShare: (url) ->
       $('#e2d3-share-url').val(url)
+      $('#e2d3-share-iframe').val("<iframe src=\"#{url}\" width=\"100%\" height=\"400\" frameborder=\"0\" scrolling=\"no\"></iframe>")
       $('#e2d3-share-facebook').attr('href', "https://www.facebook.com/sharer/sharer.php?u=#{url}")
       $('#e2d3-share-twitter').attr('href', "https://twitter.com/home?status=#{url}")
       $('#e2d3-share').modal()
