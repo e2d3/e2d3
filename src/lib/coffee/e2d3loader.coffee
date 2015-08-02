@@ -39,7 +39,7 @@ define ['text', 'compiler'], (text, compiler) ->
     wrapped = """
 define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
 
-  var _script = function (root, baseUrl, reload) {
+  var _script = function (e2d3, root, baseUrl, reload, onready) {
 
 #{compiled}
 
@@ -51,16 +51,35 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
 
   return function (root, baseUrl) {
     var _data = null;
+    var _onready = null;
     var _functions = null;
 
     var _reload = function () {
       if (_data && _functions.update) {
-        _functions.update(_data);
+        var result = _functions.update(_data);
+        if (!(typeof result === 'boolean' && result === false)) {
+          if (_onready) {
+            _onready();
+          }
+        }
       }
     };
 
+    var _ready = function () {
+      if (_onready) {
+        _onready();
+      }
+    }
+
     var _initialize = function () {
-      _functions = _script(root, baseUrl, _reload);
+      var e2d3 = {
+        root: root,
+        baseUrl: baseUrl,
+        reload: _reload,
+        onready: _ready
+      };
+
+      _functions = _script(e2d3, root, baseUrl, _reload, _ready);
       _reload();
     };
 
@@ -71,8 +90,9 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
     _initialize();
 
     var exports = {
-      update: function (data) {
+      update: function (data, onready) {
         _data = data;
+        _onready = onready;
         _reload();
       },
       resize: function () {
@@ -111,6 +131,6 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
 
       onLoad.error = (err) -> onLoadNative.error err
 
-      text.load(name, req, onLoad, config);
+      text.load(name, req, onLoad, config)
 
   e2d3loader

@@ -19,11 +19,11 @@
     "requirejs-text": "~2.0.13",
     "bootstrap-sass-official": "~3.3.0",
     "d3": "~3.5.5",
+    "d3.promise": "~1.0.0",
     "markdown": "~0.5.0",
     "font-awesome": "~4.3.0",
     "FileSaver": "*",
-    "canvg-gabelerner": "*",
-    "requirejs-plugins": "~1.0.3"
+    "canvg-gabelerner": "*"
   },
   "overrides": {
     "requirejs-domready": {
@@ -31,6 +31,9 @@
     },
     "requirejs-text": {
       "main": "text.js"
+    },
+    "d3.promise": {
+      "main": "dist/d3.promise.js"
     },
     "markdown": {
       "main": "lib/markdown.js"
@@ -42,7 +45,14 @@
       "main": "fonts/*"
     },
     "canvg-gabelerner": {
-      "main": ["canvg.js", "stackblur.js", "rgbcolor.js"]
+      "main": [
+        "canvg.js",
+        "stackblur.js",
+        "rgbcolor.js"
+      ]
     }
+  },
+  "resolutions": {
+    "d3": "~3.5.5"
   }
 }
