@@ -6,6 +6,7 @@ params = window.location.hash.substring(1).split ','
 _baseUrl = params[0] ? '.'
 _scriptType = params[1] ? 'js'
 _dataType = params[2] ? 'csv'
+_viewport = '#e2d3-chart-area'
 
 ###
 # config
@@ -22,26 +23,25 @@ require.config
 ###
 # main routine
 ###
-require ['domReady!', 'jquery', 'framecommon', 'e2d3util', 'e2d3loader!main.' + _scriptType], (domReady, $, common, util, main) ->
+require ['domReady!', 'framecommon', 'e2d3util', 'e2d3loader!main.' + _scriptType], (domReady, common, util, main) ->
 
   # set base uri
-  $('#e2d3-base').attr('href', _baseUrl + '/')
-  common.loadMainCss()
+  document.querySelector('#e2d3-base').href = _baseUrl + '/'
+  common.loadMainCss () ->
+    chart =
+      if main?
+        main document.querySelector(_viewport), _baseUrl
+      else
+        {}
 
-  _chart =
-    if main?
-      main $('#e2d3-chart-area').get(0), _baseUrl
-    else
-      {}
+    window.onresize = (e) ->
+      chart.resize?()
 
-  $(window).on 'resize', (e) ->
-    _chart.resize?()
-
-  window.debug =
-    setupDebugConsole: () ->
-      util.setupDebugConsole()
-  window.chart =
-    update: (data) ->
-      _chart.update? data, common.onDataUpdated
-    save: () ->
-      _chart.save?()
+    window.debug =
+      setupDebugConsole: () ->
+        util.setupDebugConsole()
+    window.chart =
+      update: (data) ->
+        chart.update? data, common.onDataUpdated
+      save: () ->
+        chart.save?()
