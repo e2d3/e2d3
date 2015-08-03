@@ -14,6 +14,10 @@ var E2D3_DEFAULT_PATHS = {
     '//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min',
     'coffee-script'
   ],
+  'crossfilter': [
+    '//cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.11/crossfilter.min',
+    'crossfilter'
+  ],
   'd3': [
     '//cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min',
     'd3'
@@ -21,6 +25,10 @@ var E2D3_DEFAULT_PATHS = {
   'd3plus': [
     '//cdnjs.cloudflare.com/ajax/libs/d3plus/1.7.4/d3plus.min',
     'd3plus'
+  ],
+  'dc': [
+    '//cdnjs.cloudflare.com/ajax/libs/dc/1.7.3/dc.min',
+    'dc'
   ],
   'jquery': [
     '//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min',
@@ -62,6 +70,9 @@ var E2D3_DEFAULT_PATHS = {
 var E2D3_DEFAULT_SHIM = {
   'three': {
     'exports': 'THREE'
+  },
+  'crossfilter': {
+    'exports': 'crossfilter'
   }
 };
 var E2D3_DEFAULT_MAP = {
