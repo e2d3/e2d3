@@ -64,7 +64,6 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret
       @frame.width = '100%'
       @frame.height = '100%'
       @frame.frameBorder = 0
-      @frame.scrolling = 'no'
       @frame.sandbox = 'allow-same-origin allow-scripts'
       $('#e2d3-frame').append @frame
 

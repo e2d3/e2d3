@@ -31,18 +31,17 @@ req ['domReady!', 'd3', 'framecommon', 'e2d3model', 'e2d3loader!main.' + _script
 
   # set base uri
   document.querySelector('#e2d3-base').href = _baseUrl + '/'
-  common.loadMainCss()
+  common.loadMainCss () ->
+    chart =
+      if main?
+        main document.querySelector(_viewport), _baseUrl
+      else
+        {}
 
-  chart =
-    if main?
-      main document.querySelector(_viewport), _baseUrl
-    else
-      {}
+    window.onresize = (e) ->
+      chart.resize?()
 
-  window.onresize = (e) ->
-    chart.resize?()
-
-  d3.text _dataUrl, (err, text) ->
-    rows = d3[_dataType].parseRows text
-    data = new model.ChartDataTable rows
-    chart.update data, common.onDataUpdated
+    d3.text _dataUrl, (err, text) ->
+      rows = d3[_dataType].parseRows text
+      data = new model.ChartDataTable rows
+      chart.update data, common.onDataUpdated

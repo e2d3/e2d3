@@ -12,7 +12,7 @@ define [], () ->
         , 0
 
   common =
-    loadMainCss: () ->
+    loadMainCss: (onload) ->
       # load css, please ignore 404 error
       css = document.createElement('link')
       css.rel = 'stylesheet'
@@ -24,6 +24,7 @@ define [], () ->
         console.log '[E2D3] cssLoaded'
         cssloaded = true
         takeScreenShot()
+        onload?()
       document.querySelector('head').appendChild(css)
 
     onDataUpdated: () ->
