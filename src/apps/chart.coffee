@@ -106,7 +106,7 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret
         .then (result) =>
           @showShare result.url
         .catch (err) =>
-          @showAlert 'Error on sharing', err
+          @showAlert 'Error on sharing', err.statusText ? err
 
     fetchSampleData: () ->
       d3.promise.text "#{_baseUrl}/data.#{_dataType}"
