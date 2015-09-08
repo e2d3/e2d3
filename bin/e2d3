@@ -32,22 +32,25 @@ function parseOptions() {
   program.parse(process.argv);
 
   program.contrib = path.resolve(contrib);
-  program.tinylr = tinylr;
+  program.livereload = -1;
 
   return program;
 }
 
 function checkVersion() {
   https.get('https://a.e2d3.org/api', function (res) {
-    if (res.statusCode !== 200) return;
+    if (res.statusCode !== 200) {
+      return;
+    }
 
     res.on('data', function (data) {
       var json = JSON.parse(data);
       if (semver.lt(e2d3.version, json.versions.e2d3)) {
-        console.log(colors.yellow('[E2D3] A new version is available (v' + json.versions.e2d3 + '). Please run "npm update -g e2d3"'));
+        console.log(colors.yellow(
+          '[E2D3] A new version is available (v' + json.versions.e2d3 + '). Please run "npm update -g e2d3"'));
       }
     });
-  }).on('error', function (e) {
+  }).on('error', function () {
     // ignore
   });
 }
