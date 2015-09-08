@@ -11,28 +11,32 @@ define ['text', 'compiler', 'extractor'], (text, compiler, extractor) ->
       vue: 'Vue'
       'three.js': 'THREE'
 
-    snakeToCamel = (s) ->
-      s.replace(/(\-\w)/g, (m) -> m[1].toUpperCase())
+    toVariable = (s) ->
+      s
+        .replace(/(\-\w)/g, (m) -> m[1].toUpperCase())
+        .replace('.', '')
 
     moduleNameMap = (module) ->
-      idx = module.indexOf(':')
-      if idx != -1
-        module[0...idx]
-      else
-        nameMap[module] ? snakeToCamel(module)
-
-    moduleMap = (module) ->
       idx = module.indexOf(':')
       if idx != -1
         "'#{module[(idx+1)..-1]}'"
       else
         "'#{module}'"
 
+    moduleVariableMap = (module) ->
+      idx = module.indexOf(':')
+      if idx != -1
+        module[0...idx]
+      else
+        nameMap[module] ? toVariable(module)
+
     moduleNames = modules.map(moduleNameMap).join(',')
-    moduleNamesWithQuote = modules.map(moduleMap).join(',')
+    moduleVariables = modules.map(moduleVariableMap).join(',')
+
+    console.info "[E2D3] define([#{moduleNames}], function (#{moduleVariables}) { ... });"
 
     wrapped = """
-define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
+define([#{moduleNames}], function (#{moduleVariables}) {
 
   var _script = function (e2d3, root, baseUrl, reload, onready) {
 
