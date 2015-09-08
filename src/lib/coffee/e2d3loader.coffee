@@ -1,16 +1,8 @@
-define ['text', 'compiler'], (text, compiler) ->
+define ['text', 'compiler', 'extractor'], (text, compiler, extractor) ->
   'use strict'
 
-  wrap = (compiled, firstLine) ->
-    # extract module names
-    if matched = firstLine.match /^\/\/#\s*require\s*=\s*(.*)$/
-      # for JavaScript
-      modules = matched[1].split(',').map (module) -> module.trim()
-    else if matched = firstLine.match /^##\s*require\s*=\s*(.*)$/
-      # for CoffeeScript
-      modules = matched[1].split(',').map (module) -> module.trim()
-    else
-      modules = ['d3']
+  wrap = (compiled, modules) ->
+    modules = ['d3'] if modules.length == 0
 
     nameMap =
       jquery: '$'
@@ -19,12 +11,15 @@ define ['text', 'compiler'], (text, compiler) ->
       vue: 'Vue'
       'three.js': 'THREE'
 
+    snakeToCamel = (s) ->
+      s.replace(/(\-\w)/g, (m) -> m[1].toUpperCase())
+
     moduleNameMap = (module) ->
       idx = module.indexOf(':')
       if idx != -1
         module[0...idx]
       else
-        nameMap[module] ? module
+        nameMap[module] ? snakeToCamel(module)
 
     moduleMap = (module) ->
       idx = module.indexOf(':')
@@ -119,10 +114,19 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
 
     load: (name, req, onLoadNative, config) ->
       onLoad = (source) ->
-        compiler.compile req, name, source, (compiled, mappings) ->
-          firstLine = (/[^\r\n]+/.exec(source))?[0]
+        modules = extractor.modules name, source
+        overrides = extractor.config name, source
 
-          wrapped = wrap compiled, firstLine
+        console.info "[E2D3] modules: #{JSON.stringify(modules)}"
+        console.info "[E2D3] config: #{JSON.stringify(overrides, null, '  ')}"
+
+        # copy configs from overrides
+        for own prop of overrides
+          for own key, value of overrides[prop]
+            config[prop][key] = value
+
+        compiler.compile req, name, source, (compiled, mappings) ->
+          wrapped = wrap compiled, modules
           wrappedMappings = ';;;;' + mappings
 
           transformed = compiler.mapping wrapped, name, source, wrappedMappings, config.baseUrl

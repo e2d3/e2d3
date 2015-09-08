@@ -9,12 +9,12 @@ define ['e2d3api', 'e2d3model', 'e2d3excel', 'e2d3util', 'e2d3loader', 'renderer
       new Promise (resolve, reject) ->
         initExcel = () ->
           Office.initialize = (reason) ->
-            console.info 'initialized: excel'
+            console.info '[E2D3] initialized: excel'
             e2d3.excel = excel.initialize()
             resolve reason
 
         initBrowser = () ->
-          console.info 'initialized: browser'
+          console.info '[E2D3] initialized: browser'
           e2d3.excel = excel.initialize()
           resolve 'inserted'
 

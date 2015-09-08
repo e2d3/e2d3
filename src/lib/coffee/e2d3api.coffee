@@ -9,7 +9,7 @@ define ['d3'], (d3) ->
     else
       'server'
 
-  console.info 'mode: ' + mode
+  console.info '[E2D3] mode: ' + mode
 
   server =
     topcharts: () ->
