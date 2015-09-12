@@ -8,6 +8,6 @@ define([
   'e2d3',
   'secret',
   'framecommon'
-], function () {
-  // noop
+], function() {
+// noop
 });

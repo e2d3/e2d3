@@ -5,6 +5,6 @@ define([
   'e2d3model',
   'e2d3loader',
   'framecommon'
-], function () {
-  // noop
+], function() {
+// noop
 });
