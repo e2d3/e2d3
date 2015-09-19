@@ -37,7 +37,6 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret
         $('#e2d3-share-url').select()
         document.execCommand('copy') if document.queryCommandSupported('copy')
 
-
       selectOnClick = (e) ->
         e.preventDefault()
         $(this).select()
@@ -64,7 +63,6 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret
       @frame.width = '100%'
       @frame.height = '100%'
       @frame.frameBorder = 0
-      # @frame.sandbox = 'allow-same-origin allow-scripts'
       $('#e2d3-frame').append @frame
 
       new Promise (resolve, reject) =>

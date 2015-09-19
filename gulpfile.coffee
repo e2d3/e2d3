@@ -4,6 +4,7 @@ debug = require 'gulp-debug'
 
 rimraf = require 'rimraf'
 merge = require 'merge2'
+path = require 'path'
 
 cond = require 'gulp-if'
 filter = require 'gulp-filter'
@@ -150,7 +151,9 @@ gulp.task 'run', ['watch'], ->
 gulp.task 'default', ['build']
 
 startExpress = () ->
-  server.listen path: 'server.js'
+  server.listen
+    path: 'server.js'
+    delay: 0
 
 lr = null
 startLivereload = () ->
@@ -158,6 +161,9 @@ startLivereload = () ->
   lr.listen 35730
 
 notifyLivereload = (event) ->
-  server.restart (error) ->
+  dist = path.join __dirname, 'dist'
+  name = path.relative dist, event.path
+  name = name.substring 3 if /^\.\.\/contrib\//.test name
+  server.changed (error) ->
     if !error
-      lr.changed body: files: ['dummy']
+      lr.changed body: files: [name]

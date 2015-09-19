@@ -10,7 +10,7 @@ var colors = require('colors');
 var semver = require('semver');
 var https = require('https');
 
-var e2d3server = require('../lib/index.js');
+var e2d3server = require('../lib/index');
 
 var e2d3 = require('../package.json');
 
@@ -61,7 +61,8 @@ console.log(colors.green('[E2D3] Publish ' + options.contrib));
 
 watch(options.contrib, function (filename) {
   console.log(colors.green('[E2D3] File changed ' + filename));
-  tinylr.changed('dummy');
+  filename = path.join('contrib', path.relative(options.contrib, filename));
+  tinylr.changed(filename);
 });
 
 e2d3server(options);

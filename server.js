@@ -2,7 +2,7 @@
 
 var path = require('path');
 
-var e2d3server = require('./lib/index.js');
+var e2d3server = require('./lib/index');
 
 e2d3server({
   http: process.env.PORT || 8000,
