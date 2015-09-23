@@ -2,6 +2,7 @@ extends layout
 
 block vars
   - var title = 'E2D3'
+  - var page = 'index'
   - var main = 'index.js'
 
 block navleft
@@ -13,4 +14,17 @@ block navright
       |  Go into delegate mode
 
 block content
+  #sidebar
+    a.sidebar-item.active(href='javascript:', data-label='recommended')
+      i.fa.fa-fw.fa-star
+      .sidebar-label Recommended
+    a.sidebar-item(href='javascript:', data-label='example')
+      i.fa.fa-fw.fa-gavel
+      .sidebar-label Examples
+    a.sidebar-item(href='javascript:', data-label='hackathon')
+      i.fa.fa-fw.fa-bolt
+      .sidebar-label Hackathon
+    a#uncategorized.sidebar-item(href='javascript:', data-label='uncategorized', style='display: none')
+      i.fa.fa-fw.fa-question
+      .sidebar-label Uncategorized
   #contrib.row.grid

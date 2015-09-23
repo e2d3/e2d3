@@ -1,25 +1,28 @@
 .grid {
-  padding: 0px;
+  padding: 0;
 
   > div {
     padding: $grid-gutter-width / 2;
   }
 
   figure {
-    border: 1px solid #ccc;
+    border-radius: 2px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
 
     .cover {
-      background-size: cover;
       background-position: center center;
+      background-size: cover;
 
       .title {
-        padding: 2px 8px 4px;
-        background-color: rgba(255,255,255,0.8);
-        border-top: 1px solid #ccc;
         position: absolute;
-        text-align: right;
         bottom: 0;
         width: 100%;
+        padding: 2px 8px 4px;
+        border-top: 1px solid #d9d9d9;
+        background-color: rgba(255,255,255,.8);
+        font-size: 10px;
+        text-align: right;
       }
     }
 
@@ -44,57 +47,66 @@
       position: absolute;
       top: 0;
       left: 0;
-      height: auto;
       width: 400px;
+      height: auto;
       padding: 15px;
-      border: 1px solid #AAA;
-      box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
-      z-index: 100;
+      transition: transform .3s, opacity .3s;
+      border: 1px solid #f0f0f0;
+      border-radius: 2px;
+      background-color: #ffffff;
+      color: #666666;
+      font-size: 12px;
       text-align: left;
-      background-color: #FAFAFA;
-      visibility: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,.1);
       opacity: 0;
-      transition: transform 0.3s, opacity 0.3s;
+      visibility: hidden;
+      z-index: 100;
 
       .action {
-        float: right;
         margin-left: 10px;
+        float: right;
+      }
+
+      h1, h2, h3 {
+        color: #000000;
+        font-weight: normal;
       }
 
       h1 {
-        @extend .h3;
+        font-size: 1.5em;
       }
+
       h1:first-child {
         margin-top: 0;
       }
 
       h2 {
-        @extend .h4;
+        font-size: 1.3em;
       }
 
       h3 {
-        @extend .h5;
+        font-size: 1.2em;
       }
 
       table {
         @extend .table;
         @extend .table-bordered;
-        font-size: 0.8em;
+        font-size: .8em;
       }
     }
 
     &:hover figcaption {
-      visibility: visible;
-      opacity: 1;
       transform: translate(15px, 15px);
+      opacity: 1;
+      visibility: visible;
     }
   }
 
   > div:nth-child(3n) {
     figure {
       figcaption {
-        left: auto;
         right: 0;
+        left: auto;
       }
 
       &:hover figcaption {

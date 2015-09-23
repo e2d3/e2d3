@@ -1,19 +1,31 @@
-$font-family-sans-serif: "Segoe UI", "Lucida Grande", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-sans-serif: 'Segoe UI', 'Lucida Grande', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+$border-radius-base:        2px !default;
+$border-radius-large:       2px !default;
+$border-radius-small:       2px !default;
+
+$padding-small-vertical: 3px;
 
 $navbar-height: 40px;
+$navbar-default-bg: #fafafa;
+$sidebar-width: 80px;
 
 $grid-float-breakpoint: 300px;
-$grid-gutter-width: 12px;
+$grid-gutter-width: 10px;
 
-$icon-font-path: "";
+$icon-font-path: '';
 
-$fa-font-path: ".";
+$fa-font-path: '.';
 
-@import "../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap";
-@import "../../../bower_components/font-awesome/scss/font-awesome";
+@import '../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap';
+@import '../../../bower_components/font-awesome/scss/font-awesome';
 
 body {
   padding: 6px 15px 6px 6px;
+}
+
+body.index {
+  background-color: #f8f8f8;
 }
 
 .delegate {
@@ -24,16 +36,58 @@ body {
 
 .navbar {
   .container-fluid {
-    padding: 0px;
-    margin-left: 15px;
     margin-right: 30px;
+    margin-left: 15px;
+    padding: 0px;
   }
+}
+
+#sidebar {
+  position: fixed;
+  top: $navbar-height;
+  left: 0;
+  width: $sidebar-width;
+  height: 100vh;
+  border-right: 1px solid $navbar-default-border;
+  background-color: $navbar-default-bg;
+  text-align: center;
+  z-index: 1020;
+
+  a {
+    display: block;
+    padding: 10px;
+    color: $navbar-default-link-color;
+
+    &:hover {
+      background-color: $navbar-default-link-hover-bg;
+      color: $navbar-default-link-hover-color;
+    }
+
+    &.active {
+      background-color: $navbar-default-link-active-bg;
+      color: $navbar-default-link-active-color;
+    }
+
+    i.fa {
+      font-size: 40px;
+    }
+
+    .sidebar-label {
+      font-size: 8px;
+      padding-top: 4px;
+    }
+  }
+}
+
+#contrib {
+  padding-left: $sidebar-width;
 }
 
 #maincontent {
   padding: $navbar-height $grid-gutter-width/2 0;
 }
 
-@import "./log";
-@import "./grid";
-@import "./chart";
+@import './log';
+@import './grid';
+@import './chart';
+@import './button';

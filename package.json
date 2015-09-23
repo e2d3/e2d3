@@ -25,6 +25,7 @@
     "connect-livereload": "~0.5.3",
     "cors": "~2.7.1",
     "express": "~4.13.3",
+    "js-yaml": "^3.4.2",
     "morgan": "~1.6.1",
     "node-watch": "~0.3.4",
     "open": "0.0.5",

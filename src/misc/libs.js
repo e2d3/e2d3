@@ -7,6 +7,7 @@ define([
   'markdown',
   'e2d3',
   'secret',
+  'urlparam',
   'framecommon'
 ], function() {
 // noop
