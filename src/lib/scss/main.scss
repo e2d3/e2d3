@@ -26,6 +26,7 @@ body {
 
 body.index {
   background-color: #f8f8f8;
+  overflow-x: hidden;
 }
 
 .delegate {
@@ -55,7 +56,7 @@ body.index {
 
   a {
     display: block;
-    padding: 10px;
+    padding: 10px 0;
     color: $navbar-default-link-color;
 
     &:hover {
@@ -73,7 +74,7 @@ body.index {
     }
 
     .sidebar-label {
-      font-size: 8px;
+      font-size: 10px;
       padding-top: 4px;
     }
   }
