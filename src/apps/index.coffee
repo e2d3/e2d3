@@ -13,15 +13,21 @@ require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret', 'markdown'
 
   cell = null
   charts = null
-  tag = 'recommended'
+  tag = (sessionStorage.getItem 'tag') ? 'recommended'
+
+  updateTag = () ->
+    $('.sidebar-item').removeClass 'active'
+    $(".sidebar-item[data-label='#{tag}']").addClass 'active'
+
+  updateTag()
 
   $('.sidebar-item').on 'click', (e) ->
     $this = $(this)
 
     tag = $this.data 'label'
+    sessionStorage.setItem 'tag', tag
 
-    $('.sidebar-item').removeClass 'active'
-    $this.addClass 'active'
+    updateTag()
 
     d3.select '#contrib'
       .selectAll 'div'
