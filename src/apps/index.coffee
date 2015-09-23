@@ -35,7 +35,7 @@ require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret', 'markdown'
       setupGrid()
 
       hasUncategorized = charts.some (chart) ->
-        chart.tags == null || chart.tags.length == 0
+        !chart.tags? || chart.tags.length == 0
       $('#uncategorized').show() if hasUncategorized
       undefined # cofeescript promise idiom
     .catch (err) ->
@@ -48,7 +48,7 @@ require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret', 'markdown'
           if tag != 'uncategorized'
             chart.tags? && chart.tags.indexOf(tag) != -1
           else
-            chart.tags == null || chart.tags.length == 0
+            !chart.tags? || chart.tags.length == 0
       .enter().append 'div'
         .classed 'col-xs-4', true
         .each (d, i) ->
