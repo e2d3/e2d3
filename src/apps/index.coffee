@@ -34,6 +34,11 @@ require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret', 'markdown'
       .remove()
     setupGrid()
 
+  e2d3.initialize()
+    .then () ->
+      chart = e2d3.excel.getAttribute 'chart'
+      window.location.href = "chart.html##{chart.path},#{chart.scriptType},#{chart.dataType}"
+
   Promise.all [d3.promise.html('cell.html'), e2d3.api.topcharts()]
     .then (values) ->
       cell = values[0]
@@ -60,17 +65,19 @@ require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret', 'markdown'
         .each (d, i) ->
           newcell = d3.select(cell.cloneNode(true))
 
+          baseUrl = e2d3.util.baseUrl d.path
+
           newcell.select '.cover'
-            .style 'background-image', "url('#{d.baseUrl}/thumbnail.png')"
+            .style 'background-image', "url('#{baseUrl}/thumbnail.png')"
             .select '.title'
             .text d.title
 
           newcell.select '.readme'
             .each ->
-              d3.text d.baseUrl + '/README.md', (error, readme) =>
+              d3.text baseUrl + '/README.md', (error, readme) =>
                 this.innerHTML = markdown.toHTML readme, 'Maruku'
 
           newcell.select '.use'
-            .attr 'href', "chart.html##{d.baseUrl},#{d.scriptType},#{d.dataType}"
+            .attr 'href', "chart.html##{d.path},#{d.scriptType},#{d.dataType}"
 
           this.appendChild(newcell.node())

@@ -50,7 +50,7 @@ gulp.task 'lib-scripts', ['clean'], ->
         .pipe filter '**/*.js'
       gulp.src 'src/misc/libs.js'
       gulp.src 'src/lib/js/*.js'
-      gulp.src 'src/lib/coffee/*.coffee'
+      gulp.src ['src/lib/coffee/*.coffee', 'src/common/**/*.coffee']
         .pipe plumber()
         .pipe coffee()
       )
@@ -80,7 +80,7 @@ gulp.task 'lib-scripts-standalone', ['clean'], ->
         .pipe filter '**/*.js'
       gulp.src 'src/misc/libs-standalone.js'
       gulp.src 'src/lib/js/*.js'
-      gulp.src 'src/lib/coffee/*.coffee'
+      gulp.src ['src/lib/coffee/*.coffee', 'src/common/**/*.coffee']
         .pipe plumber()
         .pipe coffee()
       )
@@ -136,12 +136,12 @@ gulp.task 'apps', ['html', 'scripts', 'files']
 gulp.task 'build', ['lib', 'apps']
 
 gulp.task 'watch', ['build'], ->
-  gulp.watch ['src/lib/**/*', 'src/misc/**/*'], ['lib']
+  gulp.watch ['src/lib/**/*', 'src/common/**/*', 'src/misc/**/*'], ['lib']
   gulp.watch 'src/apps/**/*', ['apps']
   gulp.watch ['dist/**/*', 'contrib/**/*', 'server.js', 'lib/**/*'], notifyLivereload
 
 gulp.task 'watch-server', ['build'], ->
-  gulp.watch ['src/lib/**/*', 'src/misc/**/*'], ['lib']
+  gulp.watch ['src/lib/**/*', 'src/common/**/*', 'src/misc/**/*'], ['lib']
   gulp.watch 'src/apps/**/*', ['apps']
 
 gulp.task 'run', ['watch'], ->

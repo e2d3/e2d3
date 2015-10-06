@@ -55,6 +55,25 @@ define ['d3', 'e2d3model', 'e2d3util'], (d3, model, util) ->
           else
             reject result.error
 
+    getAttribute: (key) ->
+      Office.context.document.settings.get key
+
+    storeAttribute: (key, value) ->
+      Office.context.document.settings.set key, value
+      Office.context.document.settings.saveAsync (result) ->
+        if result.status == Office.AsyncResultStatus.Succeeded
+          console.info 'Settings saved.'
+        else
+          console.error result.error
+
+    removeAttribute: (key, value) ->
+      Office.context.document.settings.remove key
+      Office.context.document.settings.saveAsync (result) ->
+        if result.status == Office.AsyncResultStatus.Succeeded
+          console.info 'Settings saved.'
+        else
+          console.error result.error
+
   ###
   # Dummy API
   ###
@@ -80,6 +99,15 @@ define ['d3', 'e2d3model', 'e2d3util'], (d3, model, util) ->
     bindSelected: (callback) ->
       new Promise (resolve, reject) ->
         resolve new DummyBinding @rows
+
+    getAttribute: (key) ->
+      JSON.parse localStorage.getItem key
+
+    storeAttribute: (key, value) ->
+      localStorage.setItem key, JSON.stringify value
+
+    removeAttribute: (key, value) ->
+      localStorage.removeItem key
 
   ###
   # export

@@ -1,4 +1,4 @@
-define ['jquery'], ($) ->
+define ['jquery', 'util/chartpath'], ($, chartpath) ->
   # this works only on top frame
   isNativeExcel =
     try
@@ -28,6 +28,9 @@ define ['jquery'], ($) ->
 
     isDebugConsoleEnabled: () ->
       isNativeExcel && @isDelegateMode()
+
+    baseUrl: (path) ->
+      chartpath.decode path
 
     ###*
     # change `console.log()`'s output to popup dialog
