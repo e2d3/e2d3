@@ -2,16 +2,29 @@ extends layout
 
 block vars
   - var title = 'E2D3'
+  - var page = 'index'
   - var main = 'index.js'
 
 block navleft
-  ul.nav.navbar-nav
-    li.active: a(href='#recommended')
-      i.fa.fa-star
-      |  Recommended
-    li: a(href='#geometory')
-      i.fa.fa-globe
-      |  Geometory
+
+block navright
+  ul.nav.navbar-nav.navbar-right
+    li#delegate(style='display: none'): a(href='#') 
+      i.fa.fa-bug
+      |  Go into delegate mode
 
 block content
-  #contrib.row.grid.cs-style-1
+  #sidebar
+    a.sidebar-item(href='javascript:', data-label='recommended')
+      i.fa.fa-fw.fa-star
+      .sidebar-label Recommended
+    a.sidebar-item(href='javascript:', data-label='example')
+      i.fa.fa-fw.fa-gavel
+      .sidebar-label Examples
+    a.sidebar-item(href='javascript:', data-label='hackathon')
+      i.fa.fa-fw.fa-bolt
+      .sidebar-label Hackathon
+    a#uncategorized.sidebar-item(href='javascript:', data-label='uncategorized', style='display: none')
+      i.fa.fa-fw.fa-question
+      .sidebar-label Uncategorized
+  #contrib.row.grid

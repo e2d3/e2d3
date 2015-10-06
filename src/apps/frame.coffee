@@ -1,35 +1,47 @@
-params = window.location.hash.substring(1).split ','
-
 ###
 # load parameters
 ###
-_baseUrl = params[0]
-_main = switch params[1]
-  when 'jsx' then 'main.jsx'
-  when 'coffee' then 'main.coffee'
-  else 'main.js'
-_dataType = params[2]
+params = window.location.hash.substring(1).split ','
+
+_baseUrl = params[0] ? '.'
+_scriptType = params[1] ? 'js'
+_dataType = params[2] ? 'csv'
+_viewport = '#e2d3-chart-area'
 
 ###
 # config
 ###
 require.config
   baseUrl: _baseUrl
-  paths:
-    JSXTransformer: '/lib/JSXTransformer'
+  paths: E2D3_DEFAULT_PATHS
+  shim: E2D3_DEFAULT_SHIM
+  map: E2D3_DEFAULT_MAP
+  config:
+    text:
+      useXhr: () -> true
 
 ###
 # main routine
 ###
-require ['domReady!', 'jquery', 'e2d3loader!'+_main], (domReady, $, main) ->
-  # load css, please ignore 404 error
-  $('<link rel="stylesheet" type="text/css" href="' + _baseUrl + '/main.css" >').appendTo 'head'
+require ['domReady!', 'framecommon', 'e2d3util', 'e2d3loader!main.' + _scriptType], (domReady, common, util, main) ->
 
-  _chart = main $('#e2d3-chart-area').get(0), _baseUrl
+  # set base uri
+  document.querySelector('#e2d3-base').href = _baseUrl + '/'
+  common.loadMainCss () ->
+    chart =
+      if main?
+        main document.querySelector(_viewport), _baseUrl
+      else
+        {}
 
-  $(window).on 'resize', (e) ->
-    if _chart.resize?
-      _chart.resize()
+    window.onresize = (e) ->
+      chart.resize?()
 
-  window.update = (data) ->
-    _chart.update data
+    window.debug =
+      setupDebugConsole: () ->
+        util.setupDebugConsole()
+    window.chart =
+      update: (data) ->
+        chart.update? data, common.onDataUpdated
+      save: () ->
+        chart.save?()

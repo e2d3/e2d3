@@ -1,0 +1,70 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var program = require('commander');
+var path = require('path');
+var tinylr = require('tiny-lr');
+var watch = require('node-watch');
+var colors = require('colors');
+var semver = require('semver');
+var https = require('https');
+
+var e2d3server = require('../lib/index');
+
+var e2d3 = require('../package.json');
+
+function parsePort(value) {
+  return parseInt(value);
+}
+
+function parseOptions() {
+  var contrib = '.';
+
+  program
+    .description('run http server for developing charts')
+    .version(e2d3.version)
+    .arguments('[dir]')
+    .option('--http <port>', 'HTTP Port', parsePort, process.env.PORT || 8000)
+    .option('--https <port>', 'HTTPS Port', parsePort, process.env.PORT || 8443)
+    .action(function (dir) { contrib = dir; });
+
+  program.parse(process.argv);
+
+  program.contrib = path.resolve(contrib);
+  program.livereload = -1;
+
+  return program;
+}
+
+function checkVersion() {
+  https.get('https://a.e2d3.org/api', function (res) {
+    if (res.statusCode !== 200) {
+      return;
+    }
+
+    res.on('data', function (data) {
+      var json = JSON.parse(data);
+      if (semver.lt(e2d3.version, json.versions.e2d3)) {
+        console.log(colors.yellow(
+          '[E2D3] A new version is available (v' + json.versions.e2d3 + '). Please run "npm update -g e2d3"'));
+      }
+    });
+  }).on('error', function () {
+    // ignore
+  });
+}
+
+var options = parseOptions();
+
+console.log(colors.green('[E2D3] Publish ' + options.contrib));
+
+watch(options.contrib, function (filename) {
+  console.log(colors.green('[E2D3] File changed ' + filename));
+  filename = path.join('contrib', path.relative(options.contrib, filename));
+  tinylr.changed(filename);
+});
+
+e2d3server(options);
+
+checkVersion();

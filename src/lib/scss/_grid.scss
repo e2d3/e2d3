@@ -1,0 +1,118 @@
+.grid {
+  padding: 0;
+
+  > div {
+    padding: $grid-gutter-width / 2;
+  }
+
+  figure {
+    border-radius: 2px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+
+    .cover {
+      background-position: center center;
+      background-size: cover;
+
+      .title {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 2px 8px 4px;
+        border-top: 1px solid #d9d9d9;
+        background-color: rgba(255,255,255,.8);
+        font-size: 10px;
+        text-align: right;
+      }
+    }
+
+    .outer {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 56.25% 0 0;
+      overflow-x: hidden;
+      overflow-y: hidden;
+
+      .inner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    figcaption {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 400px;
+      height: auto;
+      padding: 15px;
+      transition: transform .3s, opacity .3s;
+      border: 1px solid #f0f0f0;
+      border-radius: 2px;
+      background-color: #ffffff;
+      color: #666666;
+      font-size: 12px;
+      text-align: left;
+      box-shadow: 0 1px 3px rgba(0,0,0,.1);
+      opacity: 0;
+      visibility: hidden;
+      z-index: 100;
+      overflow: hidden;
+
+      .action {
+        margin-left: 10px;
+        float: right;
+      }
+
+      h1, h2, h3 {
+        color: #000000;
+        font-weight: normal;
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
+
+      h1:first-child {
+        margin-top: 0;
+      }
+
+      h2 {
+        font-size: 1.3em;
+      }
+
+      h3 {
+        font-size: 1.2em;
+      }
+
+      table {
+        @extend .table;
+        @extend .table-bordered;
+        font-size: .8em;
+      }
+    }
+
+    &:hover figcaption {
+      transform: translate(15px, 15px);
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  > div:nth-child(3n) {
+    figure {
+      figcaption {
+        right: 0;
+        left: auto;
+      }
+
+      &:hover figcaption {
+        transform: translate(-15px, 15px);
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "e2d3",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "authors": [
     "E2D3"
   ],
@@ -17,56 +17,42 @@
     "requirejs": "~2.1.15",
     "requirejs-domready": "~2.0.1",
     "requirejs-text": "~2.0.13",
-    "react": "~0.13.0",
-    "coffeescript": "~1.8.0",
-    "require-cs": "~0.5.0",
     "bootstrap-sass-official": "~3.3.0",
-    "d3": "~3.4.13",
-    "underscore": "~1.7.0",
-    "queue-async": "~1.0.7",
-    "modernizr": "~2.8.3",
-    "CaptionHoverEffects": "*",
+    "d3": "~3.5.5",
+    "d3.promise": "~1.0.0",
     "markdown": "~0.5.0",
-    "font-awesome": "~4.2.0",
-    "jquery-deparam": "~0.2.0",
-    "jsx-requirejs-plugin": "~0.5.2"
+    "font-awesome": "~4.3.0",
+    "FileSaver": "*",
+    "canvg-gabelerner": "*"
   },
   "overrides": {
     "requirejs-domready": {
       "main": "domReady.js"
     },
-    "require-cs": {
-      "main": "cs.js"
-    },
     "requirejs-text": {
       "main": "text.js"
     },
-    "modernizr": {
-      "main": "modernizr.js"
-    },
-    "CaptionHoverEffects": {
-      "main": [
-        "js/toucheffects.js",
-        "css/component.css"
-      ]
+    "d3.promise": {
+      "main": "dist/d3.promise.js"
     },
     "markdown": {
       "main": "lib/markdown.js"
     },
+    "FileSaver": {
+      "main": "FileSaver.js"
+    },
     "font-awesome": {
       "main": "fonts/*"
     },
-    "coffeescript": {
-      "main": "extras/coffee-script.js"
-    },
-    "react": {
+    "canvg-gabelerner": {
       "main": [
-        "react.js",
-        "JSXTransformer.js"
+        "canvg.js",
+        "stackblur.js",
+        "rgbcolor.js"
       ]
     }
   },
   "resolutions": {
-    "coffeescript": "~1.8.0"
+    "d3": "~3.5.5"
   }
 }

@@ -5,6 +5,25 @@ define ['d3'], (d3) ->
     desc.enumerable = false
     Object.defineProperty obj, name, desc
 
+  REGEXP_NUMBER = /^[-+]?(\d{1,3}(,?\d{3})*(\.\d+)?|\.\d+)([eE][-+]?\d+)?$/
+  REGEXP_ISODATE = /^\d{4}-\d{1,2}-\d{1,2}$/
+  REGEXP_YMD = /^\d{4}\/\d{1,2}\/\d{1,2}$/
+  REGEXP_MDY = /^\d{1,2}\/\d{1,2}\/\d{4}$/
+
+  PARSE_ISODATE = d3.time.format('%Y-%m-%d').parse
+  PARSE_YMD = d3.time.format('%Y/%m/%d').parse
+  PARSE_MDY = d3.time.format('%m/%d/%Y').parse
+
+  convert = (value, callback) ->
+    if REGEXP_NUMBER.test value
+      callback +(value.replace /,/, '')
+    else if REGEXP_ISODATE.test value
+      callback PARSE_ISODATE value
+    else if REGEXP_YMD.test value
+      callback PARSE_YMD value
+    else if REGEXP_MDY.test value
+      callback PARSE_MDY value
+
   ###
   # 単純な2次元配列
   ###
@@ -17,7 +36,7 @@ define ['d3'], (d3) ->
     ###
     transpose: () ->
       cols = d3.max(@, (row) -> row.length)
-      rows = @.length
+      rows = @length
       newarray = []
       for c in [0..cols-1]
         newarray[c] = []
@@ -32,23 +51,29 @@ define ['d3'], (d3) ->
       values = []
       for row in @
         for value in row
-          values.push +value if $.isNumeric value
+          values.push value
       values
+
+    convertToNumber: () ->
+      for row in @
+        for value, i in row
+          convert value, (converted) -> row[i] = converted
+      @
 
     ###
     # ChartDataKeyValueListへの変換
     ###
-    toList: (header) -> new ChartDataKeyValueList @, header
+    toList: (options) -> new ChartDataKeyValueList @, options
 
     ###
     # ChartDataKeyValueMapへの変換
     ###
-    toMap: (header) -> new ChartDataKeyValueMap @, header
+    toMap: (options) -> new ChartDataKeyValueMap @, options
 
     ###
     # ChartDataKeyValueNestedへの変換
     ###
-    toNested: (name, header) -> new ChartDataKeyValueNested @, name, header
+    toNested: (options) -> new ChartDataKeyValueNested @, options
 
   ###
   # 行毎のヘッダと値のマップ
@@ -65,7 +90,9 @@ define ['d3'], (d3) ->
   # ]
   ###
   class ChartDataKeyValueList extends Array
-    constructor: (table, header) ->
+    constructor: (table, options) ->
+      header = options?.header
+
       if !header?
         header = table[0]
         table = table[1..]
@@ -77,17 +104,26 @@ define ['d3'], (d3) ->
         obj
 
       @header = header
-      @.push.apply @, data
+      @push.apply @, data
+
+      @typing() if options?.typed
 
     ###
     # 全ての値を返す
     ###
-    values: () ->
+    values: (fields...) ->
       values = []
       for row in @
-        for name, value of row
-          values.push +value if $.isNumeric value
+        for own name, value of row
+          continue if fields? && fields.indexOf(name) == -1
+          values.push value
       values
+
+    typing: () ->
+      for row in @
+        for own name, value of row
+          convert value, (converted) -> row[name] = converted
+      @
 
   ###
   # 行毎のヘッダと値のマップ
@@ -104,7 +140,9 @@ define ['d3'], (d3) ->
   # }
   ###
   class ChartDataKeyValueMap
-    constructor: (table, header) ->
+    constructor: (table, options) ->
+      header = options?.header
+
       if !header?
         header = table[0][1..]
         table = table[1..]
@@ -123,17 +161,27 @@ define ['d3'], (d3) ->
       unenumerable @, 'header'
       unenumerable @, 'keys'
 
+      @typing() if options?.typed
+
     ###
     # 全ての値を返す
     ###
-    values: () ->
+    values: (fields...) ->
       values = []
       for own key, row of @
         for own name, value of row
-          values.push +value if $.isNumeric(value)
+          continue if fields? && fields.indexOf(name) == -1
+          values.push value
       values
 
+    typing: () ->
+      for own key, row of @
+        for own name, value of row
+          convert value, (converted) -> row[name] = converted
+      @
+
   unenumerable ChartDataKeyValueMap.prototype, 'values'
+  unenumerable ChartDataKeyValueMap.prototype, 'typing'
 
   ###
   # 入れ子構造
@@ -154,17 +202,21 @@ define ['d3'], (d3) ->
   unenumerable Node.prototype, 'findOrCreateChild'
 
   class ChartDataKeyValueNested extends Node
-    constructor: (table, name='root', count=1, header) ->
+    constructor: (table, options) ->
+      name = options?.name ? 'root'
+      valueColumnCount = options?.valueColumnCount ? 1
+      header = options?.header
+
       super name
 
       if !header?
-        header = table[0][-count..]
+        header = table[0][-valueColumnCount..]
         table = table[1..]
       lastindex = table[0].length - 1
 
       for row in table
-        path = row[0...-count]
-        values = row[-count..]
+        path = row[0...-valueColumnCount]
+        values = row[-valueColumnCount..]
 
         current = @
         for name in path
@@ -176,16 +228,6 @@ define ['d3'], (d3) ->
             current[key] = values[i]
 
       @header = header
-
-    ###
-    # 全ての値を返す
-    ###
-    values: () ->
-      values = []
-      for own key, row of @
-        for own name, value of row
-          values.push +value if $.isNumeric(value)
-      values
 
   ###
   # exports

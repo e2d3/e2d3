@@ -1,0 +1,9 @@
+scss_files: 'src/styles/**/*.scss'
+
+linters:
+  PropertySortOrder:
+    order: smacss
+  NestingDepth:
+    max_depth: 4
+  SelectorDepth:
+    max_depth: 5

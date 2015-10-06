@@ -1,64 +1,109 @@
-define ['text'], (text) ->
-  'use strict';
+define ['text', 'compiler', 'extractor'], (text, compiler, extractor) ->
+  'use strict'
 
-  generate = (src, modules) ->
-    moduleMap = (module) ->
-      switch module
-        when 'jquery' then '$'
-        when 'lodash' then '_'
-        when 'react' then 'React'
-        else module
+  wrap = (compiled, modules) ->
+    modules = ['d3'] if modules.length == 0
 
-    moduleNames = modules.map(moduleMap).join(',')
-    moduleNamesWithQuote = modules.map((module) -> "'#{module}'").join(',')
+    nameMap =
+      jquery: '$'
+      lodash: '_'
+      react: 'React'
+      vue: 'Vue'
+      'three.js': 'THREE'
 
-    """
-define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
+    toVariable = (s) ->
+      s
+        .replace(/(\-\w)/g, (m) -> m[1].toUpperCase())
+        .replace('.', '')
 
-  var _script = function (root, baseUrl, reload) {
+    moduleNameMap = (module) ->
+      idx = module.indexOf(':')
+      if idx != -1
+        "'#{module[(idx+1)..-1]}'"
+      else
+        "'#{module}'"
 
-////
-//// ORIGINAL SCRIPT START
-////
+    moduleVariableMap = (module) ->
+      idx = module.indexOf(':')
+      if idx != -1
+        module[0...idx]
+      else
+        nameMap[module] ? toVariable(module)
 
-#{src}
+    moduleNames = modules.map(moduleNameMap).join(',')
+    moduleVariables = modules.map(moduleVariableMap).join(',')
 
-////
-//// ORIGINAL SCRIPT END
-////
+    console.info "[E2D3] define([#{moduleNames}], function (#{moduleVariables}) { ... });"
 
-    return update;
+    wrapped = """
+define([#{moduleNames}], function (#{moduleVariables}) {
+
+  var _script = function (e2d3, root, baseUrl, reload, onready) {
+
+#{compiled}
+
+    var _functions = {};
+    if (typeof update !== 'undefined') _functions.update = update;
+    if (typeof save !== 'undefined') _functions.save = save;
+    return _functions;
   }
 
-  return function (node, baseUrl) {
+  return function (root, baseUrl) {
     var _data = null;
-    var _update = null;
+    var _onready = null;
+    var _functions = null;
 
     var _reload = function () {
-      if (_data && _update) {
-        _update(_data);
+      if (_data && _functions.update) {
+        var result = _functions.update(_data);
+        if (!(typeof result === 'boolean' && result === false)) {
+          if (_onready) {
+            _onready();
+          }
+        }
       }
     };
 
+    var _ready = function () {
+      if (_onready) {
+        _onready();
+      }
+    }
+
     var _initialize = function () {
-      _update = _script(node, baseUrl, _reload);
+      var e2d3 = {
+        root: root,
+        baseUrl: baseUrl,
+        reload: _reload,
+        onready: _ready
+      };
+
+      _functions = _script(e2d3, root, baseUrl, _reload, _ready);
       _reload();
     };
 
     var _dispose = function () {
-      d3.select(node).selectAll('*').remove();
+      d3.select(root).selectAll('*').remove();
     };
 
     _initialize();
 
     var exports = {
-      update: function (data) {
+      update: function (data, onready) {
         _data = data;
+        _onready = onready;
         _reload();
       },
       resize: function () {
         _dispose();
         _initialize();
+      },
+      save: function () {
+        if (_functions.save) {
+          return _functions.save();
+        } else {
+          return d3.select(root).select('svg');
+        }
       }
     };
 
@@ -66,41 +111,34 @@ define([#{moduleNamesWithQuote}], function (#{moduleNames}) {
   };
 });
 """
-
-  transform = (content, firstLine) ->
-    # extract module names
-    if matched = firstLine.match /^\/\/#\s*require\s*=\s*(.*)$/
-      modules = matched[1].split(',').map (module) -> module.trim()
-    else if matched = firstLine.match /^##\s*require\s*=\s*(.*)$/
-      modules = matched[1].split(',').map (module) -> module.trim()
-    else
-      modules = ['d3']
-    generate content, modules
+    wrapped
 
   e2d3loader =
     version: '0.4.0'
 
     load: (name, req, onLoadNative, config) ->
-      req ['coffee-script', 'JSXTransformer'], (CoffeeScript, JSXTransformer) ->
-        onLoad = (content) ->
-          firstLine = (content.split /\r\n|\r|\n/)[0]
+      onLoad = (source) ->
+        modules = extractor.modules name, source
+        overrides = extractor.config name, source
 
-          try
-            if /.coffee$/.test name
-              options = bare: true, header: false, inline: true
-              content = CoffeeScript.compile(content, options)
-            else if /.jsx$/.test name
-              options = {}
-              content = JSXTransformer.transform(content, options).code
-          catch err
-            onLoadNative.error err
+        console.info "[E2D3] modules: #{JSON.stringify(modules)}"
+        console.info "[E2D3] config: #{JSON.stringify(overrides, null, '  ')}"
 
-          content = transform content, firstLine
+        # copy configs from overrides
+        for own prop of overrides
+          for own key, value of overrides[prop]
+            config[prop][key] = value
 
-          onLoadNative.fromText content
+        compiler.compile req, name, source, (compiled, mappings) ->
+          wrapped = wrap compiled, modules
+          wrappedMappings = ';;;;' + mappings
 
-        onLoad.error = (err) -> onLoadNative.error err
+          transformed = compiler.mapping wrapped, name, source, wrappedMappings, config.baseUrl
 
-        text.load(name, req, onLoad, config);
+          onLoadNative.fromText transformed
+
+      onLoad.error = (err) -> onLoadNative.error err
+
+      text.load(name, req, onLoad, config)
 
   e2d3loader

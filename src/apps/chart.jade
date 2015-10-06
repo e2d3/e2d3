@@ -4,17 +4,76 @@ block vars
   - var title = 'E2D3'
   - var main = 'chart.js'
 
+block head
+  style.
+    body {
+      overflow: hidden;
+      -ms-overflow-style: none;
+    }
+  script.
+    // HACKED: prevent LiveReload shutdowning parent's LiveReload
+    document.addEventListener('LiveReloadConnect', function () {
+      LiveReload.__proto__.shutDown = function () { /* noop */ };
+    });
+
 block navleft
   ul.nav.navbar-nav
     li
-      button#e2d3-rebind.btn.btn-default.navbar-btn(data-toggle='tooltip', data-placement='right', title='Click when you change selected area')
+      button#e2d3-rebind.btn.btn-sm.btn-default.navbar-btn(data-toggle='tooltip', data-placement='bottom', title='Click when you change selected area')
+        i.fa.fa-table
+        |  Link data
+      button#e2d3-fill-sample.btn.btn-sm.btn-default.navbar-btn(style='display: none', data-toggle='tooltip', data-placement='bottom', title='Select empty cell and then click')
         i.fa.fa-refresh
+        |  Retry filling sample data
 
 block navright
   ul.nav.navbar-nav.navbar-right
     li
-      button.btn.btn-default.navbar-btn(type='button' onclick='location.href="index.html"')
+      button.btn.btn-sm.btn-default.navbar-btn#e2d3-share-chart(type='button')
+        i.fa.fa-share-square-o
+        |  Share chart
+    li
+      .dropdown
+      button#e2d3-save.btn.btn-sm.btn-default.dropdown-toggle.navbar-btn(type='button', data-toggle='dropdown', aria-expanded='true')
+        i.fa.fa-file-image-o
+        |  Save image&nbsp;
+        spean.caret
+      ul.dropdown-menu(role='menu', aria-labelledby='e2d3-save')
+        li(role='presentation'): a#e2d3-save-svg(role='menuitem', tabindex=-1, href='javascript:', download='image.svg') Save as SVG
+        li(role='presentation'): a#e2d3-save-png(role='menuitem', tabindex=-1, href='javascript:', download='image.png') Save as PNG
+    li
+      button.btn.btn-sm.btn-default.navbar-btn(type='button', onclick='location.href="index.html"')
         i.fa.fa-home
 
 block content
   section#e2d3-frame
+  #e2d3-alert.modal.fade(tabindex='-1', role='dialog', aria-labelledby='e2d3-alert', aria-hidden='true')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5#e2d3-alert-title.modal-title Modal title
+        #e2d3-alert-body.modal-body
+        .modal-footer
+          button.btn.btn-sm.btn-default(type='button', data-dismiss='modal') OK
+  #e2d3-share.modal.fade(tabindex='-1', role='dialog', aria-labelledby='e2d3-share', aria-hidden='true')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5#e2d3-alert-title.modal-title Share your chart!
+        #e2d3-share-body.modal-body
+          .form-group
+            label Share URL
+            .input-group
+              input#e2d3-share-url.form-control(type='text')
+              .input-group-btn
+                button#e2d3-share-copy.btn.btn-default(type='button')
+                  i.fa.fa-copy
+                a#e2d3-share-facebook.btn.btn-default(href='javascript:')
+                  i.fa.fa-facebook
+                a#e2d3-share-twitter.btn.btn-default(href='javascript:')
+                  i.fa.fa-twitter
+          .form-group
+            label For blog
+            textarea#e2d3-share-iframe.form-control(rows='3')
+        .modal-footer
+          button.btn.btn-sm.btn-default(type='button', data-dismiss='modal') Close

@@ -5,18 +5,17 @@ html
     meta(charset='UTF-8')
     meta(http-equiv='X-UA-Compatible', content='IE=Edge')
     title= title
-    link(rel='stylesheet', href='lib/libs.css')
     link(rel='stylesheet', href='lib/main.css')
-  body
-    #log.log
+    block head
+  body(class=page || false)
     //- header
     header
       nav.navbar.navbar-default.navbar-fixed-top
         .container-fluid
           .navbar-header
-            .navbar-brand(href='index.html')
+            .navbar-brand
               img(src='logo.png', width=32, height=20)
-          #navbar.collapse.navbar-collapse
+          #navbar
             block navleft
             block navright
 
@@ -28,3 +27,8 @@ html
     script(src='https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js')
     //- load if variable 'main' is defined
     script(src='lib/libs.js', data-main=main || false)
+    script.
+      document.addEventListener("DOMContentLoaded", function(event) {
+        if (sessionStorage.getItem('delegate'))
+          document.querySelector('html').className += 'delegate'
+      });

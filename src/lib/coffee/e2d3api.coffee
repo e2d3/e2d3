@@ -1,53 +1,55 @@
-define ['jquery', 'underscore', 'd3', 'queue'], ($, _, d3, queue) ->
+define ['d3'], (d3) ->
   apiBaseUrl = '/api'
 
-  # served from gulp-webserver
-  isStandalone = $('script[src*=":35730/livereload.js"]').length != 0
+  mode =
+    if sessionStorage.getItem 'delegate'
+      'delegate'
+    else if document.cookie.indexOf('e2d3_standalone') != -1
+      'standalone'
+    else
+      'server'
 
-  console.log 'mode: standalone' if isStandalone
+  console.info '[E2D3] mode: ' + mode
 
   server =
     topcharts: () ->
       new Promise (resolve, reject) ->
-        d3.json apiBaseUrl + '/users', (error, json) ->
+        d3.json apiBaseUrl + '/categories/github/e2d3/e2d3-contrib', (error, json) ->
           reject error if error
           resolve json.charts
+    upload: (baseUrl, scriptType, data) ->
+      new Promise (resolve, reject) ->
+        tsv = data.map((row) -> row.join('\t')).join('\n')
+        upload =
+          chart:
+            baseUrl: baseUrl
+            scriptType: scriptType
+          data: tsv
+        d3.json apiBaseUrl + '/shares'
+          .header 'Content-Type', 'application/json'
+          .post JSON.stringify(upload), (error, json) ->
+            reject error if error
+            resolve json
 
   standalone =
     topcharts: () ->
       new Promise (resolve, reject) ->
-        d3.html '/contrib/', (error, html) ->
+        d3.json apiBaseUrl + '/categories/develop', (error, json) ->
           reject error if error
+          resolve json.charts
+    upload: () ->
+      Promise.reject 'Not supported'
 
-          baseUrls = $(html).find('a').map(() -> $(this).attr('href')).filter((i) -> i != 0).get()
+  delegate =
+    topcharts: () ->
+      new Promise (resolve, reject) ->
+        d3.json 'https://localhost:8443/api/categories/delegate', (error, json) ->
+          reject error if error
+          resolve json.charts
+    upload: () ->
+      Promise.reject 'Not supported'
 
-          q = queue()
-
-          for baseUrl in baseUrls
-            q = q.defer d3.html, baseUrl
-
-          q.await () ->
-            error = arguments[0]
-            htmls = [].slice.call arguments, 1
-
-            charts = []
-            for html, i in htmls
-              files = $(html).find('a').map(() -> $(this).attr('href')).filter((i) -> i != 0).get()
-
-              exts = _(files)
-                .map (file) ->
-                  result = /([^/\.]+)\.([^/\.]+)$/.exec file
-                  if result then [result[1], result[2]] else null
-                .filter (name) -> name != null
-                .map (file) -> file
-
-              extmap = _.object(exts)
-
-              charts.push
-                baseUrl: baseUrls[i]
-                scriptType: extmap['main']
-                dataType: extmap['data']
-
-            resolve charts
-
-  if isStandalone then standalone else server
+  switch mode
+    when 'delegate' then delegate
+    when 'standalone' then standalone
+    else server

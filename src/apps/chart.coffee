@@ -3,91 +3,151 @@ params = window.location.hash.substring(1).split ','
 ###
 # load parameters
 ###
-_baseUrl = params[0]
-_main = switch params[1]
-  when 'jsx' then 'main.jsx'
-  when 'coffee' then 'main.coffee'
-  else 'main.js'
-_dataType = params[2]
+_baseUrl = params[0] ? '.'
+_scriptType = params[1] ? 'js'
+_dataType = params[2] ? 'csv'
 
-require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3'], (domReady, bootstrap, $, d3, d3Promise, e2d3) ->
+###
+# config
+###
+require.config
+  paths: E2D3_DEFAULT_PATHS
+  shim: E2D3_DEFAULT_SHIM
+  config:
+    text:
+      useXhr: () -> true
+
+require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret'], (domReady, bootstrap, $, d3, d3Promise, e2d3, secret) ->
+
+  e2d3.util.setupLiveReloadForDelegateMode()
+
   $('[data-toggle="tooltip"]').tooltip()
 
-  createFrame = () ->
-    iframe = document.createElement 'iframe'
-    iframe.src = 'frame.html' + window.location.hash
-    iframe.width = '100%'
-    iframe.height = '100%'
-    iframe.frameBorder = 0
-    iframe.scrolling = 'no'
-    iframe.sandbox = 'allow-same-origin allow-scripts'
-    return iframe
+  class E2D3ChartViewer
+    constructor: (frame) ->
+      @binding = null
 
-  initialize = () ->
-    _binding = null
+      $('#e2d3-rebind').on 'click', (e) => @rebindSelectedCells()
+      $('#e2d3-fill-sample').on 'click', (e) => @fillWithSampleData()
+      $('#e2d3-share-chart').on 'click', (e) => @shareChart()
+      $('#e2d3-save-svg').on 'click', (e) => @saveImage 'svg'
+      $('#e2d3-save-png').on 'click', (e) => @saveImage 'png'
 
-    ###
-    # bindingの初期化
-    ###
-    setupBinding = (binding) ->
-      oldbinding = _binding
-      _binding = binding
-      _binding.on 'change', renderBinding
-      renderBinding()
-      if oldbinding?
-        oldbinding.release()
-          .then () ->
-            undefined
-          .catch (err) ->
-            e2d3.onError err
+      $('#e2d3-share-copy').on 'click', (e) ->
+        $('#e2d3-share-url').select()
+        document.execCommand('copy') if document.queryCommandSupported('copy')
 
-    ###
-    # bindingの描画
-    #
-    # bindingからデータを取り出し描画する
-    ###
-    renderBinding = () ->
-      if _binding
-        _binding.fetchData()
-          .then (data) ->
-            _frame.contentWindow.update data
-      else
-        _frame.contentWindow.update e2d3.data.empty()
+      selectOnClick = (e) ->
+        e.preventDefault()
+        $(this).select()
+      shareOnClick = (e) ->
+        e.preventDefault()
+        window.open($(this).attr('href'), 'share', 'width=600,height=258')
 
-    fill = () ->
-      d3.promise.text _baseUrl + '/data.' + _dataType
+      $('#e2d3-share-url').on 'click', selectOnClick
+      $('#e2d3-share-iframe').on 'click', selectOnClick
+      $('#e2d3-share-facebook').on 'click', shareOnClick
+      $('#e2d3-share-twitter').on 'click', shareOnClick
+
+      Promise.all [@initExcel(), @createFrame()]
+        .then () =>
+          @debug().setupDebugConsole() if e2d3.util.isDebugConsoleEnabled()
+          @fillWithSampleData()
+
+    initExcel: () ->
+      e2d3.initialize()
+
+    createFrame: () ->
+      @frame = document.createElement 'iframe'
+      @frame.src = 'frame.html' + window.location.hash
+      @frame.width = '100%'
+      @frame.height = '100%'
+      @frame.frameBorder = 0
+      $('#e2d3-frame').append @frame
+
+      new Promise (resolve, reject) =>
+        checkframe = () =>
+          if @chart()?
+            resolve()
+          else
+            setTimeout checkframe, 100
+        checkframe()
+
+    chart: () ->
+      @frame?.contentWindow?.chart
+
+    debug: () ->
+      @frame?.contentWindow?.debug
+
+    fillWithSampleData: () ->
+      @fetchSampleData()
+        .then () =>
+          @bindSelected()
+        .then () ->
+          $('#e2d3-fill-sample').hide()
+        .catch (err) =>
+          @onError err
+          $('#e2d3-fill-sample').show()
+
+    rebindSelectedCells: () ->
+      @bindSelected()
+        .catch (err) =>
+          @onError err
+
+    saveImage: (type) ->
+      e2d3.save @chart().save().node(), type, _baseUrl
+
+    shareChart: () ->
+      @getBoundData()
+        .then (data) ->
+          e2d3.api.upload _baseUrl, _scriptType, data
+        .then (result) =>
+          @showShare result.url
+        .catch (err) =>
+          @showAlert 'Error on sharing', err.statusText ? err
+
+    fetchSampleData: () ->
+      d3.promise.text "#{_baseUrl}/data.#{_dataType}"
         .then (text) ->
           e2d3.excel.fill _dataType, text
-        .then () ->
-          e2d3.excel.bindSelected()
-        .then (binding) ->
-          setupBinding binding
-          undefined # cofeescript promise idiom
-        .catch (err) ->
-          e2d3.onError err
 
-    rebind = () ->
+    bindSelected: () ->
+      updateBinding = (binding) =>
+        @binding?.release().catch(@onError)
+        @binding = binding
+        @binding.on 'change', renderBinding
+
+      renderBinding = () =>
+        @getBoundData()
+          .then (data) =>
+            @chart().update data
+            Promise.resolve()
+
       e2d3.excel.bindSelected()
         .then (binding) ->
-          setupBinding binding
-          undefined # cofeescript promise idiom
-        .catch (err) ->
-          e2d3.onError err
+          updateBinding(binding)
+          renderBinding()
 
-    $('#e2d3-rebind').on 'click', (e) -> rebind()
+    getBoundData: () ->
+      if @binding?
+        @binding.fetchData()
+      else
+        Promise.resolve(e2d3.data.empty())
 
-    # for development
-    if !e2d3.util.isExcel() && e2d3.util.isStandalone()
-      fill()
-    else
-      fill()
+    onError: (err) ->
+      @showAlert err.name, err.message if err.code?
+      e2d3.onError err
 
-  _frame = createFrame()
+    showAlert: (title, message) ->
+      $('#e2d3-alert-title').text(title)
+      $('#e2d3-alert-body').text(message)
+      $('#e2d3-alert').modal()
 
-  frameReadyPromise = new Promise (resolve, reject) -> $(_frame).on 'load', () -> resolve()
-  excelReadyPromise = e2d3.initialize()
+    showShare: (url) ->
+      $('#e2d3-share-url').val(url)
+      $('#e2d3-share-iframe').val("<iframe src=\"#{url}\" width=\"100%\" height=\"400\" frameborder=\"0\" scrolling=\"no\"></iframe>")
+      $('#e2d3-share-facebook').attr('href', "https://www.facebook.com/sharer/sharer.php?u=#{url}")
+      $('#e2d3-share-twitter').attr('href', "https://twitter.com/home?status=#{url}")
+      $('#e2d3-share').modal()
 
-  $('#e2d3-frame').append _frame
-
-  Promise.all [frameReadyPromise, excelReadyPromise]
-    .then initialize
+  new E2D3ChartViewer()

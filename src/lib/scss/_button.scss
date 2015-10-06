@@ -1,0 +1,25 @@
+@mixin btn($name, $color) {
+  $btn-color: #fff;
+  $btn-bg: $color;
+  $btn-border: darken($btn-bg, 5%);
+
+  .btn-#{$name} {
+    @include button-variant($btn-color, $btn-bg, $btn-border);
+  }
+}
+
+@mixin btn-white($name, $color) {
+  $white-color: #fff;
+
+  .btn-#{$name} {
+    @include button-variant($color, $white-color, $color);
+
+    &:hover {
+      border-color: $color;
+      background-color: $color;
+      color: $white-color;
+    }
+  }
+}
+
+@include btn-white('visualize', #1f77b4);
