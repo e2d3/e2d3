@@ -1,2 +1,3 @@
 define [], () ->
+  # noop
   undefined

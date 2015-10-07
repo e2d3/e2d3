@@ -37,7 +37,8 @@ require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret', 'markdown'
   e2d3.initialize()
     .then () ->
       chart = e2d3.excel.getAttribute 'chart'
-      window.location.href = "chart.html##{chart.path},#{chart.scriptType},#{chart.dataType}"
+      if chart
+        window.location.href = "chart.html##{chart.path},#{chart.scriptType},#{chart.dataType}"
 
   Promise.all [d3.promise.html('cell.html'), e2d3.api.topcharts()]
     .then (values) ->
