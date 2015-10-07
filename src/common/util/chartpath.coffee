@@ -6,15 +6,17 @@ define (require, exports, module) ->
   config = require 'config'
 
   exports.encode = (baseUrl) ->
-    if ret = baseUrl.match new RegExp('/github/e2d3/e2d3-contrib/contents/([^/]+)$')
+    if ret = baseUrl.match new RegExp('^https://localhost:8443/files/github/e2d3/e2d3-contrib/contents/([^/]+)$')
+      "delegate:#{ret[1]}"
+    else if ret = baseUrl.match new RegExp('/files/github/e2d3/e2d3-contrib/contents/([^/]+)$')
       "#{ret[1]}"
-    else if ret = baseUrl.match new RegExp('/github/([^/]+)/([^/]+)/contents$')
+    else if ret = baseUrl.match new RegExp('/files/github/([^/]+)/([^/]+)/contents$')
       "#{ret[1]}/#{ret[2]}"
-    else if ret = baseUrl.match new RegExp('/github/([^/]+)/([^/]+)/contents/([^/]+)$')
+    else if ret = baseUrl.match new RegExp('/files/github/([^/]+)/([^/]+)/contents/([^/]+)$')
       "#{ret[1]}/#{ret[2]}/#{ret[3]}"
-    else if ret = baseUrl.match new RegExp('/gists/([^/]+)$')
+    else if ret = baseUrl.match new RegExp('/files/gists/([^/]+)$')
       "gist:#{ret[1]}"
-    else if ret = baseUrl.match new RegExp('/local/([^/]+)$')
+    else if ret = baseUrl.match new RegExp('/files/local/([^/]+)$')
       "local:#{ret[1]}"
     else
       baseUrl
@@ -22,6 +24,8 @@ define (require, exports, module) ->
   exports.decode = (path) ->
     if ret = path.match new RegExp('^local:([^/]+)$')
       "/files/local/#{ret[1]}"
+    else if ret = path.match new RegExp('^delegate:([^/]+)$')
+      "https://localhost:8443/files/github/e2d3/e2d3-contrib/contents/#{ret[1]}"
     else if ret = path.match new RegExp('^gist:([^/]+)$')
       "/files/gists/#{ret[1]}"
     else if path.indexOf '://' == -1

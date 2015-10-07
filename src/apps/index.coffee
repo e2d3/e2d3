@@ -68,6 +68,8 @@ require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret', 'markdown'
 
           baseUrl = e2d3.util.baseUrl d.path
 
+          console.log baseUrl, d.path
+
           newcell.select '.cover'
             .style 'background-image', "url('#{baseUrl}/thumbnail.png')"
             .select '.title'
