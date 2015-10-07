@@ -72,6 +72,9 @@ gulp.task 'lib-scripts-standalone', ['clean'], ->
       'src/misc/paths.js',
       'src/misc/standalone.coffee'
       ]
+      .pipe plumber()
+      .pipe cond ((file) -> path.extname(file.path) == '.coffee'), coffee()
+      .pipe plumber.stop()
     gulp.src bowerFiles().concat [
       'src/misc/libs-standalone.js',
       'src/common/**/*.coffee'
@@ -84,7 +87,7 @@ gulp.task 'lib-scripts-standalone', ['clean'], ->
       .pipe concat 'libs.js'
       .pipe plumber.stop()
     )
-    .pipe order ['**/require.js', '**/libs.js', '**/paths.js', '**/standalone.coffee']
+    .pipe order ['**/require.js', '**/libs.js', '**/paths.js', '**/standalone.js']
     .pipe concat 'e2d3.js'
     .pipe cond isRelease, uglify preserveComments: 'some'
     .pipe gulp.dest 'dist/lib'
