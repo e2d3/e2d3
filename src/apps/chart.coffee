@@ -59,7 +59,10 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret
             dataType: _dataType
 
           @debug().setupDebugConsole() if e2d3.util.isDebugConsoleEnabled()
-          @fillWithSampleData()
+
+          @bindStored()
+            .catch (err) =>
+              @fillWithSampleData()
 
     initExcel: () ->
       e2d3.initialize()
@@ -119,6 +122,7 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret
 
     goHome: () ->
       e2d3.excel.removeAttribute 'chart'
+      @binding?.release().catch(@onError)
       window.location.href = 'index.html'
 
     fetchSampleData: () ->
@@ -127,6 +131,12 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret
           e2d3.excel.fill _dataType, text
 
     bindSelected: () ->
+      @bind e2d3.excel.bindSelected()
+
+    bindStored: () ->
+      @bind e2d3.excel.bindStored()
+
+    bind: (binder) ->
       updateBinding = (binding) =>
         @binding?.release().catch(@onError)
         @binding = binding
@@ -138,7 +148,7 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret
             @chart().update data
             Promise.resolve()
 
-      e2d3.excel.bindSelected()
+      binder
         .then (binding) ->
           updateBinding(binding)
           renderBinding()
