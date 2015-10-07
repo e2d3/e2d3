@@ -17,12 +17,12 @@ define ['d3'], (d3) ->
         d3.json apiBaseUrl + '/categories/github/e2d3/e2d3-contrib', (error, json) ->
           reject error if error
           resolve json.charts
-    upload: (baseUrl, scriptType, data) ->
+    upload: (path, scriptType, data) ->
       new Promise (resolve, reject) ->
         tsv = data.map((row) -> row.join('\t')).join('\n')
         upload =
           chart:
-            baseUrl: baseUrl
+            path: path
             scriptType: scriptType
           data: tsv
         d3.json apiBaseUrl + '/shares'

@@ -2,13 +2,13 @@
 # load parameters
 ###
 script = document.currentScript || do ->
-  scripts = document.getElementsByTagName("script")
+  scripts = document.getElementsByTagName('script')
   scripts[scripts.length - 1]
 
 _baseUrl = script.getAttribute('data-base-url') ? '.'
 _scriptType = script.getAttribute('data-script-type') ? 'js'
 _dataType = script.getAttribute('data-data-type') ? 'csv'
-_dataUrl = script.getAttribute('data-data-url') ? 'data.' + _dataType
+_dataUrl = script.getAttribute('data-data-url') ? "data.#{_dataType}"
 _viewport = script.getAttribute('data-viewport') ? '#e2d3-chart-area'
 
 ###

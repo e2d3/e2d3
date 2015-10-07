@@ -29,7 +29,7 @@ define ['d3', 'e2d3model', 'e2d3util'], (d3, model, util) ->
             reject result.error
 
   class ExcelAPI
-    fill: (type, text, callback) ->
+    fill: (type, text) ->
       new Promise (resolve, reject) ->
         rows = d3[type].parseRows text
 
@@ -39,7 +39,7 @@ define ['d3', 'e2d3model', 'e2d3util'], (d3, model, util) ->
           else
             reject result.error
 
-    bindSelected: (callback) ->
+    bindSelected: () ->
       new Promise (resolve, reject) ->
         Office.context.document.bindings.addFromSelectionAsync Office.BindingType.Matrix, (result) ->
           if result.status == Office.AsyncResultStatus.Succeeded
@@ -47,13 +47,44 @@ define ['d3', 'e2d3model', 'e2d3util'], (d3, model, util) ->
           else
             reject result.error
 
-    bindPrompt: (callback) ->
+    bindPrompt: () ->
       new Promise (resolve, reject) ->
         Office.context.document.bindings.addFromPromptAsync Office.BindingType.Matrix, (result) ->
           if result.status == Office.AsyncResultStatus.Succeeded
             resolve new Binding result.value
           else
             reject result.error
+
+    bindStored: () ->
+      new Promise (resolve, reject) ->
+        Office.context.document.bindings.getAllAsync (result) ->
+          if result.status == Office.AsyncResultStatus.Succeeded
+            console.log result.value
+            if result.value[0]?
+              resolve new Binding result.value[0]
+            else
+              reject()
+          else
+            reject result.error
+
+    getAttribute: (key) ->
+      Office.context.document.settings.get key
+
+    storeAttribute: (key, value) ->
+      Office.context.document.settings.set key, value
+      Office.context.document.settings.saveAsync (result) ->
+        if result.status == Office.AsyncResultStatus.Succeeded
+          console.info 'Settings saved.'
+        else
+          console.error result.error
+
+    removeAttribute: (key, value) ->
+      Office.context.document.settings.remove key
+      Office.context.document.settings.saveAsync (result) ->
+        if result.status == Office.AsyncResultStatus.Succeeded
+          console.info 'Settings saved.'
+        else
+          console.error result.error
 
   ###
   # Dummy API
@@ -72,14 +103,27 @@ define ['d3', 'e2d3model', 'e2d3util'], (d3, model, util) ->
         resolve()
 
   class DummyExcelAPI
-    fill: (type, text, callback) ->
+    fill: (type, text) ->
       new Promise (resolve, reject) ->
         @rows = d3[type].parseRows text
         resolve()
 
-    bindSelected: (callback) ->
+    bindSelected: () ->
       new Promise (resolve, reject) ->
         resolve new DummyBinding @rows
+
+    bindStored: () ->
+      new Promise (resolve, reject) ->
+        reject()
+
+    getAttribute: (key) ->
+      JSON.parse localStorage.getItem key
+
+    storeAttribute: (key, value) ->
+      localStorage.setItem key, JSON.stringify value
+
+    removeAttribute: (key, value) ->
+      localStorage.removeItem key
 
   ###
   # export

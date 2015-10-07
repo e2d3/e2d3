@@ -1,12 +1,13 @@
 ###
 # load parameters
 ###
-params = window.location.hash.substring(1).split ','
+frame = window.frameElement
 
-_baseUrl = params[0] ? '.'
-_scriptType = params[1] ? 'js'
-_dataType = params[2] ? 'csv'
-_viewport = '#e2d3-chart-area'
+_baseUrl = frame.getAttribute('data-base-url') ? '.'
+_scriptType = frame.getAttribute('data-script-type') ? 'js'
+_dataType = frame.getAttribute('data-data-type') ? 'csv'
+_dataUrl = frame.getAttribute('data-data-url') ? "data.#{_dataType}"
+_viewport = frame.getAttribute('data-viewport') ? '#e2d3-chart-area'
 
 ###
 # config
