@@ -1,7 +1,7 @@
 'use strict';
 
-if (process.env.npm_package_dependencies_gulp) {
-  process.exit(1);
-} else {
+if (process.env.npm_config_global) {
   process.exit(0);
+} else {
+  process.exit(1);
 }

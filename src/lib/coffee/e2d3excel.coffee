@@ -74,7 +74,7 @@ define ['d3', 'e2d3model', 'e2d3util'], (d3, model, util) ->
       Office.context.document.settings.set key, value
       Office.context.document.settings.saveAsync (result) ->
         if result.status == Office.AsyncResultStatus.Succeeded
-          console.info 'Settings saved.'
+          console.info '[E2D3] settings stored successfully'
         else
           console.error result.error
 
@@ -82,7 +82,7 @@ define ['d3', 'e2d3model', 'e2d3util'], (d3, model, util) ->
       Office.context.document.settings.remove key
       Office.context.document.settings.saveAsync (result) ->
         if result.status == Office.AsyncResultStatus.Succeeded
-          console.info 'Settings saved.'
+          console.info '[E2D3] settings stored successfully'
         else
           console.error result.error
 

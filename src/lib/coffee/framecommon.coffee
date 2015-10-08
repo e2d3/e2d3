@@ -5,7 +5,7 @@ define [], () ->
 
   takeScreenShot = () ->
     if dataupdated && cssloaded
-      console.log '[E2D3] takeShot'
+      console.log '[E2D3] take screenshot'
       if typeof window.callPhantom == 'function'
         setTimeout () ->
           window.callPhantom 'takeShot'
@@ -21,14 +21,14 @@ define [], () ->
       # PhantomJS currently does not support 'onload' event for stylesheets
       # see https://github.com/ariya/phantomjs/issues/12332
       css.onload = css.onerror = window.onmaincssload = window.onmaincsserror = () ->
-        console.log '[E2D3] cssLoaded'
+        console.log '[E2D3] css loaded'
         cssloaded = true
         takeScreenShot()
         onload?()
       document.querySelector('head').appendChild(css)
 
     onDataUpdated: () ->
-      console.log '[E2D3] dataUpdated'
+      console.log '[E2D3] data updated'
       dataupdated = true
       takeScreenShot()
 
