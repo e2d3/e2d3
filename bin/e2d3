@@ -61,8 +61,8 @@ console.log(colors.green('[E2D3] Publish ' + options.contrib));
 
 watch(options.contrib, function (filename) {
   console.log(colors.green('[E2D3] File changed ' + filename));
-  filename = path.join('contrib', path.relative(options.contrib, filename));
-  tinylr.changed(filename);
+  filename = path.join('files/github/e2d3/e2d3-contrib/contents', path.relative(options.contrib, filename));
+  tinylr.changed('dummy');
 });
 
 e2d3server(options);
