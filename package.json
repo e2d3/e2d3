@@ -12,7 +12,7 @@
   "main": "./lib/index.js",
   "bin": "./bin/e2d3",
   "scripts": {
-    "postinstall": "(node scripts/postinstall-testenv.js) || (bower prune && bower update && gulp build --release)",
+    "postinstall": "(node bin/test-env-global) || (bower prune && bower update && gulp build --release)",
     "watch": "gulp run",
     "start": "gulp run",
     "release": "bower update && gulp build --release && npm publish"

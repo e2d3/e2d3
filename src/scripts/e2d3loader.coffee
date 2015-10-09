@@ -1,4 +1,4 @@
-define ['text', 'compiler', 'extractor'], (text, compiler, extractor) ->
+define ['text', 'loader/compiler', 'loader/extractor'], (text, compiler, extractor) ->
   'use strict'
 
   wrap = (compiled, modules) ->

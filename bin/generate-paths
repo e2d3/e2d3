@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 'use strict';
 
 /*
@@ -50,8 +52,8 @@ var shim = {
 };
 
 var map = {
-  '*': { 'jquery': 'jquery-private' },
-  'jquery-private': { 'jquery': 'jquery' }
+  '*': { 'jquery': 'misc/jquery-private' },
+  'misc/jquery-private': { 'jquery': 'jquery' }
 };
 
 /*
@@ -65,7 +67,7 @@ var args = process.argv.slice(2);
 
 var cdnjs = 'http://api.cdnjs.com/libraries';
 
-var dest = args[0] || 'src/misc/paths.js';
+var dest = args[0] || 'src/scripts-gen/paths.js';
 
 
 /*

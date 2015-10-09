@@ -24,7 +24,7 @@ require.config
 ###
 # main routine
 ###
-require ['domReady!', 'framecommon', 'e2d3util', 'e2d3loader!main.' + _scriptType], (domReady, common, util, main) ->
+require ['domReady!', 'ui/framecommon', 'e2d3util', 'e2d3loader!main.' + _scriptType], (domReady, common, util, main) ->
 
   # set base uri
   document.querySelector('#e2d3-base').href = _baseUrl + '/'

@@ -1,10 +1,10 @@
 define([
   'domReady',
-  'jquery-private',
+  'misc/jquery-private',
   'd3',
   'e2d3model',
   'e2d3loader',
-  'framecommon'
+  'ui/framecommon'
 ], function() {
 // noop
 });

@@ -1,4 +1,4 @@
-require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'secret', 'markdown'], (bootstrap, $, d3, d3Promise, e2d3, secret, markdown) ->
+require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'ui/secret', 'markdown'], (bootstrap, $, d3, d3Promise, e2d3, secret, markdown) ->
 
   secret () ->
     $('#delegate').show()

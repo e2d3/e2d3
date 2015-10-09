@@ -31,15 +31,15 @@ var E2D3_DEFAULT_PATHS = {
     'd3plus'
   ],
   'dc': [
-    '//cdnjs.cloudflare.com/ajax/libs/dc/1.7.3/dc.min',
+    '//cdnjs.cloudflare.com/ajax/libs/dc/1.7.4/dc.min',
     'dc'
   ],
   'react': [
-    '//cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.min',
+    '//cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.min',
     'react'
   ],
   'three': [
-    '//cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min',
+    '//cdnjs.cloudflare.com/ajax/libs/three.js/r72/three.min',
     'three'
   ],
   'topojson': [
@@ -47,7 +47,7 @@ var E2D3_DEFAULT_PATHS = {
     'topojson'
   ],
   'vue': [
-    '//cdnjs.cloudflare.com/ajax/libs/vue/0.12.13/vue.min',
+    '//cdnjs.cloudflare.com/ajax/libs/vue/0.12.16/vue.min',
     'vue'
   ],
   'jquery-with-global': [
@@ -81,9 +81,9 @@ var E2D3_DEFAULT_SHIM = {
 };
 var E2D3_DEFAULT_MAP = {
   '*': {
-    'jquery': 'jquery-private'
+    'jquery': 'misc/jquery-private'
   },
-  'jquery-private': {
+  'misc/jquery-private': {
     'jquery': 'jquery'
   }
 };

@@ -14,8 +14,7 @@ _viewport = script.getAttribute('data-viewport') ? '#e2d3-chart-area'
 ###
 # config
 ###
-req = require.config
-  context: _viewport
+require.config
   baseUrl: _baseUrl
   paths: E2D3_DEFAULT_PATHS
   shim: E2D3_DEFAULT_SHIM
@@ -27,7 +26,7 @@ req = require.config
 ###
 # main routine
 ###
-req ['domReady!', 'd3', 'framecommon', 'e2d3model', 'e2d3loader!main.' + _scriptType], (domReady, d3, common, model, main) ->
+require ['domReady!', 'd3', 'ui/framecommon', 'e2d3model', 'e2d3loader!main.' + _scriptType], (domReady, d3, common, model, main) ->
 
   # set base uri
   document.querySelector('#e2d3-base').href = _baseUrl + '/'

@@ -26,7 +26,7 @@ html
     script(src='https://www.promisejs.org/polyfills/promise-done-6.0.1.min.js')
     script(src='https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js')
     //- load if variable 'main' is defined
-    script(src='lib/libs.js', data-main=main || false)
+    script(src='lib/e2d3full.js', data-main=main || false)
     script.
       document.addEventListener("DOMContentLoaded", function(event) {
         if (sessionStorage.getItem('delegate'))

@@ -42,49 +42,47 @@ gulp.task 'clean', (cb) ->
   else
     cb()
 
-gulp.task 'lib-scripts', ['clean'], ->
+gulp.task 'lib-scripts-full', ['clean'], ->
   merge(
     gulp.src [
       'bower_components/requirejs/require.js',
-      'src/misc/paths.js'
+      'src/scripts-gen/paths.js'
       ]
     gulp.src bowerFiles().concat [
-      'src/misc/libs.js',
-      'src/common/**/*.coffee'
-      'src/lib/coffee/**/*.coffee',
+      'src/build/e2d3full.js',
+      'src/scripts/**/*.coffee',
       ]
       .pipe plumber()
       .pipe filter ['**/*.js', '**/*.coffee']
       .pipe cond ((file) -> path.extname(file.path) == '.coffee'), coffee()
-      .pipe amd 'libs', amdoptions
+      .pipe amd 'e2d3full', amdoptions
       .pipe concat 'libs.js'
       .pipe plumber.stop()
     )
     .pipe order ['**/require.js', '**/libs.js', '**/paths.js']
-    .pipe concat 'libs.js'
+    .pipe concat 'e2d3full.js'
     .pipe cond isRelease, uglify preserveComments: 'some'
     .pipe gulp.dest 'dist/lib'
 
-gulp.task 'lib-scripts-standalone', ['clean'], ->
+gulp.task 'lib-scripts-core', ['clean'], ->
   merge(
     gulp.src [
       'bower_components/requirejs/require.js'
-      'src/misc/paths.js',
-      'src/misc/standalone.coffee'
+      'src/scripts-gen/paths.js',
+      'src/scripts/standalone.coffee'
       ]
       .pipe plumber()
       .pipe cond ((file) -> path.extname(file.path) == '.coffee'), coffee()
       .pipe plumber.stop()
     gulp.src bowerFiles().concat [
-      'src/misc/libs-standalone.js',
-      'src/common/**/*.coffee'
-      'src/lib/coffee/**/*.coffee',
+      'src/build/e2d3core.js',
+      'src/scripts/**/*.coffee',
       ]
       .pipe plumber()
       .pipe filter ['**/*.js', '**/*.coffee']
       .pipe cond ((file) -> path.extname(file.path) == '.coffee'), coffee()
-      .pipe amd 'libs-standalone', amdoptions
-      .pipe concat 'libs.js'
+      .pipe amd 'e2d3core', amdoptions
+      .pipe concat 'e2d3.js'
       .pipe plumber.stop()
     )
     .pipe order ['**/require.js', '**/libs.js', '**/paths.js', '**/standalone.js']
@@ -93,7 +91,7 @@ gulp.task 'lib-scripts-standalone', ['clean'], ->
     .pipe gulp.dest 'dist/lib'
 
 gulp.task 'lib-styles', ['clean'], ->
-  gulp.src 'src/lib/scss/main.scss'
+  gulp.src 'src/styles/main.scss'
     .pipe sass precision: 8
       .on 'error', sass.logError
     .pipe concat 'main.css'
@@ -126,21 +124,21 @@ gulp.task 'files', ['clean'], ->
     .pipe filter ['**/*', '!**/*.jade', '!**/*.js', '!**/*.coffee']
     .pipe gulp.dest 'dist'
 
-gulp.task 'lib', ['lib-scripts', 'lib-scripts-standalone', 'lib-styles', 'lib-files']
+gulp.task 'lib', ['lib-scripts-full', 'lib-scripts-core', 'lib-styles', 'lib-files']
 
 gulp.task 'apps', ['html', 'scripts', 'files']
 
 gulp.task 'build', ['lib', 'apps']
 
 gulp.task 'watch', ['build'], ->
-  gulp.watch ['src/lib/coffee/**/*', 'src/common/**/*', 'src/misc/**/*'], ['lib']
-  gulp.watch ['src/lib/scss/**/*'], ['lib-styles']
+  gulp.watch ['src/scripts/**/*', 'src/build/**/*'], ['lib']
+  gulp.watch ['src/styles/**/*'], ['lib-styles']
   gulp.watch 'src/apps/**/*', ['apps']
   gulp.watch ['dist/**/*', 'contrib/**/*', 'server.js', 'lib/**/*'], notifyLivereload
 
 gulp.task 'watch-server', ['build'], ->
-  gulp.watch ['src/lib/coffee/**/*', 'src/common/**/*', 'src/misc/**/*'], ['lib']
-  gulp.watch ['src/lib/scss/**/*'], ['lib-styles']
+  gulp.watch ['src/scripts/**/*', 'src/build/**/*'], ['lib']
+  gulp.watch ['src/styles/**/*'], ['lib-styles']
   gulp.watch 'src/apps/**/*', ['apps']
 
 gulp.task 'run', ['watch'], ->

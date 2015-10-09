@@ -1,4 +1,4 @@
-define ['jquery', 'util/chartpath'], ($, chartpath) ->
+define ['jquery', 'common/chartpath'], ($, chartpath) ->
   # this works only on top frame
   isNativeExcel =
     try
