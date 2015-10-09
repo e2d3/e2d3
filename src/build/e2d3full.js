@@ -4,7 +4,7 @@ define([
   'misc/jquery-private',
   'd3',
   'd3.promise',
-  'markdown',
+  'marked',
   'e2d3',
   'ui/secret',
   'ui/framecommon',

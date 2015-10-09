@@ -30,8 +30,6 @@ amdoptions =
   shim:
     'bootstrap':
       deps: ['jquery']
-    'markdown':
-      exports: 'markdown'
     'canvg':
       exports: 'canvg'
 
