@@ -1,4 +1,10 @@
-require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'ui/secret', 'marked'], (bootstrap, $, d3, d3Promise, e2d3, secret, marked) ->
+require ['bootstrap', 'jquery', 'vue', 'd3', 'd3.promise', 'e2d3', 'ui/secret', 'marked'], (bootstrap, $, Vue, d3, d3Promise, e2d3, secret, marked) ->
+
+  e2d3.initialize()
+    .then () ->
+      chart = e2d3.excel.getAttribute 'chart'
+      if chart
+        window.location.href = "chart.html##{chart.path},#{chart.scriptType},#{chart.dataType}"
 
   secret () ->
     $('#delegate').show()
@@ -11,74 +17,46 @@ require ['bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'ui/secret', 'marked
     e2d3.util.toggleDelegateMode()
     window.location.reload()
 
-  cell = null
-  charts = null
-  tag = (sessionStorage.getItem 'tag') ? 'recommended'
+  new Vue
+    el: 'body'
+    data:
+      selected: (sessionStorage.getItem 'selected') ? 'recommended'
+      tags: [
+        { id: 'recommended', label: 'Recommended', image: 'star' },
+        { id: 'example', label: 'Examples', image: 'gavel' },
+        { id: 'hackathon', label: 'Hackathon', image: 'bolt' }
+      ]
+      charts: []
 
-  updateTag = () ->
-    $('.sidebar-item').removeClass 'active'
-    $(".sidebar-item[data-label='#{tag}']").addClass 'active'
-
-  updateTag()
-
-  $('.sidebar-item').on 'click', (e) ->
-    $this = $(this)
-
-    tag = $this.data 'label'
-    sessionStorage.setItem 'tag', tag
-
-    updateTag()
-
-    d3.select '#contrib'
-      .selectAll 'div'
-      .remove()
-    setupGrid()
-
-  e2d3.initialize()
-    .then () ->
-      chart = e2d3.excel.getAttribute 'chart'
-      if chart
-        window.location.href = "chart.html##{chart.path},#{chart.scriptType},#{chart.dataType}"
-
-  Promise.all [d3.promise.html('cell.html'), e2d3.api.topcharts()]
-    .then (values) ->
-      cell = values[0]
-      charts = values[1]
-      setupGrid()
-
-      hasUncategorized = charts.some (chart) ->
-        !chart.tags? || chart.tags.length == 0
-      $('#uncategorized').show() if hasUncategorized
-      undefined # cofeescript promise idiom
-    .catch (err) ->
-      e2d3.onError err
-
-  setupGrid = () ->
-    d3.select '#contrib'
-      .selectAll 'div'
-        .data charts.filter (chart) ->
-          if tag != 'uncategorized'
-            chart.tags? && chart.tags.indexOf(tag) != -1
+    computed:
+      visibleCharts: () ->
+        @charts.filter (chart) =>
+          if @selected != 'uncategorized'
+            chart.tags? && chart.tags.indexOf(@selected) != -1
           else
             !chart.tags? || chart.tags.length == 0
-      .enter().append 'div'
-        .classed 'col-xs-4', true
-        .each (d, i) ->
-          newcell = d3.select(cell.cloneNode(true))
 
-          baseUrl = e2d3.util.baseUrl d.path
+    components:
+      chart:
+        data: () ->
+          readme: ''
+        computed:
+          baseUrl: -> e2d3.util.baseUrl(this.path)
+          cover: -> @baseUrl + '/thumbnail.png'
+          link: -> "chart.html##{@path},#{@scriptType},#{@dataType}"
+        ready: () ->
+          d3.text @baseUrl + '/README.md', (error, readme) =>
+            @readme = marked readme
 
-          newcell.select '.cover'
-            .style 'background-image', "url('#{baseUrl}/thumbnail.png')"
-            .select '.title'
-            .text d.title
+    ready: ->
+      e2d3.api.topcharts()
+        .then (charts) =>
+          hasUncategorized = charts.some (chart) -> !chart.tags? || chart.tags.length == 0
+          if hasUncategorized
+            @tags.push { id: 'uncategorized', label: 'Uncategorized', image: 'question' }
+          @charts = charts
 
-          newcell.select '.readme'
-            .each ->
-              d3.text baseUrl + '/README.md', (error, readme) =>
-                this.innerHTML = marked readme
-
-          newcell.select '.use'
-            .attr 'href', "chart.html##{d.path},#{d.scriptType},#{d.dataType}"
-
-          this.appendChild(newcell.node())
+    methods:
+      select: (id) ->
+        @selected = id
+        sessionStorage.setItem 'selected', id

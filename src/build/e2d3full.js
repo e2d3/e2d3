@@ -1,6 +1,7 @@
 define([
   'domReady',
   'bootstrap',
+  'vue',
   'misc/jquery-private',
   'd3',
   'd3.promise',

@@ -15,16 +15,20 @@ block navright
 
 block content
   #sidebar
-    a.sidebar-item(href='javascript:', data-label='recommended')
-      i.fa.fa-fw.fa-star
-      .sidebar-label Recommended
-    a.sidebar-item(href='javascript:', data-label='example')
-      i.fa.fa-fw.fa-gavel
-      .sidebar-label Examples
-    a.sidebar-item(href='javascript:', data-label='hackathon')
-      i.fa.fa-fw.fa-bolt
-      .sidebar-label Hackathon
-    a#uncategorized.sidebar-item(href='javascript:', data-label='uncategorized', style='display: none')
-      i.fa.fa-fw.fa-question
-      .sidebar-label Uncategorized
-  #contrib.row.grid
+    template(v-repeat='tags')
+      a.sidebar-item(href='javascript:', v-class='active: id == selected', v-on='click: select(id)')
+        i.fa.fa-fw(class='fa-{{image}}')
+        .sidebar-label {{label}}
+  #contrib.row.grid(v-cloak)
+    div(v-component='chart', v-repeat='visibleCharts', inline-template)
+      .col-xs-4
+        figure
+          .outer
+            .inner.cover(v-style="background-image: 'url(' + cover + ')'")
+              .title {{title}}
+          figcaption
+            .action
+              a.btn.btn-sm.btn-visualize(href='{{link}}')
+                i.fa.fa-bar-chart
+                |  Visualize
+            .readme {{{readme}}}

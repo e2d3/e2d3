@@ -23,7 +23,8 @@
     "font-awesome": "~4.3.0",
     "FileSaver": "*",
     "canvg-gabelerner": "*",
-    "marked": "~0.3.5"
+    "marked": "~0.3.5",
+    "vue": "~0.12.16"
   },
   "overrides": {
     "requirejs-domready": {
