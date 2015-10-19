@@ -5,6 +5,19 @@ define ['d3'], (d3) ->
     desc.enumerable = false
     Object.defineProperty obj, name, desc
 
+  replaceArrayGeneratorFunctions = (cls) ->
+    replaceFunction = (name) ->
+      original = cls.prototype[name]
+      cls.prototype[name] = () ->
+        ret = original.apply this, arguments
+        ret.__proto__ = this.__proto__
+        ret.header ?= this.header
+        ret
+
+    replaceFunction 'concat'
+    replaceFunction 'filter'
+    replaceFunction 'slice'
+
   REGEXP_NUMBER = /^[-+]?(\d{1,3}(,?\d{3})*(\.\d+)?|\.\d+)([eE][-+]?\d+)?$/
   REGEXP_ISODATE = /^\d{4}-\d{1,2}-\d{1,2}$/
   REGEXP_YMD = /^\d{4}\/\d{1,2}\/\d{1,2}$/
@@ -228,6 +241,9 @@ define ['d3'], (d3) ->
             current[key] = values[i]
 
       @header = header
+
+  replaceArrayGeneratorFunctions ChartDataTable
+  replaceArrayGeneratorFunctions ChartDataKeyValueList
 
   ###
   # exports
