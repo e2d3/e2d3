@@ -1,7 +1,7 @@
 define([
   'domReady',
   'misc/jquery-private',
-  'd3',
+  'misc/d3-promised',
   'e2d3model',
   'e2d3loader',
   'ui/framecommon'

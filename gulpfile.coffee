@@ -22,6 +22,7 @@ sass = require 'gulp-sass'
 minify = require 'gulp-minify-css'
 uglify = require 'gulp-uglify'
 amd = require 'amd-optimize'
+vueloader = require './lib/vueloader'
 
 isRelease = gutil.env.release?
 isFirst = true
@@ -32,6 +33,7 @@ amdoptions =
       deps: ['jquery']
     'canvg':
       exports: 'canvg'
+  loader: vueloader 'src/scripts'
 
 gulp.task 'clean', (cb) ->
   if isFirst
@@ -49,9 +51,10 @@ gulp.task 'lib-scripts-full', ['clean'], ->
     gulp.src bowerFiles().concat [
       'src/build/e2d3full.js',
       'src/scripts/**/*.coffee',
+      'src/scripts/**/*.vue',
       ]
       .pipe plumber()
-      .pipe filter ['**/*.js', '**/*.coffee']
+      .pipe filter ['**/*.js', '**/*.coffee', '**/*.vue']
       .pipe cond ((file) -> path.extname(file.path) == '.coffee'), coffee()
       .pipe amd 'e2d3full', amdoptions
       .pipe concat 'libs.js'
@@ -75,9 +78,10 @@ gulp.task 'lib-scripts-core', ['clean'], ->
     gulp.src bowerFiles().concat [
       'src/build/e2d3core.js',
       'src/scripts/**/*.coffee',
+      'src/scripts/**/*.vue',
       ]
       .pipe plumber()
-      .pipe filter ['**/*.js', '**/*.coffee']
+      .pipe filter ['**/*.js', '**/*.coffee', '**/*.vue']
       .pipe cond ((file) -> path.extname(file.path) == '.coffee'), coffee()
       .pipe amd 'e2d3core', amdoptions
       .pipe concat 'e2d3.js'

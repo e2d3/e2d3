@@ -1,15 +1,15 @@
 define([
   'domReady',
   'bootstrap',
-  'vue',
   'misc/jquery-private',
-  'd3',
-  'd3.promise',
+  'vue',
+  'misc/d3-promised',
   'marked',
   'e2d3',
   'ui/secret',
   'ui/framecommon',
-  'ui/urlparam'
+  'ui/urlparam',
+  'ui/components'
 ], function() {
 // noop
 });

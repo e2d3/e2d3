@@ -1,4 +1,4 @@
-params = window.location.hash.substring(1).split ','
+params = window.location.hash.substring(1).split ':'
 
 ###
 # load parameters
@@ -13,43 +13,24 @@ _dataType = params[2] ? 'csv'
 require.config
   paths: E2D3_DEFAULT_PATHS
   shim: E2D3_DEFAULT_SHIM
+  map: E2D3_DEFAULT_MAP
   config:
     text:
       useXhr: () -> true
 
-require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'ui/secret'], (domReady, bootstrap, $, d3, d3Promise, e2d3, secret) ->
+require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components'], (bootstrap, Vue, d3, e2d3, components) ->
 
   e2d3.util.setupLiveReloadForDelegateMode()
 
-  $('[data-toggle="tooltip"]').tooltip()
+  new Vue
+    el: 'body'
 
-  class E2D3ChartViewer
-    constructor: (frame) ->
+    data: () ->
+      bound: true
+
+    ready: () ->
       @binding = null
       @baseUrl = e2d3.util.baseUrl _path
-
-      $('#e2d3-rebind').on 'click', (e) => @rebindSelectedCells()
-      $('#e2d3-fill-sample').on 'click', (e) => @fillWithSampleData()
-      $('#e2d3-share-chart').on 'click', (e) => @shareChart()
-      $('#e2d3-save-svg').on 'click', (e) => @saveImage 'svg'
-      $('#e2d3-save-png').on 'click', (e) => @saveImage 'png'
-      $('#e2d3-go-home').on 'click', (e) => @goHome()
-
-      $('#e2d3-share-copy').on 'click', (e) ->
-        $('#e2d3-share-url').select()
-        document.execCommand('copy') if document.queryCommandSupported('copy')
-
-      selectOnClick = (e) ->
-        e.preventDefault()
-        $(this).select()
-      shareOnClick = (e) ->
-        e.preventDefault()
-        window.open($(this).attr('href'), 'share', 'width=600,height=258')
-
-      $('#e2d3-share-url').on 'click', selectOnClick
-      $('#e2d3-share-iframe').on 'click', selectOnClick
-      $('#e2d3-share-facebook').on 'click', shareOnClick
-      $('#e2d3-share-twitter').on 'click', shareOnClick
 
       Promise.all [@initExcel(), @createFrame()]
         .then () =>
@@ -64,115 +45,108 @@ require ['domReady!', 'bootstrap', 'jquery', 'd3', 'd3.promise', 'e2d3', 'ui/sec
             .catch (err) =>
               @fillWithSampleData()
 
-    initExcel: () ->
-      e2d3.initialize()
+    methods:
+      initExcel: () ->
+        e2d3.initialize()
 
-    createFrame: () ->
-      @frame = document.createElement 'iframe'
-      @frame.src = 'frame.html'
-      @frame.width = '100%'
-      @frame.height = '100%'
-      @frame.frameBorder = 0
-      @frame.setAttribute 'data-base-url', @baseUrl
-      @frame.setAttribute 'data-script-type', _scriptType
-      @frame.setAttribute 'data-data-type', _dataType
+      createFrame: () ->
+        @frame = document.createElement 'iframe'
+        @frame.src = 'frame.html'
+        @frame.width = '100%'
+        @frame.height = '100%'
+        @frame.frameBorder = 0
+        @frame.setAttribute 'data-base-url', @baseUrl
+        @frame.setAttribute 'data-script-type', _scriptType
+        @frame.setAttribute 'data-data-type', _dataType
 
-      $('#e2d3-frame').append @frame
+        @$$.frame.appendChild @frame
 
-      new Promise (resolve, reject) =>
-        checkframe = () =>
-          if @chart()?
-            resolve()
-          else
-            setTimeout checkframe, 100
-        checkframe()
+        new Promise (resolve, reject) =>
+          checkframe = () =>
+            if @chart()?
+              resolve()
+            else
+              setTimeout checkframe, 100
+          checkframe()
 
-    chart: () ->
-      @frame?.contentWindow?.chart
+      chart: () ->
+        @frame?.contentWindow?.chart
 
-    debug: () ->
-      @frame?.contentWindow?.debug
+      debug: () ->
+        @frame?.contentWindow?.debug
 
-    fillWithSampleData: () ->
-      @fetchSampleData()
-        .then () =>
-          @bindSelected()
-        .then () ->
-          $('#e2d3-fill-sample').hide()
-        .catch (err) =>
-          @onError err
-          $('#e2d3-fill-sample').show()
+      fillWithSampleData: () ->
+        @fetchSampleData()
+          .then () =>
+            @bindSelected()
+          .then () =>
+            @bound = true
+          .catch (err) =>
+            @onError err
+            @bound = false
 
-    rebindSelectedCells: () ->
-      @bindSelected()
-        .catch (err) =>
-          @onError err
+      rebindSelectedCells: () ->
+        @bindSelected()
+          .catch (err) =>
+            @onError err
 
-    saveImage: (type) ->
-      e2d3.save @chart().save().node(), type, @baseUrl
+      saveImage: (type) ->
+        e2d3.save @chart().save().node(), type, @baseUrl
 
-    shareChart: () ->
-      @getBoundData()
-        .then (data) ->
-          e2d3.api.upload _path, _scriptType, data
-        .then (result) =>
-          @showShare result.url
-        .catch (err) =>
-          @showAlert 'Error on sharing', err.statusText ? err
-
-    goHome: () ->
-      e2d3.excel.removeAttribute 'chart'
-      @binding?.release().catch(@onError)
-      window.location.href = 'index.html'
-
-    fetchSampleData: () ->
-      d3.promise.text "#{@baseUrl}/data.#{_dataType}"
-        .then (text) ->
-          e2d3.excel.fill _dataType, text
-
-    bindSelected: () ->
-      @bind e2d3.excel.bindSelected()
-
-    bindStored: () ->
-      @bind e2d3.excel.bindStored()
-
-    bind: (binder) ->
-      updateBinding = (binding) =>
-        @binding?.release().catch(@onError)
-        @binding = binding
-        @binding.on 'change', renderBinding
-
-      renderBinding = () =>
+      shareChart: () ->
         @getBoundData()
-          .then (data) =>
-            @chart().update data
-            Promise.resolve()
+          .then (data) ->
+            e2d3.api.upload _path, _scriptType, data
+          .then (result) =>
+            @showShare result.url
+          .catch (err) =>
+            @showAlert 'Error on sharing', err.statusText ? err
 
-      binder
-        .then (binding) ->
-          updateBinding(binding)
-          renderBinding()
+      goHome: () ->
+        e2d3.excel.removeAttribute 'chart'
+        @binding?.release().catch(@onError)
+        window.location.href = 'index.html'
 
-    getBoundData: () ->
-      if @binding?
-        @binding.fetchData()
-      else
-        Promise.resolve(e2d3.data.empty())
+      fetchSampleData: () ->
+        d3.promise.text "#{@baseUrl}/data.#{_dataType}"
+          .then (text) ->
+            e2d3.excel.fill _dataType, text
 
-    onError: (err) ->
-      @showAlert err.name, err.message if err.code?
-      e2d3.onError err
+      bindSelected: () ->
+        @bind e2d3.excel.bindSelected()
 
-    showAlert: (title, message) ->
-      $('#e2d3-alert-title').text(title)
-      $('#e2d3-alert-body').text(message)
-      $('#e2d3-alert').modal()
+      bindStored: () ->
+        @bind e2d3.excel.bindStored()
 
-    showShare: (url) ->
-      $('#e2d3-share-url').val(url)
-      $('#e2d3-share-iframe').val("<iframe src=\"#{url}\" width=\"100%\" height=\"400\" frameborder=\"0\" scrolling=\"no\"></iframe>")
-      $('#e2d3-share-facebook').attr('href', "https://www.facebook.com/sharer/sharer.php?u=#{url}")
-      $('#e2d3-share-twitter').attr('href', "https://twitter.com/home?status=#{url}")
-      $('#e2d3-share').modal()
+      bind: (binder) ->
+        updateBinding = (binding) =>
+          @binding?.release().catch(@onError)
+          @binding = binding
+          @binding.on 'change', renderBinding
 
-  new E2D3ChartViewer()
+        renderBinding = () =>
+          @getBoundData()
+            .then (data) =>
+              @chart().update data
+              Promise.resolve()
+
+        binder
+          .then (binding) ->
+            updateBinding(binding)
+            renderBinding()
+
+      getBoundData: () ->
+        if @binding?
+          @binding.fetchData()
+        else
+          Promise.resolve(e2d3.data.empty())
+
+      onError: (err) ->
+        @showAlert err.name, err.message if err.code?
+        e2d3.onError err
+
+      showAlert: (title, message) ->
+        @$.alert.show title, message
+
+      showShare: (url) ->
+        @$.share.show url

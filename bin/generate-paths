@@ -48,12 +48,21 @@ var shim = {
   },
   'crossfilter': {
     exports: 'crossfilter'
+  },
+  'bootstrap': {
+    deps: ['jquery']
   }
 };
 
 var map = {
-  '*': { 'jquery': 'misc/jquery-private' },
-  'misc/jquery-private': { 'jquery': 'jquery' }
+  '*': {
+    'jquery': 'misc/jquery-private',
+    'd3': 'misc/d3-promised',
+  },
+  'misc/jquery-private': { 'jquery': 'jquery' },
+  'misc/d3-promised': { 'd3': 'd3' },
+  'd3.promise': { 'd3': 'd3' },
+  'bootstrap': { 'jquery': 'jquery' },
 };
 
 /*

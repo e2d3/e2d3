@@ -39,7 +39,7 @@ var E2D3_DEFAULT_PATHS = {
     'react'
   ],
   'three': [
-    '//cdnjs.cloudflare.com/ajax/libs/three.js/r72/three.min',
+    '//cdnjs.cloudflare.com/ajax/libs/three.js/r73/three.min',
     'three'
   ],
   'topojson': [
@@ -77,13 +77,28 @@ var E2D3_DEFAULT_SHIM = {
   },
   'crossfilter': {
     'exports': 'crossfilter'
+  },
+  'bootstrap': {
+    'deps': [
+      'jquery'
+    ]
   }
 };
 var E2D3_DEFAULT_MAP = {
   '*': {
-    'jquery': 'misc/jquery-private'
+    'jquery': 'misc/jquery-private',
+    'd3': 'misc/d3-promised'
   },
   'misc/jquery-private': {
+    'jquery': 'jquery'
+  },
+  'misc/d3-promised': {
+    'd3': 'd3'
+  },
+  'd3.promise': {
+    'd3': 'd3'
+  },
+  'bootstrap': {
     'jquery': 'jquery'
   }
 };

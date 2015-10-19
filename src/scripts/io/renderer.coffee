@@ -1,4 +1,4 @@
-define ['d3', 'd3.promise', 'FileSaver', 'canvg'], (d3, d3Promise, saveAs, canvg) ->
+define ['d3', 'FileSaver', 'canvg'], (d3, saveAs, canvg) ->
 
   save = (svgnode, type, baseUrl, filename = 'image') ->
     return if !svgnode?

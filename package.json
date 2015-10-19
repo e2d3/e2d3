@@ -51,9 +51,12 @@
     "gulp-sourcemaps": "~1.5.2",
     "gulp-uglify": "~1.4.1",
     "gulp-util": "~3.0.6",
+    "insert-css": "^0.2.0",
     "main-bower-files": "~2.9.0",
     "merge2": "~0.3.6",
-    "rimraf": "~2.4.3"
+    "rimraf": "~2.4.3",
+    "through2": "^2.0.0",
+    "vueify": "^2.0.1"
   },
   "engines": {
     "node": "~0.12.0"

@@ -1,10 +1,17 @@
-require ['bootstrap', 'jquery', 'vue', 'd3', 'd3.promise', 'e2d3', 'ui/secret', 'marked'], (bootstrap, $, Vue, d3, d3Promise, e2d3, secret, marked) ->
+###
+# config
+###
+require.config
+  paths: E2D3_DEFAULT_PATHS
+  shim: E2D3_DEFAULT_SHIM
+  map: E2D3_DEFAULT_MAP
+  config:
+    text:
+      useXhr: () -> true
 
-  e2d3.initialize()
-    .then () ->
-      chart = e2d3.excel.getAttribute 'chart'
-      if chart
-        window.location.href = "chart.html##{chart.path},#{chart.scriptType},#{chart.dataType}"
+require ['bootstrap', 'jquery', 'vue', 'd3', 'marked', 'e2d3', 'ui/secret'], (bootstrap, $, Vue, d3, marked, e2d3, secret) ->
+
+  e2d3.restore()
 
   secret () ->
     $('#delegate').show()
@@ -43,7 +50,7 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'd3.promise', 'e2d3', 'ui/secret', 
         computed:
           baseUrl: -> e2d3.util.baseUrl(this.path)
           cover: -> @baseUrl + '/thumbnail.png'
-          link: -> "chart.html##{@path},#{@scriptType},#{@dataType}"
+          link: -> "chart.html##{@path}:#{@scriptType}:#{@dataType}"
         ready: () ->
           d3.text @baseUrl + '/README.md', (error, readme) =>
             @readme = marked readme
