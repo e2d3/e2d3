@@ -38,17 +38,17 @@ define ['text', 'loader/compiler', 'loader/extractor'], (text, compiler, extract
     wrapped = """
 define([#{moduleNames}], function (#{moduleVariables}) {
 
-  var _script = function (e2d3, root, baseUrl, reload, onready) {
+  var _script = function (env, root, baseUrl, reload) {
 
 #{compiled}
 
     var _functions = {};
-    if (typeof update !== 'undefined') _functions.update = update;
-    if (typeof save !== 'undefined') _functions.save = save;
+    if (typeof update === 'function') _functions.update = update;
+    if (typeof save === 'function') _functions.save = save;
     return _functions;
-  }
+  };
 
-  return function (root, baseUrl) {
+  return function (root, baseUrl, storage) {
     var _data = null;
     var _onready = null;
     var _functions = null;
@@ -57,9 +57,7 @@ define([#{moduleNames}], function (#{moduleVariables}) {
       if (_data && _functions.update) {
         var result = _functions.update(_data);
         if (!(typeof result === 'boolean' && result === false)) {
-          if (_onready) {
-            _onready();
-          }
+          _ready();
         }
       }
     };
@@ -68,22 +66,47 @@ define([#{moduleNames}], function (#{moduleVariables}) {
       if (_onready) {
         _onready();
       }
-    }
+    };
+
+    var _statestorage = function (key, defaultValue) {
+      return function (value) {
+        if (typeof storage === 'undefined') {
+          return defaultValue;
+        } else if (typeof value !== 'undefined') {
+          var ret = storage(key, value);
+          setTimeout(_reload, 0);
+          return ret;
+        } else {
+          var ret = storage(key);
+          if (ret == null) {
+            ret = defaultValue;
+          }
+          return ret;
+        }
+      };
+    };
 
     var _initialize = function () {
-      var e2d3 = {
+      var env = {
         root: root,
         baseUrl: baseUrl,
         reload: _reload,
-        onready: _ready
+        ready: _ready,
+        colors: _statestorage('colors', d3 ? d3.scale.category10().range() : undefined),
+        state: _statestorage('state', {}),
       };
 
-      _functions = _script(e2d3, root, baseUrl, _reload, _ready);
+      _functions = _script(env, root, baseUrl, _reload);
       _reload();
     };
 
     var _dispose = function () {
       d3.select(root).selectAll('*').remove();
+    };
+
+    var _reset = function () {
+      _dispose();
+      _initialize();
     };
 
     _initialize();
@@ -94,16 +117,16 @@ define([#{moduleNames}], function (#{moduleVariables}) {
         _onready = onready;
         _reload();
       },
-      resize: function () {
-        _dispose();
-        _initialize();
-      },
+      resize: _reset,
       save: function () {
         if (_functions.save) {
           return _functions.save();
         } else {
           return d3.select(root).select('svg');
         }
+      },
+      storage: function (key, value) {
+        return _statestorage(key)(value);
       }
     };
 

@@ -32,13 +32,11 @@ require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components'], (bootstrap, Vue, d3
       @binding = null
       @baseUrl = e2d3.util.baseUrl _path
 
-      Promise.all [@initExcel(), @createFrame()]
+      @initExcel()
         .then () =>
-          e2d3.excel.storeAttribute 'chart',
-            path: _path
-            scriptType: _scriptType
-            dataType: _dataType
-
+          @initState()
+          @createFrame()
+        .then () =>
           @debug().setupDebugConsole() if e2d3.util.isDebugConsoleEnabled()
 
           @bindStored()
@@ -49,7 +47,25 @@ require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components'], (bootstrap, Vue, d3
       initExcel: () ->
         e2d3.initialize()
 
+      initState: () ->
+        if !e2d3.excel.getAttribute 'chart'
+          e2d3.excel.storeAttribute 'chart',
+            path: _path
+            scriptType: _scriptType
+            dataType: _dataType
+            parameters: {}
+
       createFrame: () ->
+        # Refer from child frame
+        # It needs Excel API initialized
+        window.storage = (key, value) ->
+          chart = e2d3.excel.getAttribute 'chart'
+          chart.parameters ?= {}
+          if arguments.length == 2
+            chart.parameters[key] = value
+            e2d3.excel.storeAttribute 'chart', chart
+          chart.parameters[key]
+
         @frame = document.createElement 'iframe'
         @frame.src = 'frame.html'
         @frame.width = '100%'

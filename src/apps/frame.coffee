@@ -31,7 +31,7 @@ require ['domReady!', 'ui/framecommon', 'e2d3util', 'e2d3loader!main.' + _script
   common.loadMainCss () ->
     chart =
       if main?
-        main document.querySelector(_viewport), _baseUrl
+        main document.querySelector(_viewport), _baseUrl, window.parent.storage
       else
         {}
 
@@ -46,3 +46,5 @@ require ['domReady!', 'ui/framecommon', 'e2d3util', 'e2d3loader!main.' + _script
         chart.update? data, common.onDataUpdated
       save: () ->
         chart.save?()
+      storage: (key, value) ->
+        chart.storage?(key, value)

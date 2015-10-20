@@ -11,7 +11,7 @@ require.config
 
 require ['bootstrap', 'jquery', 'vue', 'd3', 'marked', 'e2d3', 'ui/secret'], (bootstrap, $, Vue, d3, marked, e2d3, secret) ->
 
-  e2d3.restore()
+  e2d3.restoreChart()
 
   secret () ->
     $('#delegate').show()

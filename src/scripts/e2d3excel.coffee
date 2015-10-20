@@ -78,7 +78,7 @@ define ['d3', 'e2d3model', 'e2d3util'], (d3, model, util) ->
         else
           console.error result.error
 
-    removeAttribute: (key, value) ->
+    removeAttribute: (key) ->
       Office.context.document.settings.remove key
       Office.context.document.settings.saveAsync (result) ->
         if result.status == Office.AsyncResultStatus.Succeeded
@@ -122,7 +122,7 @@ define ['d3', 'e2d3model', 'e2d3util'], (d3, model, util) ->
     storeAttribute: (key, value) ->
       localStorage.setItem key, JSON.stringify value
 
-    removeAttribute: (key, value) ->
+    removeAttribute: (key) ->
       localStorage.removeItem key
 
   ###
