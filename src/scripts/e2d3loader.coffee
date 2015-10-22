@@ -94,6 +94,12 @@ define([#{moduleNames}], function (#{moduleVariables}) {
         ready: _ready,
         colors: _statestorage('colors', d3 ? d3.scale.category10().range() : undefined),
         state: _statestorage('state', {}),
+        colorsDomain: function (min, max) {
+          var a = []; var l = env.colors().length;
+          for (var i = 0; i < l - 1; ++i) a.push(i / l);
+          a.push(1);
+          return a.map(d3.interpolate(min, max));
+        },
       };
 
       _functions = _script(env, root, baseUrl, _reload);

@@ -13,3 +13,16 @@
 #e2d3-chart-control {
   display: none;
 }
+
+.color-table {
+  display: inline-table;
+  width: 60px;
+  margin-right: 8px;
+  border: 1px solid #000;
+  vertical-align: middle;
+
+  td {
+    width: 1%;
+    line-height: 15px;
+  }
+}

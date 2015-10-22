@@ -29,18 +29,29 @@ block navleft
 block navright
   ul.nav.navbar-nav.navbar-right
     li
+      .dropdown
+        button.btn.btn-sm.btn-default.dropdown-toggle.navbar-btn(data-toggle='dropdown', aria-expanded='true')
+          div(v-component='theme-label', name='Select color theme', colors='{{selectedColors}}')
+          | &nbsp;
+          spean.caret
+        ul.dropdown-menu(role='menu', aria-labelledby='e2d3-save')
+          div(v-component='theme', v-repeat='themes', inline-template)
+            li
+              a(v-on='click: select', role='menuitem', tabindex=-1, href='javascript:')
+                div(v-component='theme-label', name='{{name}}', colors='{{colors}}')
+    li
       button.btn.btn-sm.btn-default.navbar-btn(v-on='click: shareChart')
         i.fa.fa-share-square-o
         |  Share chart
     li
       .dropdown
-      button.btn.btn-sm.btn-default.dropdown-toggle.navbar-btn(data-toggle='dropdown', aria-expanded='true')
-        i.fa.fa-file-image-o
-        |  Save image&nbsp;
-        spean.caret
-      ul.dropdown-menu(role='menu', aria-labelledby='e2d3-save')
-        li(role='presentation'): a(v-on='click: saveImage("svg")', role='menuitem', tabindex=-1, href='javascript:', download='image.svg') Save as SVG
-        li(role='presentation'): a(v-on='click: saveImage("png")', role='menuitem', tabindex=-1, href='javascript:', download='image.png') Save as PNG
+        button.btn.btn-sm.btn-default.dropdown-toggle.navbar-btn(data-toggle='dropdown', aria-expanded='true')
+          i.fa.fa-file-image-o
+          |  Save image&nbsp;
+          spean.caret
+        ul.dropdown-menu(role='menu', aria-labelledby='e2d3-save')
+          li: a(v-on='click: saveImage("svg")', role='menuitem', tabindex=-1, href='javascript:', download='image.svg') Save as SVG
+          li: a(v-on='click: saveImage("png")', role='menuitem', tabindex=-1, href='javascript:', download='image.png') Save as PNG
     li
       button.btn.btn-sm.btn-default.navbar-btn(v-on='click: goHome')
         i.fa.fa-home

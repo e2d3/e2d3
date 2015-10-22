@@ -27,6 +27,24 @@ require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components'], (bootstrap, Vue, d3
 
     data: () ->
       bound: true
+      themes: [
+        { name: 'd3.category10', colors: d3.scale.category10().range() },
+        { name: 'd3.category20', colors: d3.scale.category20().range() },
+        { name: 'd3.category20b', colors: d3.scale.category20b().range() },
+        { name: 'd3.category20c', colors: d3.scale.category20c().range() },
+        { name: 'Red', colors: ['#fff', '#f00'] },
+        { name: 'Green', colors: ['#fff', '#0f0'] },
+        { name: 'Blue', colors: ['#fff', '#00f'] },
+        { name: 'Black', colors: ['#fff', '#000'] },
+      ]
+      selectedColors: []
+
+    components:
+      theme:
+        methods:
+          select: () ->
+            @$parent.selectedColors = this.colors
+            @$parent.chart().storage 'colors', this.colors
 
     ready: () ->
       @binding = null
@@ -48,19 +66,22 @@ require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components'], (bootstrap, Vue, d3
         e2d3.initialize()
 
       initState: () ->
-        if !e2d3.excel.getAttribute 'chart'
-          e2d3.excel.storeAttribute 'chart',
+        chart = e2d3.excel.getAttribute 'chart'
+        if !chart || !chart.parameters
+          chart =
             path: _path
             scriptType: _scriptType
             dataType: _dataType
             parameters: {}
+          e2d3.excel.storeAttribute 'chart', chart
+
+        @selectedColors = chart.parameters.colors ? @themes[0].colors
 
       createFrame: () ->
         # Refer from child frame
         # It needs Excel API initialized
         window.storage = (key, value) ->
           chart = e2d3.excel.getAttribute 'chart'
-          chart.parameters ?= {}
           if arguments.length == 2
             chart.parameters[key] = value
             e2d3.excel.storeAttribute 'chart', chart
