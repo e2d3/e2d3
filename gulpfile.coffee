@@ -165,4 +165,7 @@ notifyLivereload = (event) ->
   name = name.substring 3 if /^\.\.\/contrib\//.test name
   server.changed (error) ->
     if !error
+      # change gulp-develop-server/index.js
+      #   return done( null, 'Development server already received restart requests.', callback );
+      #     ->  return done( 'Development server already received restart requests.', callback );
       lr.changed body: files: [name]

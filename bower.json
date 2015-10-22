@@ -20,7 +20,7 @@
     "bootstrap-sass-official": "~3.3.0",
     "d3": "~3.5.5",
     "d3.promise": "~1.0.0",
-    "font-awesome": "~4.3.0",
+    "font-awesome": "~4.4.0",
     "FileSaver": "*",
     "canvg-gabelerner": "*",
     "marked": "~0.3.5",
