@@ -67,6 +67,13 @@ define ['d3', 'e2d3model', 'e2d3util'], (d3, model, util) ->
           else
             reject result.error
 
+    initAttribute: (key, defaultValue) ->
+      value = @getAttribute key
+      if value == null
+        value = defaultValue
+        @storeAttribute key, value
+      value
+
     getAttribute: (key) ->
       Office.context.document.settings.get key
 
@@ -115,6 +122,13 @@ define ['d3', 'e2d3model', 'e2d3util'], (d3, model, util) ->
     bindStored: () ->
       new Promise (resolve, reject) ->
         reject()
+
+    initAttribute: (key, defaultValue) ->
+      value = @getAttribute key
+      if value == null
+        value = defaultValue
+        @storeAttribute key, value
+      value
 
     getAttribute: (key) ->
       JSON.parse localStorage.getItem key

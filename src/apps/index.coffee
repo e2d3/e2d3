@@ -50,7 +50,7 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'marked', 'e2d3', 'ui/secret'], (bo
         computed:
           baseUrl: -> e2d3.util.baseUrl(this.path)
           cover: -> @baseUrl + '/thumbnail.png'
-          link: -> "chart.html##{@path}:#{@scriptType}:#{@dataType}"
+          link: -> "chart.html##{@path},#{@scriptType},#{@dataType}"
         ready: () ->
           d3.text @baseUrl + '/README.md', (error, readme) =>
             @readme = marked readme

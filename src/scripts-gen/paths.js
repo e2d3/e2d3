@@ -34,6 +34,14 @@ var E2D3_DEFAULT_PATHS = {
     '//cdnjs.cloudflare.com/ajax/libs/dc/1.7.4/dc.min',
     'dc'
   ],
+  'mathjs': [
+    '//cdnjs.cloudflare.com/ajax/libs/mathjs/2.4.0/math.min',
+    'math'
+  ],
+  'numeric': [
+    '//cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min',
+    'numeric'
+  ],
   'react': [
     '//cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.min',
     'react'
@@ -77,6 +85,9 @@ var E2D3_DEFAULT_SHIM = {
   },
   'crossfilter': {
     'exports': 'crossfilter'
+  },
+  'numeric': {
+    'exports': 'numeric'
   },
   'bootstrap': {
     'deps': [

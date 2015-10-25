@@ -1,4 +1,4 @@
-params = window.location.hash.substring(1).split ':'
+params = window.location.hash.substring(1).split ','
 
 ###
 # load parameters
@@ -18,7 +18,7 @@ require.config
     text:
       useXhr: () -> true
 
-require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components'], (bootstrap, Vue, d3, e2d3, components) ->
+require ['bootstrap', 'vue', 'd3', 'colorbrewer', 'e2d3', 'ui/components'], (bootstrap, Vue, d3, colorbrewer, e2d3, components) ->
 
   e2d3.util.setupLiveReloadForDelegateMode()
 
@@ -26,17 +26,18 @@ require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components'], (bootstrap, Vue, d3
     el: 'body'
 
     data: () ->
+      themes = []
+      for name, theme of colorbrewer
+        lastColors = null
+        for num, colors of theme
+          lastColors = colors
+        themes.push
+          name: name
+          colors: lastColors
+      themes.push { name: 'Campfire', colors: ['#588C7E', '#F2E394', '#F2AE72', '#D96459', '#8C4646'] }
+
       bound: true
-      themes: [
-        { name: 'd3.category10', colors: d3.scale.category10().range() },
-        { name: 'd3.category20', colors: d3.scale.category20().range() },
-        { name: 'd3.category20b', colors: d3.scale.category20b().range() },
-        { name: 'd3.category20c', colors: d3.scale.category20c().range() },
-        { name: 'Red', colors: ['#fff', '#f00'] },
-        { name: 'Green', colors: ['#fff', '#0f0'] },
-        { name: 'Blue', colors: ['#fff', '#00f'] },
-        { name: 'Black', colors: ['#fff', '#000'] },
-      ]
+      themes: themes
       selectedColors: []
 
     components:
@@ -66,26 +67,24 @@ require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components'], (bootstrap, Vue, d3
         e2d3.initialize()
 
       initState: () ->
-        chart = e2d3.excel.getAttribute 'chart'
-        if !chart || !chart.parameters
-          chart =
-            path: _path
-            scriptType: _scriptType
-            dataType: _dataType
-            parameters: {}
-          e2d3.excel.storeAttribute 'chart', chart
+        chart = e2d3.excel.initAttribute 'chart',
+          path: _path
+          scriptType: _scriptType
+          dataType: _dataType
 
-        @selectedColors = chart.parameters.colors ? @themes[0].colors
+        parameter = e2d3.excel.initAttribute 'parameter', {}
+
+        @selectedColors = parameter.colors ? @themes[0].colors
 
       createFrame: () ->
         # Refer from child frame
         # It needs Excel API initialized
         window.storage = (key, value) ->
-          chart = e2d3.excel.getAttribute 'chart'
-          if arguments.length == 2
-            chart.parameters[key] = value
-            e2d3.excel.storeAttribute 'chart', chart
-          chart.parameters[key]
+          parameter = e2d3.excel.getAttribute 'parameter'
+          if value?
+            parameter[key] = value
+            e2d3.excel.storeAttribute 'parameter', parameter
+          parameter[key]
 
         @frame = document.createElement 'iframe'
         @frame.src = 'frame.html'
@@ -133,7 +132,8 @@ require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components'], (bootstrap, Vue, d3
       shareChart: () ->
         @getBoundData()
           .then (data) ->
-            e2d3.api.upload _path, _scriptType, data
+            parameter = e2d3.excel.getAttribute 'parameter'
+            e2d3.api.upload _path, _scriptType, parameter, data
           .then (result) =>
             @showShare result.url
           .catch (err) =>

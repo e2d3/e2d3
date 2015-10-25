@@ -4,6 +4,7 @@ define([
   'misc/jquery-private',
   'vue',
   'misc/d3-promised',
+  'colorbrewer',
   'marked',
   'e2d3',
   'ui/secret',

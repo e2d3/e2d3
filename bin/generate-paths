@@ -24,7 +24,9 @@ var targets = [
   'vue',
   'three.js',
   'dc',
-  'crossfilter'
+  'crossfilter',
+  'mathjs',
+  'numeric'
 ];
 
 var additional = [
@@ -48,6 +50,9 @@ var shim = {
   },
   'crossfilter': {
     exports: 'crossfilter'
+  },
+  'numeric': {
+    exports: 'numeric'
   },
   'bootstrap': {
     deps: ['jquery']

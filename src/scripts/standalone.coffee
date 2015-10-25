@@ -10,6 +10,7 @@ _scriptType = script.getAttribute('data-script-type') ? 'js'
 _dataType = script.getAttribute('data-data-type') ? 'csv'
 _dataUrl = script.getAttribute('data-data-url') ? "data.#{_dataType}"
 _viewport = script.getAttribute('data-viewport') ? '#e2d3-chart-area'
+_parameter = JSON.parse(script.getAttribute('data-parameter') ? '{}')
 
 ###
 # config
@@ -33,7 +34,10 @@ require ['domReady!', 'd3', 'ui/framecommon', 'e2d3model', 'e2d3loader!main.' + 
   common.loadMainCss () ->
     chart =
       if main?
-        main document.querySelector(_viewport), _baseUrl
+        main document.querySelector(_viewport), _baseUrl, (key, value) ->
+          if value?
+            _parameter[key] = value
+          _parameter[key]
       else
         {}
 

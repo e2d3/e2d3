@@ -33,6 +33,8 @@ amdoptions =
       deps: ['jquery']
     'canvg':
       exports: 'canvg'
+    'colorbrewer':
+      exports: 'colorbrewer'
   loader: vueloader 'src/scripts'
 
 gulp.task 'clean', (cb) ->
