@@ -1,4 +1,4 @@
-params = window.location.hash.substring(1).split ','
+params = window.location.hash.substring(1).split '!'
 
 ###
 # load parameters
@@ -141,6 +141,7 @@ require ['bootstrap', 'vue', 'd3', 'colorbrewer', 'e2d3', 'ui/components'], (boo
 
       goHome: () ->
         e2d3.excel.removeAttribute 'chart'
+        e2d3.excel.removeAttribute 'parameter'
         @binding?.release().catch(@onError)
         window.location.href = 'index.html'
 
