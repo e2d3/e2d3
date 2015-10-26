@@ -18,7 +18,7 @@ require.config
     text:
       useXhr: () -> true
 
-require ['bootstrap', 'vue', 'd3', 'colorbrewer', 'e2d3', 'ui/components'], (bootstrap, Vue, d3, colorbrewer, e2d3, components) ->
+require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components', 'ui/colorthemes'], (bootstrap, Vue, d3, e2d3, components, colorthemes) ->
 
   e2d3.util.setupLiveReloadForDelegateMode()
 
@@ -26,26 +26,18 @@ require ['bootstrap', 'vue', 'd3', 'colorbrewer', 'e2d3', 'ui/components'], (boo
     el: 'body'
 
     data: () ->
-      themes = []
-      for name, theme of colorbrewer
-        lastColors = null
-        for num, colors of theme
-          lastColors = colors
-        themes.push
-          name: name
-          colors: lastColors
-      themes.push { name: 'Campfire', colors: ['#588C7E', '#F2E394', '#F2AE72', '#D96459', '#8C4646'] }
-
       bound: true
-      themes: themes
+      themes: colorthemes
       selectedColors: []
 
     components:
-      theme:
+      themes:
+        props: ['themes']
+        template: '#themes'
         methods:
-          select: () ->
-            @$parent.selectedColors = this.colors
-            @$parent.chart().storage 'colors', this.colors
+          select: (e) ->
+            @$parent.selectedColors = e.targetVM.colors
+            @$parent.chart().storage 'colors', e.targetVM.colors
 
     ready: () ->
       @binding = null
@@ -79,11 +71,12 @@ require ['bootstrap', 'vue', 'd3', 'colorbrewer', 'e2d3', 'ui/components'], (boo
       createFrame: () ->
         # Refer from child frame
         # It needs Excel API initialized
-        window.storage = (key, value) ->
+        window.storage = (key, value) =>
           parameter = e2d3.excel.getAttribute 'parameter'
           if value?
             parameter[key] = value
             e2d3.excel.storeAttribute 'parameter', parameter
+            @storageChanged key, value
           parameter[key]
 
         @frame = document.createElement 'iframe'
@@ -104,6 +97,10 @@ require ['bootstrap', 'vue', 'd3', 'colorbrewer', 'e2d3', 'ui/components'], (boo
             else
               setTimeout checkframe, 100
           checkframe()
+
+      storageChanged: (key, value) ->
+        if key == 'colors'
+          @selectedColors = value
 
       chart: () ->
         @frame?.contentWindow?.chart

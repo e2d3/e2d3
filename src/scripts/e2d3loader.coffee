@@ -92,7 +92,7 @@ define([#{moduleNames}], function (#{moduleVariables}) {
         baseUrl: baseUrl,
         reload: _reload,
         ready: _ready,
-        colors: _statestorage('colors', d3 ? ['#000000'] : undefined),
+        colors: _statestorage('colors', undefined),
         state: _statestorage('state', {}),
         colorsDomain: function (min, max) {
           var a = []; var l = env.colors().length;

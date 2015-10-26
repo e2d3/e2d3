@@ -10,7 +10,8 @@ define([
   'ui/secret',
   'ui/framecommon',
   'ui/urlparam',
-  'ui/components'
+  'ui/components',
+  'ui/colorthemes'
 ], function() {
 // noop
 });

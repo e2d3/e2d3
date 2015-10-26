@@ -8,6 +8,7 @@ $padding-small-vertical: 3px;
 
 $navbar-height: 40px;
 $navbar-default-bg: #fafafa;
+$navbar-default-link-hover-bg: darken($navbar-default-bg, 3.0%);
 $sidebar-width: 80px;
 
 $grid-float-breakpoint: 300px;
@@ -21,14 +22,14 @@ $fa-font-path: '.';
 @import '../../bower_components/font-awesome/scss/font-awesome';
 
 [v-cloak] {
-  display: none
+  display: none !important;
 }
 
 body {
   padding: 6px 15px 6px 6px;
 }
 
-body.index {
+.index {
   background-color: #f8f8f8;
   overflow-x: hidden;
 }
@@ -45,6 +46,10 @@ body.index {
     margin-left: 15px;
     padding: 0px;
   }
+}
+
+.navbar-fixed-top {
+  box-shadow: 0 3px 2px -2px rgba(0, 0, 0, .1);
 }
 
 #sidebar {

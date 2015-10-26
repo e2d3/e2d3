@@ -6,12 +6,32 @@
   right: 0;
 }
 
-#e2d3-controller {
-  display: none;
-}
+.theme-list {
+  width: 160px * 3;
+  background-color: $navbar-default-bg;
 
-#e2d3-chart-control {
-  display: none;
+  > tbody > tr > td {
+    vertical-align: top;
+  }
+
+  a {
+    display: block;
+    width: 160px;
+    padding: 3px 6px;
+    color: $navbar-default-link-color;
+    font-size: 12px;
+    text-decoration: none;
+
+    &:hover {
+      background-color: $navbar-default-link-hover-bg;
+      color: $navbar-default-link-hover-color;
+    }
+
+    &:active {
+      background-color: $navbar-default-link-active-bg;
+      color: $navbar-default-link-active-color;
+    }
+  }
 }
 
 .color-table {
@@ -23,6 +43,6 @@
 
   td {
     width: 1%;
-    line-height: 15px;
+    line-height: 16px;
   }
 }
