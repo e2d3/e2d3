@@ -36,7 +36,7 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'marked', 'e2d3', 'ui/secret'], (bo
       charts: []
 
     computed:
-      visibleCharts: () ->
+      selectedCharts: () ->
         @charts.filter (chart) =>
           if @selected != 'uncategorized'
             chart.tags? && chart.tags.indexOf(@selected) != -1
@@ -45,13 +45,15 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'marked', 'e2d3', 'ui/secret'], (bo
 
     components:
       chart:
-        data: () ->
+        template: '#chart'
+        props: ['chart']
+        data: ->
           readme: ''
         computed:
-          baseUrl: -> e2d3.util.baseUrl(this.path)
-          cover: -> @baseUrl + '/thumbnail.png'
-          link: -> "chart.html##{@path}!#{@scriptType}!#{@dataType}"
-        ready: () ->
+          baseUrl: -> e2d3.util.baseUrl(@chart.path)
+          link: -> "chart.html##{@chart.path}!#{@chart.scriptType}!#{@chart.dataType}"
+          coverBackground: -> 'background-image': 'url(' + @baseUrl + '/thumbnail.png' + ')'
+        ready: ->
           d3.text @baseUrl + '/README.md', (error, readme) =>
             @readme = marked readme
 

@@ -4,6 +4,14 @@ block vars
   - var title = 'E2D3'
   - var main = 'chart.js'
 
+block template
+  template#themes
+    table
+      tr(v-for='theme in themes')
+        td
+          a(@click='select(theme)', tabindex=-1, href='javascript:')
+            theme-label(:name='theme.name', :colors='theme.colors')
+
 block head
   style.
     body {
@@ -19,49 +27,43 @@ block head
 block navleft
   ul.nav.navbar-nav
     li
-      a(href='javascript:', v-on='click: rebindSelectedCells', data-toggle='tooltip', data-placement='bottom', title='Click when you change selected area')
+      a(href='javascript:', @click='rebindSelectedCells', data-toggle='tooltip', data-placement='bottom', title='Click when you change selected area')
         i.fa.fa-table
         |  Link data
-      a(href='javascript:', v-on='click: fillWithSampleData', v-if='!bound', v-cloak, data-toggle='tooltip', data-placement='bottom', title='Select empty cell and then click')
+      a(href='javascript:', @click='fillWithSampleData', v-if='!bound', v-cloak, data-toggle='tooltip', data-placement='bottom', title='Select empty cell and then click')
         i.fa.fa-refresh
         |  Retry filling sample data
 
 block navright
   ul.nav.navbar-nav.navbar-right
-    li.dropdown
+    li.dropdown(v-if='capabilities.colors', v-cloak)
       a.dropdown-toggle(href='javascript:', data-toggle='dropdown')
-        div(v-component='theme-label', name='Select color theme', colors='{{selectedColors}}')
+        theme-label(:name='"Select color theme"', :colors='selectedColors')
         | &nbsp;
-        spean.caret
+        span.caret
       div.dropdown-menu
-        template#themes
-          table
-            tr(v-repeat='themes')
-              td
-                a(v-on='click: select', tabindex=-1, href='javascript:')
-                  div(v-component='theme-label', name='{{name}}', colors='{{colors}}')
         table.theme-list
           tr
-            td: themes(themes='{{themes | filterBy "continuous" in "type"}}')
-            td: themes(themes='{{themes | filterBy "highlow" in "type"}}')
-            td: themes(themes='{{themes | filterBy "discrete" in "type"}}')
+            td: themes(:themes='themes | filterBy "continuous" in "type"')
+            td: themes(:themes='themes | filterBy "highlow" in "type"')
+            td: themes(:themes='themes | filterBy "discrete" in "type"')
     li
-      a(href='javascript:', v-on='click: shareChart')
+      a(href='javascript:', @click='shareChart')
         i.fa.fa-share-square-o
         |  Share chart
     li.dropdown
       a.dropdown-toggle(href='javascript:', data-toggle='dropdown')
         i.fa.fa-file-image-o
         |  Save image&nbsp;
-        spean.caret
+        span.caret
       ul.dropdown-menu
-        li: a(v-on='click: saveImage("svg")', tabindex=-1, href='javascript:', download='image.svg') Save as SVG
-        li: a(v-on='click: saveImage("png")', tabindex=-1, href='javascript:', download='image.png') Save as PNG
+        li: a(@click='saveImage("svg")', tabindex=-1, href='javascript:', download='image.svg') Save as SVG
+        li: a(@click='saveImage("png")', tabindex=-1, href='javascript:', download='image.png') Save as PNG
     li
-      a(href='javascript:', v-on='click: goHome')
+      a(href='javascript:', @click='goHome')
         i.fa.fa-home
 
 block content
-  section#e2d3-frame(v-el='frame')
-  div(v-component='alert', v-ref='alert')
-  div(v-component='share', v-ref='share')
+  section#e2d3-frame(v-el:frame)
+  alert-dialog(v-ref:alert)
+  share-dialog(v-ref:share)

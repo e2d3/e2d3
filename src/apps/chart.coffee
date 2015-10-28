@@ -27,6 +27,7 @@ require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components', 'ui/colorthemes'], (
 
     data: () ->
       bound: true
+      capabilities: {}
       themes: colorthemes
       selectedColors: []
 
@@ -35,13 +36,15 @@ require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components', 'ui/colorthemes'], (
         props: ['themes']
         template: '#themes'
         methods:
-          select: (e) ->
-            @$parent.selectedColors = e.targetVM.colors
-            @$parent.chart().storage 'colors', e.targetVM.colors
+          select: (theme) ->
+            @$parent.selectedColors = theme.colors
+            @$parent.chart().storage 'colors', theme.colors
 
     ready: () ->
       @binding = null
       @baseUrl = e2d3.util.baseUrl _path
+
+      @fetchManifest()
 
       @initExcel()
         .then () =>
@@ -88,7 +91,7 @@ require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components', 'ui/colorthemes'], (
         @frame.setAttribute 'data-script-type', _scriptType
         @frame.setAttribute 'data-data-type', _dataType
 
-        @$$.frame.appendChild @frame
+        @$els.frame.appendChild @frame
 
         new Promise (resolve, reject) =>
           checkframe = () =>
@@ -142,6 +145,12 @@ require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components', 'ui/colorthemes'], (
         @binding?.release().catch(@onError)
         window.location.href = 'index.html'
 
+      fetchManifest: () ->
+        d3.promise.yaml "#{@baseUrl}/manifest.yml"
+          .then (obj) =>
+            console.log obj
+            @capabilities = obj.capabilities if obj.capabilities?
+
       fetchSampleData: () ->
         d3.promise.text "#{@baseUrl}/data.#{_dataType}"
           .then (text) ->
@@ -181,7 +190,7 @@ require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components', 'ui/colorthemes'], (
         e2d3.onError err
 
       showAlert: (title, message) ->
-        @$.alert.show title, message
+        @$refs.alert.show title, message
 
       showShare: (url) ->
-        @$.share.show url
+        @$refs.share.show url

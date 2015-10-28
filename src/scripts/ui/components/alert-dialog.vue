@@ -1,12 +1,12 @@
 <template lang="jade">
-.modal.fade(tabindex='-1', role='dialog', aria-labelledby='e2d3-alert', aria-hidden='true')
+.modal.fade(tabindex='-1')
   .modal-dialog
     .modal-content
       .modal-header
         h5.modal-title {{title}}
       .modal-body {{message}}
       .modal-footer
-        button.btn.btn-sm.btn-default(type='button', data-dismiss='modal') OK
+        button.btn.btn-sm.btn-default(data-dismiss='modal') OK
 </template>
 
 <script lang="coffee">

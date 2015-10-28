@@ -6,7 +6,7 @@ $border-radius-small:       2px !default;
 
 $padding-small-vertical: 3px;
 
-$navbar-height: 40px;
+$navbar-height: 32px;
 $navbar-default-bg: #fafafa;
 $navbar-default-link-hover-bg: darken($navbar-default-bg, 3.0%);
 $sidebar-width: 80px;
@@ -41,6 +41,8 @@ body {
 }
 
 .navbar {
+  font-size: 12px;
+
   .container-fluid {
     margin-right: 30px;
     margin-left: 15px;

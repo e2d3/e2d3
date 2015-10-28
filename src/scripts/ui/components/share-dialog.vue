@@ -1,5 +1,5 @@
 <template lang="jade">
-.modal.fade(tabindex='-1', role='dialog', aria-labelledby='e2d3-share', aria-hidden='true')
+.modal.fade(tabindex='-1')
   .modal-dialog
     .modal-content
       .modal-header
@@ -8,19 +8,19 @@
         .form-group
           label Share URL
           .input-group
-            input.form-control(type='text', v-model='url', v-on='click: select', v-el='url', readonly)
+            input.form-control(type='text', v-model='url', @click='select', v-el:url, readonly)
             .input-group-btn
-              button.btn.btn-default(v-on='click: copy')
+              button.btn.btn-default(@click='copy')
                 i.fa.fa-copy
-              button.btn.btn-default(v-on='click: share(facebook)')
+              button.btn.btn-default(@click='share(facebook)')
                 i.fa.fa-facebook
-              button.btn.btn-default(v-on='click: share(twitter)')
+              button.btn.btn-default(@click='share(twitter)')
                 i.fa.fa-twitter
         .form-group
           label For blog
-          textarea.form-control(rows='3', v-model='frame', v-on='click: select', readonly)
+          textarea.form-control(rows='3', v-model='frame', @click='select', readonly)
       .modal-footer
-        button.btn.btn-sm.btn-default(type='button', data-dismiss='modal') Close
+        button.btn.btn-sm.btn-default(data-dismiss='modal') Close
 </template>
 
 <script lang="coffee">
@@ -48,7 +48,7 @@ module.exports =
       e.target.select()
 
     copy: (e) ->
-      this.$$.url.select()
+      @$els.url.select()
       document.execCommand('copy') if document.queryCommandSupported('copy')
 
     share: (url) ->

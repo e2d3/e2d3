@@ -5,7 +5,18 @@ block vars
   - var page = 'index'
   - var main = 'index.js'
 
-block navleft
+block template
+  template#chart
+    figure
+      .outer
+        .inner.cover(:style='coverBackground')
+          .title {{chart.title}}
+      figcaption
+        .action
+          a.btn.btn-sm.btn-visualize(:href='link')
+            i.fa.fa-bar-chart
+            |  Visualize
+        .readme {{{readme}}}
 
 block navright
   ul.nav.navbar-nav.navbar-right
@@ -15,20 +26,10 @@ block navright
 
 block content
   #sidebar
-    template(v-repeat='tags')
-      a.sidebar-item(href='javascript:', v-class='active: id == selected', v-on='click: select(id)')
-        i.fa.fa-fw(class='fa-{{image}}')
-        .sidebar-label {{label}}
+    template(v-for='tag in tags')
+      a.sidebar-item(href='javascript:', :class='{ active: tag.id == selected }', @click='select(tag.id)')
+        i.fa.fa-fw(class='fa-{{tag.image}}')
+        .sidebar-label {{tag.label}}
   #contrib.row.grid(v-cloak)
-    div(v-component='chart', v-repeat='visibleCharts', inline-template)
-      .col-xs-4
-        figure
-          .outer
-            .inner.cover(v-style='background-image: "url(" + cover + ")"')
-              .title {{title}}
-          figcaption
-            .action
-              a.btn.btn-sm.btn-visualize(href='{{link}}')
-                i.fa.fa-bar-chart
-                |  Visualize
-            .readme {{{readme}}}
+    .col-xs-4(v-for='chart in selectedCharts')
+      chart(:chart='chart')

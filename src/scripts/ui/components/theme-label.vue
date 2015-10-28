@@ -1,7 +1,7 @@
 <template lang="jade">
 table.color-table
   tr
-    td(v-repeat='color: colors', v-style='background-color: color') &#x200A;
+    td(v-for='color in colors', :style="{ 'background-color': color }") &#x200A;
 | {{name}}
 </template>
 
