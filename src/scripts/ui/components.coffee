@@ -1,4 +1,6 @@
-define ['vue', './components/alert-dialog.vue', './components/share-dialog.vue', './components/theme-label.vue'], (Vue, alertDialog, shareDialog, themeLabel) ->
-  Vue.component 'alert-dialog', alertDialog
-  Vue.component 'share-dialog', shareDialog
-  Vue.component 'theme-label', themeLabel
+define (require, exports, module) ->
+  Vue = require 'vue'
+  Vue.component 'alert-dialog', require './components/alert-dialog.vue'
+  Vue.component 'share-dialog', require './components/share-dialog.vue'
+  Vue.component 'theme-label', require './components/theme-label.vue'
+  Vue

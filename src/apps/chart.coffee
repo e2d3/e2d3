@@ -18,9 +18,11 @@ require.config
     text:
       useXhr: () -> true
 
-require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components', 'ui/colorthemes'], (bootstrap, Vue, d3, e2d3, components, colorthemes) ->
+require ['bootstrap', 'jquery', 'vue', 'd3', 'e2d3', 'ui/components', 'ui/colorthemes'], (bootstrap, $, Vue, d3, e2d3, components, colorthemes) ->
 
   e2d3.util.setupLiveReloadForDelegateMode()
+
+  $ -> $('[data-toggle="tooltip"]').tooltip()
 
   new Vue
     el: 'body'
@@ -148,7 +150,6 @@ require ['bootstrap', 'vue', 'd3', 'e2d3', 'ui/components', 'ui/colorthemes'], (
       fetchManifest: () ->
         d3.promise.yaml "#{@baseUrl}/manifest.yml"
           .then (obj) =>
-            console.log obj
             @capabilities = obj.capabilities if obj.capabilities?
 
       fetchSampleData: () ->
