@@ -30,8 +30,10 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'marked', 'e2d3', 'ui/secret'], (bo
       selected: (sessionStorage.getItem 'selected') ? 'recommended'
       tags: [
         { id: 'recommended', label: 'Recommended', image: 'star' },
+        { id: 'statistics', label: 'Statistics', image: 'balance-scale' },
         { id: 'example', label: 'Examples', image: 'gavel' },
-        { id: 'hackathon', label: 'Hackathon', image: 'bolt' }
+        { id: 'hackathon', label: 'Hackathon', image: 'bolt' },
+        { id: 'marathon', label: 'Marathon', image: 'map' },
       ]
       charts: []
 

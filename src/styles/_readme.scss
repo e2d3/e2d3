@@ -1,0 +1,33 @@
+.readme {
+  color: #666666;
+  font-size: 12px;
+  text-align: left;
+
+  h1, h2, h3 {
+    color: #000000;
+    font-weight: normal;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+
+  h1:first-child {
+    margin-top: 0;
+  }
+
+  h2 {
+    font-size: 1.3em;
+  }
+
+  h3 {
+    font-size: 1.2em;
+  }
+
+  table {
+    @extend .table;
+    @extend .table-bordered;
+    font-size: .8em;
+  }
+
+}

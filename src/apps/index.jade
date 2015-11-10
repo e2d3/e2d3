@@ -25,11 +25,11 @@ block navright
       |  Go into delegate mode
 
 block content
-  #sidebar
-    template(v-for='tag in tags')
+  .sidebar
+    div(v-for='tag in tags', v-cloak)
       a.sidebar-item(href='javascript:', :class='{ active: tag.id == selected }', @click='select(tag.id)')
         i.fa.fa-fw(class='fa-{{tag.image}}')
         .sidebar-label {{tag.label}}
-  #contrib.row.grid(v-cloak)
+  .contrib.row.grid(v-cloak)
     .col-xs-4(v-for='chart in selectedCharts')
       chart(:chart='chart')

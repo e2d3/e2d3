@@ -1,5 +1,7 @@
 $font-family-sans-serif: 'Segoe UI', 'Lucida Grande', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
+$body-index-bg: #f8f8f8;
+
 $border-radius-base:        2px !default;
 $border-radius-large:       2px !default;
 $border-radius-small:       2px !default;
@@ -8,11 +10,15 @@ $padding-small-vertical: 3px;
 
 $navbar-height: 32px;
 $navbar-default-bg: #fafafa;
-$navbar-default-link-hover-bg: darken($navbar-default-bg, 3.0%);
+$navbar-default-link-hover-bg: darken($navbar-default-bg, 3%);
+$navbar-delegate-bg: #fdd;
 $sidebar-width: 80px;
 
 $grid-float-breakpoint: 300px;
 $grid-gutter-width: 10px;
+
+$figure-separator: #d9d9d9;
+$figure-bg: #fff;
 
 $icon-font-path: '';
 
@@ -22,6 +28,7 @@ $fa-font-path: '.';
 @import '../../bower_components/font-awesome/scss/font-awesome';
 
 [v-cloak] {
+  // scss-lint:disable ImportantRule
   display: none !important;
 }
 
@@ -30,13 +37,13 @@ body {
 }
 
 .index {
-  background-color: #f8f8f8;
+  background-color: $body-index-bg;
   overflow-x: hidden;
 }
 
 .delegate {
   .navbar-default {
-    background-color: #ffdddd;
+    background-color: $navbar-delegate-bg;
   }
 }
 
@@ -46,7 +53,7 @@ body {
   .container-fluid {
     margin-right: 30px;
     margin-left: 15px;
-    padding: 0px;
+    padding: 0;
   }
 }
 
@@ -54,7 +61,7 @@ body {
   box-shadow: 0 3px 2px -2px rgba(0, 0, 0, .1);
 }
 
-#sidebar {
+.sidebar {
   position: fixed;
   top: $navbar-height;
   left: 0;
@@ -80,26 +87,27 @@ body {
       color: $navbar-default-link-active-color;
     }
 
-    i.fa {
+    .fa {
       font-size: 40px;
     }
 
     .sidebar-label {
-      font-size: 10px;
       padding-top: 4px;
+      font-size: 10px;
     }
   }
 }
 
-#contrib {
+.contrib {
   padding-left: $sidebar-width;
 }
 
-#maincontent {
+.maincontent {
   padding: $navbar-height $grid-gutter-width/2 0;
 }
 
 @import './log';
 @import './grid';
+@import './readme';
 @import './chart';
 @import './button';
