@@ -34,6 +34,7 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'marked', 'e2d3', 'ui/secret'], (bo
         { id: 'example', label: 'Examples', image: 'gavel' },
         { id: 'hackathon', label: 'Hackathon', image: 'bolt' },
         { id: 'marathon', label: 'Marathon', image: 'map' },
+        { id: 'tbd', label: 'To Be Developed', image: 'bomb' },
       ]
       charts: []
 
