@@ -33,6 +33,7 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'marked', 'e2d3', 'ui/secret'], (bo
         { id: 'statistics', label: 'Statistics', image: 'balance-scale' },
         { id: 'example', label: 'Examples', image: 'gavel' },
         { id: 'hackathon', label: 'Hackathon', image: 'bolt' },
+        { id: 'map', label: 'Map', image: 'map-marker' },
         { id: 'marathon', label: 'Marathon', image: 'map' },
         { id: 'tbd', label: 'To Be Developed', image: 'bomb' },
       ]
