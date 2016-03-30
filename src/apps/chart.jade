@@ -25,17 +25,17 @@ block head
     });
 
 block navleft
-  ul.nav.navbar-nav
+  ul.nav.navbar-nav(v-cloak)
     li
       a(href='javascript:', @click='rebindSelectedCells', data-toggle='tooltip', data-placement='bottom', title='Click when you change selected area')
         i.fa.fa-table
-        |  Link data
+        |  {{$t('linkdata')}}
       a(href='javascript:', @click='fillWithSampleData', v-if='!bound', v-cloak, data-toggle='tooltip', data-placement='bottom', title='Select empty cell and then click')
         i.fa.fa-refresh
-        |  Retry filling sample data
+        |  {{$t('retryfilling')}}
 
 block navright
-  ul.nav.navbar-nav.navbar-right
+  ul.nav.navbar-nav.navbar-right(v-cloak)
     li.dropdown(v-if='capabilities.colors', v-cloak)
       a.dropdown-toggle(href='javascript:', data-toggle='dropdown')
         theme-label(:name='"Select color theme"', :colors='selectedColors')
@@ -50,15 +50,15 @@ block navright
     li
       a(href='javascript:', @click='shareChart')
         i.fa.fa-share-square-o
-        |  Share chart
+        |  {{$t('sharechart')}}
     li.dropdown
       a.dropdown-toggle(href='javascript:', data-toggle='dropdown')
         i.fa.fa-file-image-o
-        |  Save image&nbsp;
+        |  {{$t('saveimage')}}&nbsp;
         span.caret
       ul.dropdown-menu
-        li: a(@click='saveImage("svg")', tabindex=-1, href='javascript:', download='image.svg') Save as SVG
-        li: a(@click='saveImage("png")', tabindex=-1, href='javascript:', download='image.png') Save as PNG
+        li: a(@click='saveImage("svg")', tabindex=-1, href='javascript:', download='image.svg') {{$t('saveassvg')}}
+        li: a(@click='saveImage("png")', tabindex=-1, href='javascript:', download='image.png') {{$t('saveaspng')}}
     li
       a(href='javascript:', @click='goHome')
         i.fa.fa-home

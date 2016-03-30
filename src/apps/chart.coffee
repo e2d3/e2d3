@@ -18,7 +18,7 @@ require.config
     text:
       useXhr: () -> true
 
-require ['bootstrap', 'jquery', 'vue', 'd3', 'e2d3', 'ui/components', 'ui/colorthemes'], (bootstrap, $, Vue, d3, e2d3, components, colorthemes) ->
+require ['bootstrap', 'jquery', 'vue', 'd3', 'e2d3', 'ui/i18n', 'ui/components', 'ui/colorthemes'], (bootstrap, $, Vue, d3, e2d3, i18n, components, colorthemes) ->
 
   e2d3.util.setupLiveReloadForDelegateMode()
 

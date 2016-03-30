@@ -9,7 +9,7 @@ require.config
     text:
       useXhr: () -> true
 
-require ['bootstrap', 'jquery', 'vue', 'd3', 'marked', 'e2d3', 'ui/secret'], (bootstrap, $, Vue, d3, marked, e2d3, secret) ->
+require ['bootstrap', 'jquery', 'vue', 'd3', 'marked', 'e2d3', 'ui/i18n', 'ui/secret'], (bootstrap, $, Vue, d3, marked, e2d3, i18n, secret) ->
 
   e2d3.restoreChart()
 
