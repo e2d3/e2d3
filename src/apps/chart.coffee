@@ -125,6 +125,8 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'e2d3', 'ui/i18n', 'ui/components',
 
       rebindSelectedCells: () ->
         @bindSelected()
+          .then () =>
+            @bound = true
           .catch (err) =>
             @onError err
 
