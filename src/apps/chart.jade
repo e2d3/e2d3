@@ -29,16 +29,17 @@ block navleft
     li
       a(href='javascript:', @click='rebindSelectedCells', data-toggle='tooltip', data-placement='bottom', title='Click when you change selected area')
         i.fa.fa-table
-        |  {{$t('linkdata')}}
-      a(href='javascript:', @click='fillWithSampleData', v-if='!bound', v-cloak, data-toggle='tooltip', data-placement='bottom', title='Select empty cell and then click')
+        |  {{$t('linkData')}}
+    li(v-if='!bound', v-cloak)
+      a(href='javascript:', @click='fillWithSampleData', data-toggle='tooltip', data-placement='bottom', title='Select empty cell and then click')
         i.fa.fa-refresh
-        |  {{$t('retryfilling')}}
+        |  {{$t('retryFilling')}}
 
 block navright
   ul.nav.navbar-nav.navbar-right(v-cloak)
     li.dropdown(v-if='capabilities.colors', v-cloak)
       a.dropdown-toggle(href='javascript:', data-toggle='dropdown')
-        theme-label(:name='"Select color theme"', :colors='selectedColors')
+        theme-label(:name='$t("selectColorTheme")', :colors='selectedColors')
         | &nbsp;
         span.caret
       div.dropdown-menu
@@ -50,15 +51,15 @@ block navright
     li
       a(href='javascript:', @click='shareChart')
         i.fa.fa-share-square-o
-        |  {{$t('sharechart')}}
+        |  {{$t('shareChart')}}
     li.dropdown
       a.dropdown-toggle(href='javascript:', data-toggle='dropdown')
         i.fa.fa-file-image-o
-        |  {{$t('saveimage')}}&nbsp;
+        |  {{$t('saveImage')}}&nbsp;
         span.caret
       ul.dropdown-menu
-        li: a(@click='saveImage("svg")', tabindex=-1, href='javascript:', download='image.svg') {{$t('saveassvg')}}
-        li: a(@click='saveImage("png")', tabindex=-1, href='javascript:', download='image.png') {{$t('saveaspng')}}
+        li: a(@click='saveImage("svg")', tabindex=-1, href='javascript:', download='image.svg') {{$t('saveAsSvg')}}
+        li: a(@click='saveImage("png")', tabindex=-1, href='javascript:', download='image.png') {{$t('saveAsPng')}}
     li
       a(href='javascript:', @click='goHome')
         i.fa.fa-home

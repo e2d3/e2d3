@@ -18,8 +18,8 @@ module.exports =
     message: 'message'
 
   methods:
-    show: (title, message) ->
-      @title = title
-      @message = message
+    show: (err) ->
+      @title = err.name
+      @message = err.message
       $(@$el).modal()
 </script>

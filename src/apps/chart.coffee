@@ -139,7 +139,7 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'e2d3', 'ui/i18n', 'ui/components',
           .then (result) =>
             @showShare result.url
           .catch (err) =>
-            @showAlert 'Error on sharing', err.statusText ? err
+            @showAlert name: 'Error on sharing', message: err.statusText
 
       goHome: () ->
         e2d3.excel.removeAttribute 'chart'
@@ -187,7 +187,7 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'e2d3', 'ui/i18n', 'ui/components',
           Promise.resolve(e2d3.data.empty())
 
       onError: (err) ->
-        @showAlert err.name, err.message if err.code?
+        @showAlert i18n.error err
         e2d3.onError err
 
       showAlert: (title, message) ->
