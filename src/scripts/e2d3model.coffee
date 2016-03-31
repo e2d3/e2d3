@@ -29,7 +29,7 @@ define ['d3'], (d3) ->
 
   convert = (value, callback) ->
     if REGEXP_NUMBER.test value
-      callback +(value.replace /,/, '')
+      callback +(value.replace /,/g, '')
     else if REGEXP_ISODATE.test value
       callback PARSE_ISODATE value
     else if REGEXP_YMD.test value
