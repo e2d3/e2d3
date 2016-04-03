@@ -8,12 +8,13 @@ define([
   'colorbrewer',
   'marked',
   'e2d3',
+  'ui/framecommon',
   'ui/i18n',
   'ui/secret',
-  'ui/framecommon',
   'ui/urlparam',
   'ui/components',
-  'ui/colorthemes'
+  'ui/colorthemes',
+  'ui/capabilities'
 ], function() {
 // noop
 });

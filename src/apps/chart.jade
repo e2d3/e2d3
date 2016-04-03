@@ -37,7 +37,7 @@ block navleft
 
 block navright
   ul.nav.navbar-nav.navbar-right(v-cloak)
-    li.dropdown(v-if='capabilities.colors', v-cloak)
+    li.dropdown(v-if='capabilities.selectColorThemes', v-cloak)
       a.dropdown-toggle(href='javascript:', data-toggle='dropdown')
         theme-label(:name='$t("selectColorTheme")', :colors='selectedColors')
         | &nbsp;
@@ -52,7 +52,7 @@ block navright
       a(href='javascript:', @click='shareChart')
         i.fa.fa-share-square-o
         |  {{$t('shareChart')}}
-    li.dropdown
+    li.dropdown(v-if='capabilities.saveImages', v-cloak)
       a.dropdown-toggle(href='javascript:', data-toggle='dropdown')
         i.fa.fa-file-image-o
         |  {{$t('saveImage')}}&nbsp;

@@ -18,7 +18,7 @@ require.config
     text:
       useXhr: () -> true
 
-require ['bootstrap', 'jquery', 'vue', 'd3', 'e2d3', 'ui/i18n', 'ui/components', 'ui/colorthemes'], (bootstrap, $, Vue, d3, e2d3, i18n, components, colorthemes) ->
+require ['bootstrap', 'jquery', 'vue', 'd3', 'e2d3', 'ui/i18n', 'ui/components', 'ui/colorthemes', 'ui/capabilities'], (bootstrap, $, Vue, d3, e2d3, i18n, components, colorthemes, capabilities) ->
 
   e2d3.util.setupLiveReloadForDelegateMode()
 
@@ -152,7 +152,9 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'e2d3', 'ui/i18n', 'ui/components',
       fetchManifest: () ->
         d3.promise.yaml "#{@baseUrl}/manifest.yml"
           .then (obj) =>
-            @capabilities = obj.capabilities if obj.capabilities?
+            @capabilities = capabilities.extract obj.capabilities
+          .catch (err) =>
+            @capabilities = capabilities.extract undefined
 
       fetchSampleData: () ->
         d3.promise.text "#{@baseUrl}/data.#{_dataType}"
