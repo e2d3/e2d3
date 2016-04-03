@@ -32,6 +32,7 @@ amdoptions =
     'bootstrap':
       deps: ['jquery']
     'canvg':
+      deps: ['rgbcolor', 'stackblur']
       exports: 'canvg'
     'colorbrewer':
       exports: 'colorbrewer'
