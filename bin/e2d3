@@ -47,7 +47,7 @@ function checkVersion() {
       var json = JSON.parse(data);
       if (semver.lt(e2d3.version, json.versions.e2d3)) {
         console.log(colors.yellow(
-          '[E2D3] A new version is available (v' + json.versions.e2d3 + '). Please run "npm update -g e2d3"'));
+          '[E2D3] A new version is available (v' + json.versions.e2d3 + '). Please run "npm install -g e2d3"'));
       }
     });
   }).on('error', function () {
