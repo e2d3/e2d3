@@ -23,7 +23,7 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'marked', 'e2d3', 'ui/i18n', 'ui/se
   $('#delegate').on 'click', (e) ->
     e2d3.util.toggleDelegateMode()
     window.location.reload()
-
+  Vue.config.debug = true
   new Vue
     el: 'body'
     data:
@@ -41,11 +41,18 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'marked', 'e2d3', 'ui/i18n', 'ui/se
 
     computed:
       selectedCharts: () ->
-        @charts.filter (chart) =>
-          if @selected != 'uncategorized'
-            chart.tags? && chart.tags.indexOf(@selected) != -1
-          else
-            !chart.tags? || chart.tags.length == 0
+        @charts
+          .filter (chart) =>
+            if @selected != 'uncategorized'
+              chart.tags.map((t) -> t.name).indexOf(@selected) != -1
+            else
+              chart.tags.length == 0
+          .sort (c1, c2) =>
+            if @selected != 'uncategorized'
+              order = (chart) => chart.tags.filter((t) => t.name == @selected)[0].order
+              order(c1) - order(c2)
+            else
+              0
 
     components:
       chart:
