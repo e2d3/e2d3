@@ -35,6 +35,7 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'marked', 'e2d3', 'ui/i18n', 'ui/se
         { id: 'marathon', label: 'Marathon', image: 'male' },
         { id: 'hackathon', label: 'Hackathon', image: 'bolt' },
         { id: 'nagoya-hack', label: 'NagoyaHack', image: 'fort-awesome' },
+        { id: 'kurashiki-hack', label: 'KurashikiHack', image: 'institution' },
         { id: 'kanazawa-hack', label: 'KanazawaHack', image: 'leaf' },
         { id: 'globe', label: 'Globe', image: 'globe' },
         { id: 'tbd', label: 'To Be Developed', image: 'bomb' }
