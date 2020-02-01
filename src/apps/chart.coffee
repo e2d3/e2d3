@@ -47,6 +47,7 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'e2d3', 'ui/i18n', 'ui/components',
       @baseUrl = e2d3.util.baseUrl _path
 
       @fetchManifest()
+      @overrideModulesFromManifest()
 
       @initExcel()
         .then () =>
@@ -155,6 +156,11 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'e2d3', 'ui/i18n', 'ui/components',
             @capabilities = capabilities.extract obj.capabilities
           .catch (err) =>
             @capabilities = capabilities.extract undefined
+
+      overrideModulesFromManifest: () ->
+        d3.promise.yaml "#{@baseUrl}/manifest.yml"
+          .then (obj) => console.log(obj.modules)
+          .catch (err) => console.log(err)
 
       fetchSampleData: () ->
         d3.promise.text "#{@baseUrl}/data.#{_dataType}"
