@@ -159,8 +159,13 @@ require ['bootstrap', 'jquery', 'vue', 'd3', 'e2d3', 'ui/i18n', 'ui/components',
 
       overrideModulesFromManifest: () ->
         d3.promise.yaml "#{@baseUrl}/manifest.yml"
-          .then (obj) => console.log(obj.modules)
-          .catch (err) => console.log(err)
+          .then (obj) =>
+            obj.modules.map (m) ->
+              tag = document.createElement('script')
+              tag.setAttribute('src', m)
+              document.head.appendChild(tag)
+          .catch (err) =>
+            @myModules = []
 
       fetchSampleData: () ->
         d3.promise.text "#{@baseUrl}/data.#{_dataType}"
