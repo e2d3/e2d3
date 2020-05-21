@@ -26,6 +26,14 @@ var E2D3_DEFAULT_PATHS = {
     '//cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min',
     'd3'
   ],
+  'd3_4': [
+    '//cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min',
+    'd3_4'
+  ],
+  'd3_5': [
+    '//cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min',
+    'd3_5'
+  ],
   'd3plus': [
     '//cdnjs.cloudflare.com/ajax/libs/d3plus/1.8.0/d3plus.min',
     'd3plus'
@@ -99,7 +107,6 @@ var E2D3_DEFAULT_MAP = {
   '*': {
     'jquery': 'misc/jquery-private',
     'd3': 'misc/d3-promised',
-    'FileSaver': 'FileSaver.js'
   },
   'misc/jquery-private': {
     'jquery': 'jquery'
