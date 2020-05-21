@@ -63,7 +63,6 @@ var map = {
   '*': {
     'jquery': 'misc/jquery-private',
     'd3': 'misc/d3-promised',
-    'FileSaver': 'FileSaver.js',
   },
   'misc/jquery-private': { 'jquery': 'jquery' },
   'misc/d3-promised': { 'd3': 'd3' },

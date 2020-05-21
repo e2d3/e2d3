@@ -99,7 +99,6 @@ var E2D3_DEFAULT_MAP = {
   '*': {
     'jquery': 'misc/jquery-private',
     'd3': 'misc/d3-promised',
-    'FileSaver': 'FileSaver.js'
   },
   'misc/jquery-private': {
     'jquery': 'jquery'
